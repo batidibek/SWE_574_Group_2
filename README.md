@@ -29,6 +29,3 @@ This wiki is the main source of documentation for **developers** working with (o
 * [Assignments](https://github.com/batidibek/SWE_574_Group_2/wiki/Assignments)
     
 * [Researches](https://github.com/batidibek/SWE_574_Group_2/wiki/Researches)  
-  * [W3C Activity Stream](https://github.com/batidibek/SWE_574_Group_2/wiki/W3C-Activity-Stream)  
-  * [Web Annotation Data Model](https://github.com/batidibek/SWE_574_Group_2/wiki/Web-Annotation-Data-Model)   
-  * [WikiData](https://github.com/batidibek/SWE_574_Group_2/wiki/WikiData)    
