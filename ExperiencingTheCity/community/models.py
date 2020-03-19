@@ -33,13 +33,11 @@ class PostType(models.Model):
 #Notification           -->  Adil        : 19.03.2020 12.00
 class Notification(models.Model):
     #type enum?
-    community_id    = models.ForeignKey(Community, default="", on_delete=models.CASCADE)
-    #post_id         = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
-    #user_id vs owner?
-    user_id         = models.ForeignKey(User.pk)
+    community_id    = models.ForeignKey(Community, default="")
+    post_id         = models.ForeignKey(Post, default="")
+    user_id         = models.ForeignKey(User)
     description     = models.CharField(max_length=200)
-    # URL of the related event?
-    url             = models.URLField()
+    url             = models.CharField(max_length=300)
     creation_date   = models.DateTimeField('date published')
 
 #UserAdditionalInfo     -->  Adil        : 19.03.2020 12.00
@@ -50,9 +48,8 @@ class UserAdditionalInfo(models.Model):
 
 #Followership           -->  Adil        : 19.03.2020 12.00
 class Followership(models.Model):
-    # user_id vs owner?
-    user_id = models.ForeignKey(User.pk)
-    #clarify
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    #discuss further
     follower = models.ManyToManyField(User)
 
 # + Burcu DB oluşturacak : 20.03.2020 23.00
