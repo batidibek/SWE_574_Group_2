@@ -24,9 +24,30 @@ class PostType(models.Model):
     complaint       = models.BooleanField(default=False)
 
 
-#Post                   -->  Batı        : 19.03.2020 23.00
-#SemanticTags           -->  Batı        : 19.03.2020 23.00
-#MemberShip             -->  Batı        : 19.03.2020 23.00
+#Post
+class Post(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank = True)
+    creation_date = models.DateTimeField('date published')
+    form_fields = JSONField()
+    community_id = models.ForeignKey(Community, default="", on_delete=models.CASCADE)
+    posttype_id = models.ForeignKey(PostType, default="", on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    complaint = models.BooleanField(default=False)
+    complaint_status = models.CharField(max_length=100)
+    inappropriate = models.BooleanField(default=False)
+
+#SemanticTags 
+class SemanticTags(models.Model):
+    community_id = models.ForeignKey(Community, default="", on_delete=models.CASCADE)
+    post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
+    tag_info = JSONField()
+
+#MemberShip
+class MemberShip(models.Model):
+    community_id = models.ForeignKey(Community, default="", on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    
 #comments               -->  Burcu       : 20.03.2020 23.00
 #Inappropriate Posts    -->  Burcu       : 20.03.2020 23.00
 
