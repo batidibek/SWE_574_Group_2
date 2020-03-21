@@ -92,13 +92,23 @@ WSGI_APPLICATION = 'ExperiencingTheCity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE':   'django.db.backends.postgresql',
+        'NAME':     'dcakhbp4q7nbn7',
+        'USER':     'kajuyatjzemxvb',
+        'PASSWORD': '31d522de25d83c38b5b31a4c51e1aacf7c266147d4caf932253e4cce19bb970b',
+        'HOST':     'ec2-52-207-93-32.compute-1.amazonaws.com',
+        'PORT':     '5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
