@@ -3,4 +3,6 @@ from . import views
 
 
 app_name = 'community'
-urlpatterns = []
+urlpatterns = [
+    path('', views.homepage, name='home'),
+]
