@@ -6,3 +6,4 @@ media/
 *.pyc
 .venv
 /ENV
+migrations/
