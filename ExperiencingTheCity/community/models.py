@@ -76,9 +76,11 @@ class Notification(models.Model):
 
 
 class UserAdditionalInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.URLField(max_length=600, blank=True)
     # geolocation
+    def __str__(self):
+        return self.user.username  
 
 
 class Followership(models.Model):

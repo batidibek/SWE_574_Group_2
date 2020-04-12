@@ -88,7 +88,8 @@
                 <path d="M21 21l-5.2-5.2" />
               </svg>
             </a>
-            <a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a>
+            <a class="btn btn-sm btn-outline-primary" href="#">Sign in</a>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'community:sign_up'%}">Sign up</a>
           </div>
         </div>
       </header>
@@ -112,11 +113,11 @@
     <main role="main" class="container">
       {% block content %}{% endblock %}
     </main>
-    <footer class="blog-footer">
-      <p>
-        Big City Life by
-        <a href="https://github.com/batidibek/SWE_574_Group_2">@Group 2</a>.
-      </p>
-    </footer>
+      <footer class="blog-footer">
+        <p>
+          Big City Life by
+          <a href="https://github.com/batidibek/SWE_574_Group_2">@Group 2</a>.
+        </p>
+      </footer>  
   </body>
 </html>
