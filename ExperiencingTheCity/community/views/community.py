@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
+from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership, City
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -48,15 +48,20 @@ def create_community(request):
         }) 
     name = str(request.POST.get('name', "")).strip()
     description = str(request.POST.get('description', "")).strip()
+    city = str(request.POST.get('city', "")).strip()
     try:
-        old_community = Community.objects.get(name=name)
+        city_object = City.objects.get(name=city)
+        try:
+            old_community = Community.objects.get(name=name, city=city_object)
+        except:
+            old_community = None
+        if old_community:
+            return render(request, 'CommunityCreate.html', {
+                'error_message': "There is another community named " + name + " in " + city_object.name,
+                'description': description
+            })
     except:
-        old_community = None
-    if old_community:
-        return render(request, 'CommunityCreate.html', {
-            'error_message': "There is another community named " + name,
-            'description': description
-        })
+        city_object = City
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
     community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user)
