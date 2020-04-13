@@ -49,6 +49,13 @@ def create_community(request):
     name = str(request.POST.get('name', "")).strip()
     description = str(request.POST.get('description', "")).strip()
     city = str(request.POST.get('city', "")).strip()
+    country = str(request.POST.get('country', "")).strip()
+    if request.POST['city'] == "":
+        return render(request, 'CommunityCreate.html', {
+            'error_message': "You must select a city.",
+            'description': description,
+            'community_name': name
+        })
     try:
         city_object = City.objects.get(name=city)
         try:
@@ -61,10 +68,10 @@ def create_community(request):
                 'description': description
             })
     except:
-        city_object = City
+        city_object = City(name=city, country=country)
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user)
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, city=city_object)
     if community.name == "" or community.description == "" or request.POST['tags'] == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
@@ -72,5 +79,6 @@ def create_community(request):
             'community_name': name
         })
     else:
+        city_object.save()
         community.save()
         return HttpResponseRedirect(reverse('community:home'))
