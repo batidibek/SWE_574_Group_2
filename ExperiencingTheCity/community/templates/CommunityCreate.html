@@ -2,10 +2,23 @@
 <div class="container" style="width: 800px; margin:0 auto;">
     <h3>Create a new community</h3>
     {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>{% endif %}
-
+    <br />
     <!--    FORM -->
     <form action="{% url 'community:create_community'%}" method="post">
         {% csrf_token %}
+        <div class="form-group">
+            <label for="CommunityName">Country:</label>
+            <select name="country" size="1" onchange="set_city_state(this,city)">
+                <option value="" selected="selected">SELECT COUNTRY</option>
+                <option value=""></option>
+                <script type="text/javascript">
+                    setRegions(this);
+                </script>
+            </select>
+            &nbsp;&nbsp;
+            <label for="CommunityName">City:</label>
+            <select name="city" size="1" disabled="disabled" onchange="print_city_state(country,this)"></select>
+        </div>
         <div class="form-group">
             <label for="CommunityName">Community Name</label>
             {% if community_name %}

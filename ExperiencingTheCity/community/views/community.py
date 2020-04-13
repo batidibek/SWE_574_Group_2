@@ -16,6 +16,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import requests
 
+# COMMUNITY LIST
+
+def community_list(request):
+    community_list = Community.objects.order_by('-pub_date')[:30]
+    context = {'community_list': community_list}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, 'Communities.html', context)
+
 # NEW COMMUNITY
 
 def new_community(request):    
@@ -29,6 +39,7 @@ def new_community(request):
         return render(request, 'CommunityCreate.html', {'user': community_user})
 
 def create_community(request):
+    print(request.POST)
     if not request.user.is_authenticated:
         community_list = Community.objects.order_by('-pub_date')[:30]
         return render(request, 'Home.html', {
