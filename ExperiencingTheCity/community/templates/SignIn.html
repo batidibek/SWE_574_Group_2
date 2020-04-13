@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %}
+<div class="container" style="width: 800px; margin:0 auto;">
+
+    <h3>Sign in to Big City Life</h3>
+    {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>{% endif %}
+    <form action="{% url 'community:authenticate_user' %}" method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="InputUserName">Username or Mail Adress</label>
+            <input type="text" class="form-control" id="InputUserName" aria-describedby="InputUserName"
+                placeholder="Enter your username or email adress" name="user_key">
+        </div>
+        <div class="form-group">
+            <label for="InputPassword">Password</label>
+            <input type="password" class="form-control" id="Password" aria-describedby="Password"
+                placeholder="Enter your password" name="password">
+        </div>
+
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-outline-success">Log in</button>
+            <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
+                style="margin-left: 10px;">Cancel</button>
+
+        </div>
+    </form>
+</div>
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+{% endblock content %}

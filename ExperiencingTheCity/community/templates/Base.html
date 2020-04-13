@@ -88,8 +88,13 @@
                 <path d="M21 21l-5.2-5.2" />
               </svg>
             </a>
-            <a class="btn btn-sm btn-outline-primary" href="#">Sign in</a>
-            <a class="btn btn-sm btn-outline-secondary" href="{% url 'community:sign_up'%}">Sign up</a>
+        {% if user.user %}
+          <a class="nav-link disabled">Hi, {{user.user.username}}!</a>
+          <a class="nav-link" href="{% url 'community:log_out'%}">Log Out</a>
+        {% else %}
+          <a class="btn btn-sm btn-outline-primary" href="{% url 'community:sign_in'%}">Sign in</a>
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'community:sign_up'%}">Sign up</a>
+        {% endif %}
           </div>
         </div>
       </header>

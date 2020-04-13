@@ -18,4 +18,10 @@ import requests
 
 
 def homepage(request):
-    return render(request, 'Home.html')
+    context = {}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context = {
+            'user': community_user
+        }
+    return render(request, 'Home.html', context)

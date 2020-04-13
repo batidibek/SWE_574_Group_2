@@ -16,6 +16,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import requests
 
+#SIGN UP
+
 def sign_up(request):
     return render(request, 'SignUp.html')
 
@@ -60,4 +62,46 @@ def create_user(request):
     login(request, user)
     community_user = UserAdditionalInfo(user=user)
     community_user.save()
-    return HttpResponseRedirect(reverse('community:home'))       
+    return HttpResponseRedirect(reverse('community:home'))  
+
+#SIGN IN
+
+def sign_in(request):
+   return render(request, 'SignIn.html')            
+
+def authenticate_user(request):
+    if "cancel" in request.POST:
+        return HttpResponseRedirect(reverse('community:home'))
+    user_key = request.POST["user_key"]
+    password = request.POST["password"] 
+    if user_key == "" or password == "":
+        return render(request, 'SignIn.html', {
+            'error_message': "Please provide your username or email adress, and password.",
+        })
+    username_checker = False
+    try:
+        u = User.objects.get(username=user_key)
+    except:
+        username_checker = True
+    email_checker = False
+    try:
+        u = User.objects.get(email=user_key)
+        user_key = u.username
+    except:
+        email_checker = True
+    if username_checker and email_checker:
+       return render(request, 'SignIn.html', {
+            'error_message': "This username or email adress does not exist.",
+        })         
+    user = authenticate(request, username=user_key, password=password)    
+    if user is not None:
+        login(request, user)
+        return HttpResponseRedirect(reverse('community:home'))
+    else:
+        return render(request, 'SignIn.html', {
+        'error_message': "Invalid password.",
+    })   
+
+def log_out(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('community:home'))    
