@@ -50,7 +50,9 @@ def create_community(request):
     description = str(request.POST.get('description', "")).strip()
     city = str(request.POST.get('city', "")).strip()
     country = str(request.POST.get('country', "")).strip()
-    if request.POST['city'] == "":
+    if "cancel" in request.POST:
+        return HttpResponseRedirect(reverse('community:home'))
+    if city == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "You must select a city.",
             'description': description,
@@ -69,8 +71,6 @@ def create_community(request):
             })
     except:
         city_object = City(name=city, country=country)
-    if "cancel" in request.POST:
-        return HttpResponseRedirect(reverse('community:home'))
     community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, city=city_object)
     if community.name == "" or community.description == "" or request.POST['tags'] == "":
         return render(request, 'CommunityCreate.html', {
