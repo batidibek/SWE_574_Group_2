@@ -10,6 +10,8 @@ class Community(models.Model):
     active = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     # geolocation = models.CharField
+    def __str__(self):
+        return self.name
 
 
 class PostType(models.Model):

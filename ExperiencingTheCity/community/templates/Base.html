@@ -106,6 +106,9 @@
           <a class="p-2 text-muted" href="#">COMMUNITIES</a>
           <a class="p-2 text-muted" href="#">POSTS</a>
           <a class="p-2 text-muted" href="#">USER PROFILE</a>
+          {% if user.user %}
+          <a class="p-2 text-muted" href="{% url 'community:new_community'%}">NEW COMMUNITY</a>
+          {% endif %}
         </nav>
       </div>
       <br />

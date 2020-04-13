@@ -1,13 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {% load static %}
-</head>
-<body>
+{% extends "base.html" %} {% block content %}
+<div class="container" style="width: 800px; margin:0 auto;">
+    <h3>Create a new community</h3>
+    {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>{% endif %}
 
-
-<script src="{% static 'controller/CommunityCreate.js' %}"></script>
-</body>
-</html>
+    <!--    FORM -->
+    <form action="{% url 'community:create_community'%}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="CommunityName">Community Name</label>
+            {% if community_name %}
+            <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
+                placeholder="Enter community name" value="{{community_name}}" name="name">
+            {% else %}
+            <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
+                placeholder="Enter community name" name="name">
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="CommunityDescription">Description</label>
+            {% if description %}
+            <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
+                rows="5" name="description">{{description}}</textarea>
+            {% else %}
+            <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
+                rows="5" name="description"></textarea>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="CommunityDescription">Tags</label>
+            <input type="text" class="form-control" data-role="tagsinput" name="tags" />
+        </div>
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-outline-success">Create Community</button>
+            <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
+                style="margin-left: 10px;">Cancel</button>
+        </div>
+    </form>
+    <!--    FORM -->
+    <br /><br /><br /><br /><br />
+</div>
+{% endblock content %}
