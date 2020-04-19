@@ -48,30 +48,19 @@ def create_community(request):
         }) 
     name = str(request.POST.get('name', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    city = str(request.POST.get('city', "")).strip()
     country = str(request.POST.get('country', "")).strip()
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
-    if city == "":
-        return render(request, 'CommunityCreate.html', {
-            'error_message': "You must select a city.",
-            'description': description,
-            'community_name': name
-        })
     try:
-        city_object = City.objects.get(name=city)
-        try:
-            old_community = Community.objects.get(name=name, city=city_object)
-        except:
-            old_community = None
-        if old_community:
-            return render(request, 'CommunityCreate.html', {
-                'error_message': "There is another community named " + name + " in " + city_object.name,
-                'description': description
-            })
+         old_community = Community.objects.get(name=name, city=city_object)
     except:
-        city_object = City(name=city, country=country)
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, city=city_object)
+        old_community = None
+    if old_community:
+        return render(request, 'CommunityCreate.html', {
+            'error_message': "There is another community named " + name + " in " + city_object.name,
+            'description': description
+        })
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user)
     if community.name == "" or community.description == "" or request.POST['tags'] == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
@@ -79,6 +68,5 @@ def create_community(request):
             'community_name': name
         })
     else:
-        city_object.save()
         community.save()
         return HttpResponseRedirect(reverse('community:home'))

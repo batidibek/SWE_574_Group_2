@@ -23,7 +23,13 @@
                 L.control.scale().addTo(map);
 
                 // show a marker on the map
-                // L.marker({ lon: 28.98, lat: 41.02 }).bindPopup('The center of the world').addTo(map);
+                var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
+                var latLng = {lat: 41.02, lon: 28.98};
+
+                map.on('click', function (e) {
+                    marker.setLatLng(e.latlng);
+                    latLng = {lat: e.latlng.lat, lon: e.latlng.lng};
+                });  
             </script>
         </div>
         <div class="form-group">
