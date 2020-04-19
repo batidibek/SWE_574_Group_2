@@ -8,7 +8,7 @@ class Community(models.Model):
     creation_date = models.DateTimeField('date published')
     active = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    # geolocation = models.CharField
+    geolocation = JSONField(default="")
     def __str__(self):
         return self.name
 

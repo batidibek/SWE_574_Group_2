@@ -48,7 +48,8 @@ def create_community(request):
         }) 
     name = str(request.POST.get('name', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    country = str(request.POST.get('country', "")).strip()
+    lat = str(request.POST.get('latitude', "")).strip()
+    lon = str(request.POST.get('longitude', "")).strip()
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
     try:
@@ -60,7 +61,7 @@ def create_community(request):
             'error_message': "There is another community named " + name, 
             'description': description
         })
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user)
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation={'lat': lat, 'lon': lon})
     if community.name == "" or community.description == "" or request.POST['tags'] == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
