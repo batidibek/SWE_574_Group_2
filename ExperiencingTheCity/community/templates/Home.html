@@ -21,9 +21,7 @@
     {% if community_list %}
     {% for community in community_list %}
     <script>
-      var communityName = "{{community.name}}"
-      var marker = L.marker({ lon: "{{community.geolocation.lon}}", lat: "{{community.geolocation.lat}}" }).addTo(map);
-      marker.bindPopup(communityName);
+      var marker = L.marker({ lon: "{{community.geolocation.lon}}", lat: "{{community.geolocation.lat}}" }).bindPopup("{{community.name}}").addTo(map);
       marker.on('mouseover', function (e) {
         this.openPopup();
       });
