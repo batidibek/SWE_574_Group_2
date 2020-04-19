@@ -9,6 +9,8 @@
         <div class="form-group">
             <label for="CommunityName">Select Region</label>
             <div id="map" style="width: 770px; height: 400px;"></div>
+            <input type="hidden" class="form-control" id="Geolocation" aria-describedby="Geolocation"
+            placeholder="Enter community name" value=field name="geolocation">
             <script>
                 // initialize Leaflet
                 var map = L.map('map').setView({ lon: 28.98, lat: 41.06 }, 10);
