@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership, City
+from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -19,9 +19,11 @@ import requests
 
 def homepage(request):
     context = {}
+    community_list = Community.objects.order_by('-creation_date')[:30]
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context = {
+            'community_list': community_list,
             'user': community_user
         }
     return render(request, 'Home.html', context)

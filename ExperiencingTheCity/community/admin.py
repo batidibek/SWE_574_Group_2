@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership, City
+from .models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
 
 admin.site.register(Community)
 admin.site.register(PostType)
@@ -13,4 +13,3 @@ admin.site.register(InappropriatePosts)
 admin.site.register(Notification)
 admin.site.register(UserAdditionalInfo)
 admin.site.register(Followership)
-admin.site.register(City)

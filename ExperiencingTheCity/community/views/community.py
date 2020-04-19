@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership, City
+from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -48,30 +48,20 @@ def create_community(request):
         }) 
     name = str(request.POST.get('name', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    city = str(request.POST.get('city', "")).strip()
-    country = str(request.POST.get('country', "")).strip()
+    lat = str(request.POST.get('latitude', "")).strip()
+    lon = str(request.POST.get('longitude', "")).strip()
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
-    if city == "":
-        return render(request, 'CommunityCreate.html', {
-            'error_message': "You must select a city.",
-            'description': description,
-            'community_name': name
-        })
     try:
-        city_object = City.objects.get(name=city)
-        try:
-            old_community = Community.objects.get(name=name, city=city_object)
-        except:
-            old_community = None
-        if old_community:
-            return render(request, 'CommunityCreate.html', {
-                'error_message': "There is another community named " + name + " in " + city_object.name,
-                'description': description
-            })
+         old_community = Community.objects.get(name=name)
     except:
-        city_object = City(name=city, country=country)
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, city=city_object)
+        old_community = None
+    if old_community:
+        return render(request, 'CommunityCreate.html', {
+            'error_message': "There is another community named " + name, 
+            'description': description
+        })
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation={'lat': lat, 'lon': lon})
     if community.name == "" or community.description == "" or request.POST['tags'] == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
@@ -79,6 +69,5 @@ def create_community(request):
             'community_name': name
         })
     else:
-        city_object.save()
         community.save()
         return HttpResponseRedirect(reverse('community:home'))
