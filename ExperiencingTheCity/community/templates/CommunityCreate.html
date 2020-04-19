@@ -1,13 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {% load static %}
-</head>
-<body>
+{% extends "base.html" %} {% block content %}
+<div class="container" style="width: 800px; margin:0 auto;">
+    <h3>Create a new community</h3>
+    {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>{% endif %}
+    <br />
+    <!--    FORM -->
+    <form action="{% url 'community:create_community'%}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="CommunityName">Select Region</label>
+            <div id="map" style="width: 770px; height: 400px;"></div>
+            <script>
+                // initialize Leaflet
+                var map = L.map('map').setView({ lon: 28.98, lat: 41.06 }, 10);
 
+                // add the OpenStreetMap tiles
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                }).addTo(map);
 
-<script src="{% static 'controller/CommunityCreate.js' %}"></script>
-</body>
-</html>
+                // show the scale bar on the lower left corner
+                L.control.scale().addTo(map);
+
+                // show a marker on the map
+                // L.marker({ lon: 28.98, lat: 41.02 }).bindPopup('The center of the world').addTo(map);
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="CommunityName">Community Name</label>
+            {% if community_name %}
+            <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
+                placeholder="Enter community name" value="{{community_name}}" name="name">
+            {% else %}
+            <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
+                placeholder="Enter community name" name="name">
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="CommunityDescription">Description</label>
+            {% if description %}
+            <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
+                rows="5" name="description">{{description}}</textarea>
+            {% else %}
+            <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
+                rows="5" name="description"></textarea>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="CommunityDescription">Tags</label>
+            <input type="text" class="form-control" data-role="tagsinput" name="tags" />
+        </div>
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-outline-success">Create Community</button>
+            <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
+                style="margin-left: 10px;">Cancel</button>
+        </div>
+    </form>
+    <!--    FORM -->
+    <br /><br /><br /><br /><br />
+</div>
+{% endblock content %}

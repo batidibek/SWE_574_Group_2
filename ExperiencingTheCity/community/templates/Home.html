@@ -1,10 +1,26 @@
 {% extends "base.html" %} {% block content %}
-<div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
-  <div class="col-md-6 px-0">
-    <h1 class="display-4 font-italic">
-      MAP
-    </h1>
-  </div>
+<div class="container" style="width: 1200px; margin:0 auto;">
+  {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>
+  {% endif %}
+  
+<div class="jumbotron p-4 p-md-5 text-white rounded bg-dark" style="height: 400px;">
+    <div id="map" style="width: 100%; height: 100%;"></div>
+    <script>
+      // initialize Leaflet
+      var map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
+
+      // add the OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).addTo(map);
+
+      // show the scale bar on the lower left corner
+      L.control.scale().addTo(map);
+
+      // show a marker on the map
+      L.marker({lon: 28.98, lat: 41.02}).bindPopup('The center of the world').addTo(map);
+    </script>
 </div>
 <div class="row">
   <div class="col-md-8 blog-main">

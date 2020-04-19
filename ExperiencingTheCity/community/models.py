@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
 
 class Community(models.Model):
     name = models.CharField(max_length=100)
@@ -9,7 +14,10 @@ class Community(models.Model):
     creation_date = models.DateTimeField('date published')
     active = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, default="", on_delete=models.CASCADE)
     # geolocation = models.CharField
+    def __str__(self):
+        return self.name
 
 
 class PostType(models.Model):
