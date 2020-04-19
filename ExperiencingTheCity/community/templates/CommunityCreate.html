@@ -7,17 +7,24 @@
     <form action="{% url 'community:create_community'%}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="CommunityName">Country:</label>
-            <select name="country" size="1" onchange="set_city_state(this,city)">
-                <option value="" selected="selected">SELECT COUNTRY</option>
-                <option value=""></option>
-                <script type="text/javascript">
-                    setRegions(this);
-                </script>
-            </select>
-            &nbsp;&nbsp;
-            <label for="CommunityName">City:</label>
-            <select name="city" size="1" disabled="disabled" onchange="print_city_state(country,this)"></select>
+            <label for="CommunityName">Select Region</label>
+            <div id="map" style="width: 770px; height: 400px;"></div>
+            <script>
+                // initialize Leaflet
+                var map = L.map('map').setView({ lon: 28.98, lat: 41.06 }, 10);
+
+                // add the OpenStreetMap tiles
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                }).addTo(map);
+
+                // show the scale bar on the lower left corner
+                L.control.scale().addTo(map);
+
+                // show a marker on the map
+                // L.marker({ lon: 28.98, lat: 41.02 }).bindPopup('The center of the world').addTo(map);
+            </script>
         </div>
         <div class="form-group">
             <label for="CommunityName">Community Name</label>
