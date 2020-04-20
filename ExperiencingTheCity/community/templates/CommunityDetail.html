@@ -1,12 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{% extends "base.html" %}{% block content %}
     {% load static %}
-</head>
-<body>
 
-<script src="{% static 'controller/CommunityDetail.js' %}"></script>
-</body>
-</html>
+    <div class="container" style="width: 800px; margin:0 auto;">
+        <h3>Community: {{ communityDetail.name }}</h3>
+        <br/>
+        <script src="{% static 'controller/CommunityDetail.js' %}"></script>
+        <form>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="CommunityName">Region</label>
+                <div id="map" style="width: 770px; height: 400px;"></div>
+                <script>
+                    // initialize Leaflet
+                    var map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
+
+                    // add the OpenStreetMap tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                    }).addTo(map);
+
+                    // show the scale bar on the lower left corner
+                    L.control.scale().addTo(map);
+
+                    // show a marker on the map
+                    // L.marker({ lon: 28.98, lat: 41.02 }).bindPopup('The center of the world').addTo(map);
+                </script>
+            </div>
+            <div class="form-group">
+                <label for="CommunityName">Community Name</label>
+                <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName" disabled
+                       placeholder="Enter community name" value="{{ communityDetail.name }}" name="name">
+
+            </div>
+            <div class="form-group">
+                <label for="CommunityDescription">Description</label>
+                <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
+                          disabled
+                          rows="5" name="description">{{ communityDetail.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="CommunityTag">Tags</label>
+                <input type="text" class="form-control" id="CommunityTags"
+                       width="100%"
+                       disabled>
+            </div>
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-outline-success">
+                     <a href="postType/{{ communityDetail.id }}" class="stretched-link">Create Post Type</a>
+                </button>
+
+{#                <button class="btn btn-outline-success">Create Post Type#}
+{#                    <a href="postType/{{ Community.id }}" class="stretched-link"></a>#}
+{#                    </button>#}
+            </div>
+        </form>
+
+
+        <br/><br/><br/><br/><br/>
+    </div>
+
+
+
+
+{% endblock content %}

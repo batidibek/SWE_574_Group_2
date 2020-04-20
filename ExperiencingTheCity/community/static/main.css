@@ -114,6 +114,12 @@ h6 {
   margin-bottom: 0;
 }
 
+.addDataField {
+    background-color: inherit;
+}
+
+
 .leaflet-popup-content {
   color: #000
 }
+

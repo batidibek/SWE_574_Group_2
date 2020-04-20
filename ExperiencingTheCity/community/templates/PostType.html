@@ -1,0 +1,102 @@
+{% extends "base.html" %} {% block content %}
+    {% load static %}
+    <script src="{% static 'controller/PostType.js' %}"></script>
+    <div class="container" style="width: 800px; margin:0 auto;">
+        <h3>Create A Post Type For "{{ communityDetail.name }}" Community</h3>
+
+
+        <br/>
+        <script>
+            var fieldJson = '{ "theFields" : [] }';
+
+            {#var communityDataTypes = {{ communityDataTypes|safe }}; #}
+        </script>
+        <!--    FORM -->
+        <form method="POST" action="/newPostType">
+            {% csrf_token %}
+
+            <input hidden value="" name="postTypeFields" id="postTypeFields">
+            <input hidden value="{{ communityDetail.id }}" name="communityId" id="communityId">
+            <input hidden value="" name="isUpdate" id="isUpdate">
+            <div class="form-group">
+                <label for="PostTypeName">Name</label>
+                <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
+                       placeholder="Enter post type name" name="PostTypeName">
+            </div>
+            <div class="form-group">
+                <label for="CommunityDescription">Post Type Description</label>
+                <textarea class="form-control" id="PostTypeDescription"
+                          placeholder="Briefly describe your post type"
+                          rows="5" name="PostTypeDescription"></textarea>
+            </div>
+
+            <div class="addfields">
+                <table class="table" id="myTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" width="10%">Field Pos. No</th>
+                        <th scope="col">Field Label</th>
+                        <th scope="col">Field Type</th>
+                        <th scope="col">Enumerated Values</th>
+                        <th scope="col">Is Required?</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableToModify">
+                    <tr id="rowToClone_0">
+                        <th scope="row">
+                            <input type="text" id="dt_fieldposnr" class="form-control"
+                                   name="dt_fieldposnr">
+                        </th>
+                        <th scope="row">
+                            <input type="text" id="dt_fieldlabel" class="form-control"
+                                   name="dt_fieldlabel">
+                        </th>
+                        <td>
+                            <select class="mdb-select md-form form-control" name="dt_fieldtype"
+                                    onchange="onSelectFType()" id="dt_fieldtype">
+                                <option value="" disabled selected>Choose your option</option>
+                                <option value="TE">Text field</option>
+                                <option value="TA">Text area</option>
+                                <option value="DA">Date</option>
+                                <option value="TI">Time</option>
+                                <option value="IN">Integer</option>
+                                <option value="DE">Decimal</option>
+                                <option value="IM">Image</option>
+                                <option value="VI">Video</option>
+                                <option value="AU">Audio</option>
+                                <option value="UR">URI</option>
+                                <option value="LO">Location</option>
+                                <option value="EN">Enumerated</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" id="enum_vals" class="form-control"
+                                   name="enum_vals" data-role="tagsinput" disabled>
+                        </td>
+                        <td>
+                            <input type="checkbox" checked="true" data-toggle="toggle"
+                                   data-style="ios"
+                                   id="dt_fieldrequire" name="dt_fieldrequire"
+                                   data-onstyle="success">
+                        </td>
+                        <td>
+                            <button type="button" class="btn addDataField"
+                                    id="addDataField"><span
+                                    class="fa fa-plus"> </span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-outline-success" id="createPostType">Create Post Type</button>
+                <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
+                        style="margin-left: 10px;">Cancel
+                </button>
+            </div>
+        </form>
+        <!--    FORM -->
+        <br/><br/><br/><br/><br/>
+    </div>
+{% endblock content %}
