@@ -9,10 +9,10 @@
         <script>
             var fieldJson = '{ "theFields" : [] }';
 
-            {#var communityDataTypes = {{ communityDataTypes|safe }}; #}
+            var communityDataTypes = "{{ communityDataTypes|safe }}"; 
         </script>
         <!--    FORM -->
-        <form method="POST" action="/newPostType">
+        <form method="POST" action="{% url 'community:create_post_type'%}"">
             {% csrf_token %}
 
             <input hidden value="" name="postTypeFields" id="postTypeFields">

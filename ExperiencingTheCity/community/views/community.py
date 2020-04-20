@@ -115,4 +115,4 @@ def newPostType(request):
     pt.save()
 
     # return HttpResponse(dt.pk)
-    return redirect('/communities/' + communityId)
+    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))     

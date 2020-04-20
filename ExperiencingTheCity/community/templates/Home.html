@@ -25,6 +25,9 @@
       marker.on('mouseover', function (e) {
         this.openPopup();
       });
+      marker.on('click', function (e) {
+        window.location = "{% url 'community:community_detail' community.id %}";
+      });
     </script>
     {% endfor %}
     {% endif %}

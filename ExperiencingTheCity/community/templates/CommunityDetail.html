@@ -47,11 +47,11 @@
             </div>
             <div class="input-group-btn">
                 <button type="button" class="btn btn-outline-success">
-                     <a href="postType/{{ communityDetail.id }}" class="stretched-link">Create Post Type</a>
+                     <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link">Create Post Type</a>
                 </button>
 
 {#                <button class="btn btn-outline-success">Create Post Type#}
-{#                    <a href="postType/{{ Community.id }}" class="stretched-link"></a>#}
+{#                    <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link"></a>#}
 {#                    </button>#}
             </div>
         </form>
