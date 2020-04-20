@@ -9,6 +9,10 @@
         <div class="form-group">
             <label for="CommunityName">Select Region</label>
             <div id="map" style="width: 770px; height: 400px;"></div>
+            <input type="hidden" class="form-control" id="latitude" aria-describedby="Geolocation"
+            placeholder="Enter community name" value="value" name="latitude">
+            <input type="hidden" class="form-control" id="longitude" aria-describedby="Geolocation"
+            placeholder="Enter community name" value="value" name="longitude">
             <script>
                 // initialize Leaflet
                 var map = L.map('map').setView({ lon: 28.98, lat: 41.06 }, 10);
@@ -23,7 +27,17 @@
                 L.control.scale().addTo(map);
 
                 // show a marker on the map
-                // L.marker({ lon: 28.98, lat: 41.02 }).bindPopup('The center of the world').addTo(map);
+                var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
+                var lat = 41.02;
+                var lon = 28.98;
+
+                map.on('click', function (e) {
+                    marker.setLatLng(e.latlng);
+                    lat = e.latlng.lat;
+                    lon = e.latlng.lng;
+                    document.getElementById("latitude").value = lat;
+                    document.getElementById("longitude").value = lon;
+                });  
             </script>
         </div>
         <div class="form-group">
