@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="886ed246-af4e-4eec-9afa-2ea9e6a7b0e4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/community/static/controller/PostType.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/community/templates/PostType.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/static/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/Base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/templates/Communities.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/Communities.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/templates/CommunityDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/CommunityDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/views/community.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/views/community.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,12 +19,21 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1ZICLTpX2x8o09eNCjKhrYv6tSA" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -47,6 +63,7 @@
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="ExperiencingTheCity.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -78,6 +95,8 @@
       <workItem from="1584517169460" duration="380000" />
       <workItem from="1584547500934" duration="725000" />
       <workItem from="1584599536356" duration="621000" />
+      <workItem from="1587319694388" duration="15321000" />
+      <workItem from="1587380565709" duration="23000" />
     </task>
     <servers />
   </component>
@@ -89,7 +108,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
