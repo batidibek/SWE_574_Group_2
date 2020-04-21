@@ -30,18 +30,18 @@ def community_list(request):
 
 def getCommunity(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-    communityDataTypes = PostType.objects.filter(community_id=id)
-    communityPosts = Post.objects.filter(community_id=id)
-    print(SemanticTags.objects.filter(community_id=id, post_id=0))
-    tmpObj = serializers.serialize("json", SemanticTags.objects.filter(community_id=id, post_id=0).only("tag_info"))
-    print("---------------------------------")
-    print(tmpObj)
-
-    communityTags = json.loads(tmpObj)
-    return render(request, "CommunityDetail.html", {"communityDetail": communityDetail,
-                                                    "communityDataTypes": communityDataTypes,
-                                                    "communityTags": communityTags,
-                                                    "communityPosts": communityPosts})
+    # communityDataTypes = PostType.objects.filter(community_id=id)
+    # communityPosts = Post.objects.filter(community_id=id)
+    # print(SemanticTags.objects.filter(community_id=id, post_id=0))
+    # tmpObj = serializers.serialize("json", SemanticTags.objects.filter(community_id=id, post_id=0).only("tag_info"))
+    # print("---------------------------------")
+    # print(tmpObj)
+    #
+    # communityTags = json.loads(tmpObj)
+    return render(request, "CommunityDetail.html", {"communityDetail": communityDetail })
+                                                    # "communityDataTypes": communityDataTypes,
+                                                    # "communityTags": communityTags,
+                                                    # "communityPosts": communityPosts})
 
 
 def getCommunityHeader(request, id):
@@ -137,4 +137,10 @@ def newPostType(request):
     pt.save()
 
     # return HttpResponse(dt.pk)
-    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))     
+    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
+
+## GET POST TYPES
+
+def getPostTypes(request, id):
+    communityPostTypes = PostType.objects.filter(community_id=id)
+    return render(request, "PostTypeList.html", {"communityPostTypes": communityPostTypes })

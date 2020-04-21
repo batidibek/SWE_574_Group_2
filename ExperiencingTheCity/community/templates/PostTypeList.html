@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block content %}
+    {% load static %}
+
+    <div class="container" style="width: 800px; margin:0 auto;">
+
+
+        <div class="row mb-2">
+
+             {% if communityPostTypes %}
+                {% for PostType in communityPostTypes %}
+                    <div class="col-md-6">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <h3 class="mb-0">{{ PostType.name }}</h3>
+                                <div class="mb-1 text-muted">{{ PostType.creation_date }}</div>
+                                <p class="card-text mb-auto">
+                                    {{ PostType.description }}
+                                </p>
+                                <a href="{{ PostType.id }}" class="stretched-link">View fields</a>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+        </div>
+        <br/><br/><br/><br/><br/>
+    </div>
+{% endblock content %}
