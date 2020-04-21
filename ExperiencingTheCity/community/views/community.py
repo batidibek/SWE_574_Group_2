@@ -94,6 +94,28 @@ def create_community(request):
         })
     else:
         community.save()
+
+        # Generic Post Type creation
+        pt = PostType()
+        pt.community_id = Community.objects.get(pk=community.id)
+        pt.name = "Generic Post Type"
+        pt.description = "Here is a generic post type for your basic posts in the community!"
+        pt.owner = User.objects.get(username=request.user)
+        pt.creation_date = datetime.datetime.now()
+        pt.save()
+
+        # Generic Complaint Post Type creation
+        pt = PostType()
+        pt.community_id = Community.objects.get(pk=community.id)
+        pt.name = "Generic Post Type for Complaints"
+        pt.description = "Here is a generic post type for your complaint posts in the community!"
+        pt.owner = User.objects.get(username=request.user)
+        pt.creation_date = datetime.datetime.now()
+        pt.creation_date = datetime.datetime.now()
+        pt.complaint = True;
+        pt.save()
+
+
         return HttpResponseRedirect(reverse('community:home'))
 
 
