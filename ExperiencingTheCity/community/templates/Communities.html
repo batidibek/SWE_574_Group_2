@@ -1,23 +1,32 @@
 {% extends "base.html" %} {% block content %}
     {% load static %}
 
-    <div
-            class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-    >
+    <div class="container" style="width: 800px; margin:0 auto;">
 
-        {% if community_list %}
-            {% for Community in community_list %}
-                <div class="col p-4 d-flex flex-column position-static">
-                    <!-- Buraya tag yazabiliriz -->
-                    <strong class="d-inline-block mb-2 text-primary">Tag</strong>
-                    <h3 class="mb-0">{{ Community.name }}</h3>
-                    <div class="mb-1 text-muted">{{ Community.creation_date }}</div>
-                    <p class="card-text mb-auto">
-                        {{ Community.description }}
-                    </p>
-                    <a href="{{ Community.id }}" class="stretched-link">Continue reading</a>
-                </div>
-            {% endfor %}
-        {% endif %}
+
+        <div class="row mb-2">
+
+            {% if community_list %}
+                {% for Community in community_list %}
+                    <div class="col-md-6">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <!-- Buraya tag yazabiliriz -->
+
+                                <strong class="d-inline-block mb-2 text-primary">Tag</strong>
+                                <h3 class="mb-0">{{ Community.name }}</h3>
+                                <div class="mb-1 text-muted">{{ Community.creation_date }}</div>
+                                <p class="card-text mb-auto">
+                                    {{ Community.description }}
+                                </p>
+                                <a href="{{ Community.id }}" class="stretched-link">Continue reading</a>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+        </div>
+        <br/><br/><br/><br/><br/>
     </div>
 {% endblock content %}
