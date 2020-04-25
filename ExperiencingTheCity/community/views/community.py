@@ -30,19 +30,7 @@ def community_list(request):
 
 def getCommunity(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-    # communityDataTypes = PostType.objects.filter(community_id=id)
-    # communityPosts = Post.objects.filter(community_id=id)
-    # print(SemanticTags.objects.filter(community_id=id, post_id=0))
-    # tmpObj = serializers.serialize("json", SemanticTags.objects.filter(community_id=id, post_id=0).only("tag_info"))
-    # print("---------------------------------")
-    # print(tmpObj)
-    #
-    # communityTags = json.loads(tmpObj)
     return render(request, "CommunityDetail.html", {"communityDetail": communityDetail })
-                                                    # "communityDataTypes": communityDataTypes,
-                                                    # "communityTags": communityTags,
-                                                    # "communityPosts": communityPosts})
-
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
@@ -53,7 +41,6 @@ def getCommunityHeader(request, id):
 
 def new_community(request):
     if not request.user.is_authenticated:
-        community_list = Community.objects.order_by('-pub_date')[:30]
         return render(request, 'Home.html', {
             'error_message': "You need to Log in or Sign up to create new community.",
         })
@@ -72,8 +59,11 @@ def create_community(request):
         })
     name = str(request.POST.get('name', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    lat = str(request.POST.get('latitude', "")).strip()
-    lon = str(request.POST.get('longitude', "")).strip()
+    lat = request.POST.getlist('latitude', "")
+    lon = request.POST.getlist('longitude', "")
+    geolocation = {"location": []}
+    for i in range (len(lat)):
+        geolocation["location"].append({"lat": lat[i], "lon": lon[i]})
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
     try:
@@ -85,7 +75,7 @@ def create_community(request):
             'error_message': "There is another community named " + name, 
             'description': description
         })
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation={'lat': lat, 'lon': lon})
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation=geolocation)
     if community.name == "" or community.description == "" or request.POST['tags'] == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
@@ -114,8 +104,6 @@ def create_community(request):
         pt.creation_date = datetime.datetime.now()
         pt.complaint = True;
         pt.save()
-
-
         return HttpResponseRedirect(reverse('community:home'))
 
 
@@ -135,8 +123,6 @@ def newPostType(request):
     pt.creation_date = timezone.now()
     pt.complaint = False;
     pt.save()
-
-    # return HttpResponse(dt.pk)
     return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 ## GET POST TYPES

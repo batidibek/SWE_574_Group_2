@@ -16,12 +16,13 @@
       }).addTo(map);
 
       // show the scale bar on the lower left corner
-      L.control.scale().addTo(map);    
+      L.control.scale().addTo(map);
     </script>
     {% if community_list %}
     {% for community in community_list %}
+        {% for location in community.geolocation.location %}
     <script>
-      var marker = L.marker({ lon: "{{community.geolocation.lon}}", lat: "{{community.geolocation.lat}}" }).bindPopup("{{community.name}}").addTo(map);
+      var marker = L.marker({ lon: "{{ location.lon }}", lat: "{{ location.lat }}" }).bindPopup("{{community.name}}").addTo(map);
       marker.on('mouseover', function (e) {
         this.openPopup();
       });
@@ -29,6 +30,7 @@
         window.location = "{% url 'community:community_detail' community.id %}";
       });
     </script>
+        {% endfor %}
     {% endfor %}
     {% endif %}
   </div>

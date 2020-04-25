@@ -9,13 +9,9 @@
         <div class="form-group">
             <label for="CommunityName">Select Region</label>
             <div id="map" style="width: 770px; height: 400px;"></div>
-            <input type="hidden" class="form-control" id="latitude" aria-describedby="Geolocation"
-            value="value" name="latitude">
-            <input type="hidden" class="form-control" id="longitude" aria-describedby="Geolocation"
-            value="value" name="longitude">
             <script>
                 // initialize Leaflet
-                var map = L.map('map').setView({ lon: 28.98, lat: 41.06 }, 10);
+                let map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
 
                 // add the OpenStreetMap tiles
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -27,16 +23,24 @@
                 L.control.scale().addTo(map);
 
                 // show a marker on the map
-                var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
-                var lat = 41.02;
-                var lon = 28.98;
+                //var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
+                let lat = 41.02;
+                let lon = 28.98;
 
                 map.on('click', function (e) {
-                    marker.setLatLng(e.latlng);
+                    L.marker({ lon: e.latlng.lng, lat: e.latlng.lat }).addTo(map);
                     lat = e.latlng.lat;
                     lon = e.latlng.lng;
-                    document.getElementById("latitude").value = lat;
-                    document.getElementById("longitude").value = lon;
+                    let latInput = document.createElement("input");
+                    latInput.name = "latitude";
+                    latInput.type = "hidden";
+                    latInput.value = lat;
+                    document.getElementById("map").appendChild(latInput);
+                    let lonInput = document.createElement("input");
+                    lonInput.name = "longitude"
+                    lonInput.type = "hidden";
+                    lonInput.value = lon;
+                    document.getElementById("map").appendChild(lonInput);
                 });  
             </script>
         </div>
