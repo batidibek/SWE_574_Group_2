@@ -30,18 +30,18 @@ def community_list(request):
 
 def getCommunity(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-    communityDataTypes = PostType.objects.filter(community_id=id)
-    communityPosts = Post.objects.filter(community_id=id)
-    print(SemanticTags.objects.filter(community_id=id, post_id=0))
-    tmpObj = serializers.serialize("json", SemanticTags.objects.filter(community_id=id, post_id=0).only("tag_info"))
-    print("---------------------------------")
-    print(tmpObj)
-
-    communityTags = json.loads(tmpObj)
-    return render(request, "CommunityDetail.html", {"communityDetail": communityDetail,
-                                                    "communityDataTypes": communityDataTypes,
-                                                    "communityTags": communityTags,
-                                                    "communityPosts": communityPosts})
+    # communityDataTypes = PostType.objects.filter(community_id=id)
+    # communityPosts = Post.objects.filter(community_id=id)
+    # print(SemanticTags.objects.filter(community_id=id, post_id=0))
+    # tmpObj = serializers.serialize("json", SemanticTags.objects.filter(community_id=id, post_id=0).only("tag_info"))
+    # print("---------------------------------")
+    # print(tmpObj)
+    #
+    # communityTags = json.loads(tmpObj)
+    return render(request, "CommunityDetail.html", {"communityDetail": communityDetail })
+                                                    # "communityDataTypes": communityDataTypes,
+                                                    # "communityTags": communityTags,
+                                                    # "communityPosts": communityPosts})
 
 
 def getCommunityHeader(request, id):
@@ -94,6 +94,28 @@ def create_community(request):
         })
     else:
         community.save()
+
+        # Generic Post Type creation
+        pt = PostType()
+        pt.community_id = Community.objects.get(pk=community.id)
+        pt.name = "Generic Post Type"
+        pt.description = "Here is a generic post type for your basic posts in the community!"
+        pt.owner = User.objects.get(username=request.user)
+        pt.creation_date = datetime.datetime.now()
+        pt.save()
+
+        # Generic Complaint Post Type creation
+        pt = PostType()
+        pt.community_id = Community.objects.get(pk=community.id)
+        pt.name = "Generic Post Type for Complaints"
+        pt.description = "Here is a generic post type for your complaint posts in the community!"
+        pt.owner = User.objects.get(username=request.user)
+        pt.creation_date = datetime.datetime.now()
+        pt.creation_date = datetime.datetime.now()
+        pt.complaint = True;
+        pt.save()
+
+
         return HttpResponseRedirect(reverse('community:home'))
 
 
@@ -115,4 +137,10 @@ def newPostType(request):
     pt.save()
 
     # return HttpResponse(dt.pk)
-    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))     
+    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
+
+## GET POST TYPES
+
+def getPostTypes(request, id):
+    communityPostTypes = PostType.objects.filter(community_id=id)
+    return render(request, "PostTypeList.html", {"communityPostTypes": communityPostTypes })
