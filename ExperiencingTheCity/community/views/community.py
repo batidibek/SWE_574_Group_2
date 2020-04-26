@@ -144,3 +144,9 @@ def newPostType(request):
 def getPostTypes(request, id):
     communityPostTypes = PostType.objects.filter(community_id=id)
     return render(request, "PostTypeList.html", {"communityPostTypes": communityPostTypes })
+
+def getPostType(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+    print("=====================")
+    print(post_type)
+    return render(request, "PostType.html", {"post_type": post_type})

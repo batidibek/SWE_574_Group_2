@@ -2,32 +2,48 @@
     {% load static %}
     <script src="{% static 'controller/PostType.js' %}"></script>
     <div class="container" style="width: 800px; margin:0 auto;">
-        <h3>Create A Post Type For "{{ communityDetail.name }}" Community</h3>
-
+        {% if post_type %}
+            <h3>Edit Post Type: "{{ post_type.name }}"</h3>
+        {% else %}
+            <h3>Create A Post Type For "{{ communityDetail.name }}" Community</h3>
+        {% endif %}
 
         <br/>
         <script>
             var fieldJson = '{ "theFields" : [] }';
 
-            var communityDataTypes = "{{ communityDataTypes|safe }}"; 
+            var communityDataTypes = "{{ communityDataTypes|safe }}";
         </script>
         <!--    FORM -->
-        <form method="POST" action="{% url 'community:create_post_type'%}">
+        <form method="POST" action="{% url 'community:create_post_type' %}">
             {% csrf_token %}
 
             <input hidden value="" name="postTypeFields" id="postTypeFields">
             <input hidden value="{{ communityDetail.id }}" name="communityId" id="communityId">
             <input hidden value="" name="isUpdate" id="isUpdate">
             <div class="form-group">
-                <label for="PostTypeName">Name</label>
-                <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
-                       placeholder="Enter post type name" name="PostTypeName">
+                <label for="PostTypeName">Post Type Name</label>
+                {% if post_type %}
+                    <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
+                           value="{{ post_type.name }}" name="name">
+                {% else %}
+                    <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
+                           placeholder="Enter post type name" name="PostTypeName">
+                {% endif %}
+
+
             </div>
             <div class="form-group">
-                <label for="CommunityDescription">Post Type Description</label>
-                <textarea class="form-control" id="PostTypeDescription"
-                          placeholder="Briefly describe your post type"
-                          rows="5" name="PostTypeDescription"></textarea>
+                <label for="PostTypeDescription">Post Type Description</label>
+                {% if post_type %}
+                    <textarea class="form-control" id="PostTypeDescription"
+                              rows="5" name="PostTypeDescription">{{ post_type.description }}</textarea>
+                {% else %}
+                    <textarea class="form-control" id="PostTypeDescription"
+                              placeholder="Briefly describe your post type"
+                              rows="5" name="PostTypeDescription"></textarea>
+                {% endif %}
+
             </div>
 
             <div class="addfields">
@@ -90,7 +106,7 @@
                 </table>
             </div>
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-outline-success" id="createPostType">Create Post Type</button>
+                <button type="submit" class="btn btn-outline-success" id="createPostType">Save</button>
                 <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
                         style="margin-left: 10px;">Cancel
                 </button>
