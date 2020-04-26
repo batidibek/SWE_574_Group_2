@@ -6,9 +6,6 @@
       <change beforePath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/static/controller/PostType.js" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/controller/PostType.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/templates/PostType.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/PostType.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/templates/PostTypeList.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/PostTypeList.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/views/community.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/views/community.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -94,7 +91,8 @@
       <workItem from="1584599536356" duration="621000" />
       <workItem from="1587319694388" duration="15321000" />
       <workItem from="1587380565709" duration="23000" />
-      <workItem from="1587859532699" duration="3441000" />
+      <workItem from="1587859532699" duration="4041000" />
+      <workItem from="1587942545950" duration="2367000" />
     </task>
     <servers />
   </component>

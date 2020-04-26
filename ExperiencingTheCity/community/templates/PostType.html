@@ -12,6 +12,8 @@
         <script>
             var fieldJson = '{ "theFields" : [] }';
 
+            var isEdit = false;
+
             var communityDataTypes = "{{ communityDataTypes|safe }}";
         </script>
         <!--    FORM -->
@@ -24,6 +26,11 @@
             <div class="form-group">
                 <label for="PostTypeName">Post Type Name</label>
                 {% if post_type %}
+                    <script>
+                        isEdit = true;
+                    </script>
+                    <input type="text" class="form-control" id="PostTypeFields" hidden
+                           value="{{ post_type.formfields }}" name="PostTypeFields">
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                            value="{{ post_type.name }}" name="name">
                 {% else %}
