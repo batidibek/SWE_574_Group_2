@@ -118,6 +118,10 @@ h6 {
     background-color: inherit;
 }
 
+.removeDataField {
+    background-color: inherit;
+    color: firebrick;
+}
 
 .leaflet-popup-content {
   color: #000

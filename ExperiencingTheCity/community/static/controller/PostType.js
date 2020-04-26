@@ -8,6 +8,7 @@ $(document).ready(function () {
         var table = document.getElementById("tableToModify"); // find table to append to
         var clone = row.cloneNode(true); // copy children too
         clone.id = "rowToClone_" + counter.toString(); // change id or other attributes/contents
+        clone.cells[5].innerHTML =  "<button type='button' class='btn removeDataField' onclick='removePostField();'><span class='fa fa-minus'> </span></button>";
         table.appendChild(clone); // add new row to end of table
     });
 
