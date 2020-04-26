@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/static/controller/PostType.js" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/controller/PostType.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/static/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/main.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +90,7 @@
       <workItem from="1584599536356" duration="621000" />
       <workItem from="1587319694388" duration="15321000" />
       <workItem from="1587380565709" duration="23000" />
-      <workItem from="1587859532699" duration="1040000" />
+      <workItem from="1587859532699" duration="1795000" />
     </task>
     <servers />
   </component>

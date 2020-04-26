@@ -8,7 +8,7 @@ $(document).ready(function () {
         var table = document.getElementById("tableToModify"); // find table to append to
         var clone = row.cloneNode(true); // copy children too
         clone.id = "rowToClone_" + counter.toString(); // change id or other attributes/contents
-        clone.cells[5].innerHTML =  "<button type='button' class='btn removeDataField' onclick='removePostField();'><span class='fa fa-minus'> </span></button>";
+        clone.cells[5].innerHTML =  "<button type='button' class='btn removeDataField' onclick='removePostField(this);'><span class='fa fa-minus'> </span></button>";
         table.appendChild(clone); // add new row to end of table
     });
 
@@ -31,33 +31,14 @@ $(document).ready(function () {
                 "enumvals": fieldTypes.options[fieldTypes.selectedIndex].value === "EN" ? tagsJson : ""
             });
 
-
         }
-
         fieldJson = JSON.stringify(obj);
         console.log(fieldJson);
         $("#postTypeFields").val(fieldJson);
-        //
-        // var csrftoken = getCookie('csrftoken');
-        //
-        // $.ajaxSetup({
-        //     beforeSend: function (xhr, settings) {
-        //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-        //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        //         }
-        //     }
-        // });
-        //
-        // jQuery.ajax({
-        //     type: "POST", url: "/newPostType",
-        //     data: {"communityId": document.getElementById("communityId").value,
-        //            "postTypeFields": fieldJson},
-        //     success:
-        //         function (result) {
-        //             $('#confirmDeactivation').modal('hide');
-        //             window.location.href = "/";
-        //         }
-        // });
-
     });
+
 });
+
+function removePostField(oEvent) {
+    $(oEvent).closest("tr").remove();
+}
