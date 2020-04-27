@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/static/controller/PostType.js" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/controller/PostType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/static/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/templates/Base.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/Base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/templates/PostType.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/PostType.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -92,7 +94,7 @@
       <workItem from="1587319694388" duration="15321000" />
       <workItem from="1587380565709" duration="23000" />
       <workItem from="1587859532699" duration="4041000" />
-      <workItem from="1587942545950" duration="5045000" />
+      <workItem from="1587942545950" duration="6696000" />
     </task>
     <servers />
   </component>
