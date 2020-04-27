@@ -4,7 +4,7 @@ $(document).ready(function () {
     $(window).keydown(function (event) {
         if (event.keyCode == 13) {
 
-            if ( $(event.target).attr("name") == "enum_vals") {
+            if ($(event.target).attr("name") == "enum_vals") {
                 event.preventDefault();
             }
 
@@ -25,14 +25,14 @@ $(document).ready(function () {
         var clone = row.cloneNode(true); // copy children too
         clone.id = "rowToClone_" + counter.toString(); // change id or other attributes/contents
         clone.cells[5].innerHTML = "<button type='button' class='btn removeDataField' onclick='removePostField(this);'><span class='fa fa-minus'> </span></button>";
-        clone.cells[3].innerHTML = '<input type="text" class="enum_vals form-control "\n' +
-            '                                   name="enum_vals" data-role="tagsinput" disabled>';
+        // clone.cells[3].innerHTML = '<input type="text" class="enum_vals form-control "\n' +
+        //     '                                   name="enum_vals" data-role="tagsinput" disabled>';
         table.appendChild(clone); // add new row to end of table
     });
 
     $("#createPostType").on("click", function (event) {
 
-       var enumValuesOfRows = $('input[name=enum_vals]').tagsinput("items");
+        var enumValuesOfRows = $('input[name=enum_vals]').tagsinput("items");
 
         var tagsJson = '{ "enums" : [] }';
         var table = document.getElementById("myTable");

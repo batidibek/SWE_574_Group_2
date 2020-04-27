@@ -137,7 +137,11 @@ def newPostType(request):
 
 def getPostTypes(request, id):
     communityPostTypes = PostType.objects.filter(community_id=id)
-    return render(request, "PostTypeList.html", {"communityPostTypes": communityPostTypes })
+    context = {'communityPostTypes': communityPostTypes}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, "PostTypeList.html", context)
 
 def getPostType(request, id):
     post_type = get_object_or_404(PostType, pk=id)
