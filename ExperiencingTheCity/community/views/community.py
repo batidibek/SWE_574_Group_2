@@ -30,18 +30,12 @@ def community_list(request):
 
 def getCommunity(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-    # communityDataTypes = PostType.objects.filter(community_id=id)
-    # communityPosts = Post.objects.filter(community_id=id)
-    # print(SemanticTags.objects.filter(community_id=id, post_id=0))
-    # tmpObj = serializers.serialize("json", SemanticTags.objects.filter(community_id=id, post_id=0).only("tag_info"))
-    # print("---------------------------------")
-    # print(tmpObj)
-    #
-    # communityTags = json.loads(tmpObj)
-    return render(request, "CommunityDetail.html", {"communityDetail": communityDetail })
-                                                    # "communityDataTypes": communityDataTypes,
-                                                    # "communityTags": communityTags,
-                                                    # "communityPosts": communityPosts})
+    context = {'communityDetail': communityDetail}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, "CommunityDetail.html", context)
+
 
 
 def getCommunityHeader(request, id):
