@@ -68,16 +68,16 @@
                     <tbody id="tableToModify">
                     <tr id="rowToClone_0">
                         <th scope="row">
-                            <input type="text" id="dt_fieldposnr" class="form-control"
+                            <input type="text" class="dt_fieldposnr form-control"
                                    name="dt_fieldposnr">
                         </th>
                         <th scope="row">
-                            <input type="text" id="dt_fieldlabel" class="form-control"
+                            <input type="text"  class="dt_fieldlabel form-control"
                                    name="dt_fieldlabel">
                         </th>
                         <td>
-                            <select class="mdb-select md-form form-control" name="dt_fieldtype"
-                                    onchange="onSelectFType()" id="dt_fieldtype">
+                            <select class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype"
+                                    onchange="onSelectFType(this)">
                                 <option value="" disabled selected>Choose your option</option>
                                 <option value="TE">Text field</option>
                                 <option value="TA">Text area</option>
@@ -94,13 +94,13 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" id="enum_vals" class="form-control"
+                            <input type="text" class="enum_vals form-control"
                                    name="enum_vals" data-role="tagsinput" disabled>
                         </td>
                         <td>
                             <input type="checkbox" checked="true" data-toggle="toggle"
                                    data-style="ios"
-                                   id="dt_fieldrequire" name="dt_fieldrequire"
+                                   name="dt_fieldrequire"
                                    data-onstyle="success">
                         </td>
                         <td>

@@ -89,3 +89,16 @@ function addDataTypeFields(oFormFields) {
         table.appendChild(clone); // add new row to end of table
     }
 }
+
+function onSelectFType(oEvent) {
+    var $this = $(oEvent);
+
+    console.dir($(oEvent).val());
+
+    if ($(oEvent).val() == "EN") {
+          $this.parent('td').parent('tr').find("input[name='enum_vals']").prop("disabled", false);
+    } else {
+          $this.parent('td').parent('tr').find("input[name='enum_vals']").prop("disabled", true);
+    }
+}
+
