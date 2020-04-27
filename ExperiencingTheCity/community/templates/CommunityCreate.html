@@ -1,80 +1,98 @@
 {% extends "base.html" %} {% block content %}
-<div class="container" style="width: 800px; margin:0 auto;">
-    <h3>Create a new community</h3>
-    {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>{% endif %}
-    <br />
-    <!--    FORM -->
-    <form action="{% url 'community:create_community'%}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="CommunityName">Select Region</label>
-            <div id="map" style="width: 770px; height: 400px;"></div>
-            <script>
-                // initialize Leaflet
-                let map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
+    <div class="container" style="width: 800px; margin:0 auto;">
+        <h3>Create a new community</h3>
+        {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>{% endif %}
+        <br/>
+        <!--    FORM -->
+        <form action="{% url 'community:create_community' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="CommunityName">Select Region</label>
+                <div id="map" style="width: 770px; height: 400px;"></div>
+                <script>
+                    // initialize Leaflet
+                    let map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
 
-                // add the OpenStreetMap tiles
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-                }).addTo(map);
+                    // add the OpenStreetMap tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                    }).addTo(map);
 
-                // show the scale bar on the lower left corner
-                L.control.scale().addTo(map);
+                    // show the scale bar on the lower left corner
+                    L.control.scale().addTo(map);
 
-                // show a marker on the map
-                //var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
-                let lat = 41.02;
-                let lon = 28.98;
+                    // show a marker on the map
+                    //var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
+                    let lat = 41.02;
+                    let lon = 28.98;
 
-                map.on('click', function (e) {
-                    L.marker({ lon: e.latlng.lng, lat: e.latlng.lat }).addTo(map);
-                    lat = e.latlng.lat;
-                    lon = e.latlng.lng;
-                    let latInput = document.createElement("input");
-                    latInput.name = "latitude";
-                    latInput.type = "hidden";
-                    latInput.value = lat;
-                    document.getElementById("map").appendChild(latInput);
-                    let lonInput = document.createElement("input");
-                    lonInput.name = "longitude"
-                    lonInput.type = "hidden";
-                    lonInput.value = lon;
-                    document.getElementById("map").appendChild(lonInput);
-                });  
-            </script>
-        </div>
-        <div class="form-group">
-            <label for="CommunityName">Community Name</label>
-            {% if community_name %}
-            <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
-                placeholder="Enter community name" value="{{community_name}}" name="name">
-            {% else %}
-            <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
-                placeholder="Enter community name" name="name">
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <label for="CommunityDescription">Description</label>
-            {% if description %}
-            <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
-                rows="5" name="description">{{description}}</textarea>
-            {% else %}
-            <textarea class="form-control" id="CommunityDescription" placeholder="Briefly describe your community"
-                rows="5" name="description"></textarea>
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <label for="CommunityDescription">Tags</label>
-            <input type="text" class="form-control" data-role="tagsinput" name="tags" />
-        </div>
-        <div class="input-group-btn">
-            <button type="submit" class="btn btn-outline-success">Create Community</button>
-            <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
-                style="margin-left: 10px;">Cancel</button>
-        </div>
-    </form>
-    <!--    FORM -->
-    <br /><br /><br /><br /><br />
-</div>
+                    map.on('click', function (e) {
+                        L.marker({lon: e.latlng.lng, lat: e.latlng.lat}).addTo(map);
+                        lat = e.latlng.lat;
+                        lon = e.latlng.lng;
+                        let latInput = document.createElement("input");
+                        latInput.name = "latitude";
+                        latInput.type = "hidden";
+                        latInput.value = lat;
+                        document.getElementById("map").appendChild(latInput);
+                        let lonInput = document.createElement("input");
+                        lonInput.name = "longitude"
+                        lonInput.type = "hidden";
+                        lonInput.value = lon;
+                        document.getElementById("map").appendChild(lonInput);
+                    });
+                </script>
+            </div>
+            <div class="form-group">
+                <label for="CommunityName">Community Name</label>
+                {% if community_name %}
+                    <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
+                           placeholder="Enter community name" value="{{ community_name }}" name="name">
+                {% else %}
+                    <input type="text" class="form-control" id="CommunityName" aria-describedby="CommunityName"
+                           placeholder="Enter community name" name="name">
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="CommunityDescription">Description</label>
+                {% if description %}
+                    <textarea class="form-control" id="CommunityDescription"
+                              placeholder="Briefly describe your community"
+                              rows="5" name="description">{{ description }}</textarea>
+                {% else %}
+                    <textarea class="form-control" id="CommunityDescription"
+                              placeholder="Briefly describe your community"
+                              rows="5" name="description"></textarea>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="CommunityDescription">Tags</label>
+                <br/>
+                <input type="text" class="form-control" data-role="tagsinput" name="tags"
+                       style="width: 500px; float: left"/>
+                <button class="btn btn-outline-primary" type="submit" name="get_tag" value="get_tag"
+                        style="margin-left: 10px; float: left">Get
+                    Tag Suggestions
+                </button>
+            </div>
+        {% if suggested_tags %}
+            {% for item in suggested_tags.items %}
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="wiki_tag" value="{{item}}" >
+                <label class="form-check-label" for="exampleCheck1">{{ item.id }} {{ item.label }}: {{ item.description }}</label>
+            </div>
+            {% endfor %}
+         {% endif %}
+        <br/><br/>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-outline-success">Create Community</button>
+                <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
+                        style="margin-left: 10px;">Cancel
+                </button>
+            </div>
+        </form>
+        <!--    FORM -->
+        <br/><br/><br/><br/><br/>
+    </div>
 {% endblock content %}

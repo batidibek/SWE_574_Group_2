@@ -123,4 +123,22 @@ h6 {
   color: #000
 }
 
+.textboxwWikiInfo {
+    visibility: hidden;
+
+    background-color: #6A6A6A;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+
+.WikiItemTag:hover .textboxwWikiInfo {
+    visibility: visible;
+  }
+
 

@@ -9,6 +9,7 @@ class Community(models.Model):
     active = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     geolocation = JSONField(default="")
+    tags = JSONField(default="")
     def __str__(self):
         return self.name
 
@@ -22,6 +23,8 @@ class PostType(models.Model):
         Community, default="", on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     complaint = models.BooleanField(default=False)
+    def __str__(self):
+        return self.name
 
 
 class Post(models.Model):

@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import requests
 from django.utils import timezone
+from ..utils import wiki_data
 
 # COMMUNITY LIST
 
@@ -58,14 +59,25 @@ def create_community(request):
             'error_message': "You need to Log in or Sign up to create new community.",
         })
     name = str(request.POST.get('name', "")).strip()
+    query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
+    context = {'community_name': name, 'description': description}
     lat = request.POST.getlist('latitude', "")
     lon = request.POST.getlist('longitude', "")
     geolocation = {"location": []}
     for i in range (len(lat)):
-        geolocation["location"].append({"lat": lat[i], "lon": lon[i]})
+        geolocation["location"].append({"lat": lat[i], "lon": lon[i]}) # TODO: error handling for no location
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
+    if "get_tag" in request.POST:
+        if query == "":
+            context["error_message"] = "You need to enter a query to get tag suggestions."
+            return render(request, 'CommunityCreate.html', context)
+        else:
+            suggested_tags = wiki_data.suggest_tags(query)
+            if suggested_tags:
+                context["suggested_tags"] = suggested_tags
+            return render(request, 'CommunityCreate.html', context)
     try:
          old_community = Community.objects.get(name=name)
     except:
@@ -75,8 +87,14 @@ def create_community(request):
             'error_message': "There is another community named " + name, 
             'description': description
         })
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation=geolocation)
-    if community.name == "" or community.description == "" or request.POST['tags'] == "":
+    wiki_tags = {}
+    if "wiki_tag" in request.POST:
+        wiki_tags["tags"] = []
+        tags = request.POST.getlist('wiki_tag', "")
+        for i in range(len(tags)):
+            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\""))) # TODO: error handling for empty tags
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation=geolocation, tags=wiki_tags)
+    if community.name == "" or community.description == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
             'description': description,
