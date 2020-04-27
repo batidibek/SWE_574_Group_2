@@ -17,7 +17,7 @@
             var communityDataTypes = "{{ communityDataTypes|safe }}";
         </script>
         <!--    FORM -->
-        <form method="POST" action="{% url 'community:create_post_type' %}">
+        <form id="createpost"  method="POST" action="{% url 'community:create_post_type' %}">
             {% csrf_token %}
 
             <input hidden value="" name="postTypeFields" id="postTypeFields">

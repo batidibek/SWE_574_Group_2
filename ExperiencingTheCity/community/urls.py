@@ -14,6 +14,7 @@ urlpatterns = [
     path('communities/new-post-type/<id>', community.getCommunityHeader, name="new_post_type"),
     path('communities/post_types/<id>', community.getPostTypes, name="post_types"),
     path('communities/post_types/detail/<id>', community.getPostType, name="post_type"),
+    path('communities/post_types/detail/<id>/createpost', community.getPostType, name="post_type"),
 
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),

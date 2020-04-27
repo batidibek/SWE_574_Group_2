@@ -1,12 +1,19 @@
 $(document).ready(function () {
 
 
-    $(window).keydown(function (event) {
-        if (event.keyCode == 13) {
+    // $(window).keydown(function (event) {
+    //     if (event.keyCode == 13) {
+    //
+    //         if ($(event.target).attr("name") == "enum_vals") {
+    //             event.preventDefault();
+    //         }
+    //
+    //     }
+    // });
 
-            if ($(event.target).attr("name") == "enum_vals") {
-                event.preventDefault();
-            }
+    $("#createpost").keydown(function (event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
 
         }
     });
