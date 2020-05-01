@@ -6,7 +6,7 @@
 
         <div class="row mb-2">
 
-             {% if communityPostTypes %}
+            {% if communityPostTypes %}
                 {% for PostType in communityPostTypes %}
                     <div class="col-md-6">
                         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -16,7 +16,21 @@
                                 <p class="card-text mb-auto">
                                     {{ PostType.description }}
                                 </p>
-                                <a href="{{ PostType.id }}" class="stretched-link">View fields</a>
+
+                                <div class="btn-group">
+
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            style="margin: 2px;">
+                                        <a href="detail/{{ PostType.id }}"> View fields </a>
+                                    </button>
+
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            style="margin: 2px;">
+                                            <a href="detail/{{ PostType.id }}/createpost"> Create post </a>
+                                    </button>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
