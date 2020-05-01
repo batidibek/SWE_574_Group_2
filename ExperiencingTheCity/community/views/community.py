@@ -31,7 +31,11 @@ def community_list(request):
 
 def getCommunity(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-    return render(request, "CommunityDetail.html", {"communityDetail": communityDetail })
+    context = {'communityDetail': communityDetail}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, "CommunityDetail.html", context)
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
@@ -147,4 +151,14 @@ def newPostType(request):
 
 def getPostTypes(request, id):
     communityPostTypes = PostType.objects.filter(community_id=id)
-    return render(request, "PostTypeList.html", {"communityPostTypes": communityPostTypes })
+    context = {'communityPostTypes': communityPostTypes}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, "PostTypeList.html", context)
+
+def getPostType(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+    print("=====================")
+    print(post_type)
+    return render(request, "PostType.html", {"post_type": post_type})

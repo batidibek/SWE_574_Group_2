@@ -102,12 +102,17 @@ WSGI_APPLICATION = 'ExperiencingTheCity.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE':   'django.db.backends.postgresql',
-        'NAME':     'dcakhbp4q7nbn7',
-        'USER':     'kajuyatjzemxvb',
-        'PASSWORD': '31d522de25d83c38b5b31a4c51e1aacf7c266147d4caf932253e4cce19bb970b',
-        'HOST':     'ec2-52-207-93-32.compute-1.amazonaws.com',
-        'PORT':     '5432'
+        'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME':     'dcakhbp4q7nbn7',
+        # 'USER':     'kajuyatjzemxvb',
+        # 'PASSWORD': '31d522de25d83c38b5b31a4c51e1aacf7c266147d4caf932253e4cce19bb970b',
+        # 'HOST':     'ec2-52-207-93-32.compute-1.amazonaws.com',
+        # 'PORT':     '5432'
+        'USER': 'postgres',
+        'NAME': 'ExperienceCity',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 

@@ -118,6 +118,10 @@ h6 {
     background-color: inherit;
 }
 
+.removeDataField {
+    background-color: inherit;
+    color: firebrick;
+}
 
 .leaflet-popup-content {
   color: #000
@@ -142,3 +146,27 @@ h6 {
   }
 
 
+.bootstrap-tagsinput {
+    width: 100%;
+}
+
+.bootstrap-tagsinput .tag{
+    margin-right: 2px;
+    color: white !important;
+}
+.label-info {
+    background-color: #5bc0de !important;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
