@@ -6,4 +6,6 @@ media/
 *.pyc
 .venv
 /ENV
-migrations/
+migrations
+.DS_Store
+.idea/

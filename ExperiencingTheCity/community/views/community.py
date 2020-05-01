@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import requests
 from django.utils import timezone
+from ..utils import wiki_data
 
 # COMMUNITY LIST
 
@@ -36,8 +37,6 @@ def getCommunity(request, id):
         context["user"] = community_user
     return render(request, "CommunityDetail.html", context)
 
-
-
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
     return render(request, "PostType.html", {"communityDetail": communityDetail})
@@ -47,7 +46,6 @@ def getCommunityHeader(request, id):
 
 def new_community(request):
     if not request.user.is_authenticated:
-        community_list = Community.objects.order_by('-pub_date')[:30]
         return render(request, 'Home.html', {
             'error_message': "You need to Log in or Sign up to create new community.",
         })
@@ -65,11 +63,25 @@ def create_community(request):
             'error_message': "You need to Log in or Sign up to create new community.",
         })
     name = str(request.POST.get('name', "")).strip()
+    query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    lat = str(request.POST.get('latitude', "")).strip()
-    lon = str(request.POST.get('longitude', "")).strip()
+    context = {'community_name': name, 'description': description}
+    lat = request.POST.getlist('latitude', "")
+    lon = request.POST.getlist('longitude', "")
+    geolocation = {"location": []}
+    for i in range (len(lat)):
+        geolocation["location"].append({"lat": lat[i], "lon": lon[i]}) # TODO: error handling for no location
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
+    if "get_tag" in request.POST:
+        if query == "":
+            context["error_message"] = "You need to enter a query to get tag suggestions."
+            return render(request, 'CommunityCreate.html', context)
+        else:
+            suggested_tags = wiki_data.suggest_tags(query)
+            if suggested_tags:
+                context["suggested_tags"] = suggested_tags
+            return render(request, 'CommunityCreate.html', context)
     try:
          old_community = Community.objects.get(name=name)
     except:
@@ -79,8 +91,14 @@ def create_community(request):
             'error_message': "There is another community named " + name, 
             'description': description
         })
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation={'lat': lat, 'lon': lon})
-    if community.name == "" or community.description == "" or request.POST['tags'] == "":
+    wiki_tags = {}
+    if "wiki_tag" in request.POST:
+        wiki_tags["tags"] = []
+        tags = request.POST.getlist('wiki_tag', "")
+        for i in range(len(tags)):
+            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\""))) # TODO: error handling for empty tags
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation=geolocation, tags=wiki_tags)
+    if community.name == "" or community.description == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
             'description': description,
@@ -108,8 +126,6 @@ def create_community(request):
         pt.creation_date = datetime.datetime.now()
         pt.complaint = True;
         pt.save()
-
-
         return HttpResponseRedirect(reverse('community:home'))
 
 
@@ -129,8 +145,6 @@ def newPostType(request):
     pt.creation_date = timezone.now()
     pt.complaint = False;
     pt.save()
-
-    # return HttpResponse(dt.pk)
     return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 ## GET POST TYPES
