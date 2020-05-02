@@ -5,7 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/static/controller/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/controller/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/templates/Home.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/Home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/community/views/home.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/views/home.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

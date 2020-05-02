@@ -73,6 +73,7 @@ $(document).on('keypress', function (e) {
             success:
                 function (result) {
                     console.log(result);
+                    dataList.innerHTML = "";
                     dataList.empty();
                     $('#cmnList').html(result);
                 },
@@ -81,7 +82,7 @@ $(document).on('keypress', function (e) {
                     dataList.empty();
                     console.log(returnVal);
                     if (returnVal.status === 200) {
-
+                        dataList.innerHTML = "";
                         var result = $('#cmnList', returnVal.responseText)
                         $('#cmnList').html(result);
                     }

@@ -26,14 +26,10 @@ def homepage(request):
     #     context["user"] = community_user
     # return render(request, 'Home.html', context)
     idList = request.GET.getlist("idList[]", "")
-    print("==============")
-    print(idList)
     if not idList:
         community_list = Community.objects.order_by('-creation_date')[:30]
     else:
-
         community_list = Community.objects.filter(id__in=idList)
-    print(community_list)
     context = {'community_list': community_list}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
