@@ -159,6 +159,8 @@ def getPostTypes(request, id):
 
 def getPostType(request, id):
     post_type = get_object_or_404(PostType, pk=id)
-    print("=====================")
-    print(post_type)
-    return render(request, "PostType.html", {"post_type": post_type})
+    context = {'post_type': post_type}
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    return render(request, "PostType.html", context)

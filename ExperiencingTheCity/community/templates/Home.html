@@ -1,103 +1,111 @@
 {% extends "base.html" %} {% block content %}
-<div class="container" style="width: 1200px; margin:0 auto;">
-  {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>
-  {% endif %}
+    <div class="container" style="width: 1200px; margin:0 auto;">
+        {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>
+        {% endif %}
 
-  <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark" style="height: 400px;">
-    <div id="map" style="width: 100%; height: 100%;"></div>
-    <script>
-      // initialize Leaflet
-      var map = L.map('map').setView({ lon: 28.98, lat: 41.06 }, 10);
+        <div id="searchbar" style="width: 100%; height: 80px;">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        </div>
 
-      // add the OpenStreetMap tiles
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-      }).addTo(map);
+        <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark" style="height: 400px;">
 
-      // show the scale bar on the lower left corner
-      L.control.scale().addTo(map);
-    </script>
-    {% if community_list %}
-    {% for community in community_list %}
-        {% for location in community.geolocation.location %}
-    <script>
-      var marker = L.marker({ lon: "{{ location.lon }}", lat: "{{ location.lat }}" }).bindPopup("{{community.name}}").addTo(map);
-      marker.on('mouseover', function (e) {
-        this.openPopup();
-      });
-      marker.on('click', function (e) {
-        window.location = "{% url 'community:community_detail' community.id %}";
-      });
-    </script>
-        {% endfor %}
-    {% endfor %}
-    {% endif %}
-  </div>
-  <div class="row">
-    <div class="col-md-8 blog-main">
-      <nav class="blog-pagination">
-        <a class="btn btn-outline-primary" href="#">Older</a>
-        <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
-      </nav>
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <!-- Buraya tag yazabiliriz -->
-          <strong class="d-inline-block mb-2 text-primary">World</strong>
-          <h3 class="mb-0">Featured post</h3>
-          <div class="mb-1 text-muted">Nov 12</div>
-          <p class="card-text mb-auto">
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content.
-          </p>
-          <a href="#" class="stretched-link">Continue reading</a>
+            <div id="map" style="width: 100%; height: 100%;"></div>
+            <script>
+                // initialize Leaflet
+                var map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
+
+                // add the OpenStreetMap tiles
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                }).addTo(map);
+
+                // show the scale bar on the lower left corner
+                L.control.scale().addTo(map);
+            </script>
+            {% if community_list %}
+                {% for community in community_list %}
+                    {% for location in community.geolocation.location %}
+                        <script>
+                            var marker = L.marker({
+                                lon: "{{ location.lon }}",
+                                lat: "{{ location.lat }}"
+                            }).bindPopup("{{community.name}}").addTo(map);
+                            marker.on('mouseover', function (e) {
+                                this.openPopup();
+                            });
+                            marker.on('click', function (e) {
+                                window.location = "{% url 'community:community_detail' community.id %}";
+                            });
+                        </script>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
         </div>
-      </div>
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <!-- Buraya tag yazabiliriz -->
-          <strong class="d-inline-block mb-2 text-muted">Sport</strong>
-          <h3 class="mb-0">Featured post 2</h3>
-          <div class="mb-1 text-muted">Nov 12</div>
-          <p class="card-text mb-auto">
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content.
-          </p>
-          <a href="#" class="stretched-link">Continue reading</a>
+        <div class="row">
+            <div class="col-md-8 blog-main">
+                <nav class="blog-pagination">
+                    <a class="btn btn-outline-primary" href="#">Older</a>
+                    <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
+                </nav>
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <!-- Buraya tag yazabiliriz -->
+                        <strong class="d-inline-block mb-2 text-primary">World</strong>
+                        <h3 class="mb-0">Featured post</h3>
+                        <div class="mb-1 text-muted">Nov 12</div>
+                        <p class="card-text mb-auto">
+                            This is a wider card with supporting text below as a natural lead-in
+                            to additional content.
+                        </p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                </div>
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <!-- Buraya tag yazabiliriz -->
+                        <strong class="d-inline-block mb-2 text-muted">Sport</strong>
+                        <h3 class="mb-0">Featured post 2</h3>
+                        <div class="mb-1 text-muted">Nov 12</div>
+                        <p class="card-text mb-auto">
+                            This is a wider card with supporting text below as a natural lead-in
+                            to additional content.
+                        </p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                </div>
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <!-- Buraya tag yazabiliriz -->
+                        <strong class="d-inline-block mb-2 text-success">Health</strong>
+                        <h3 class="mb-0">Featured post 3</h3>
+                        <div class="mb-1 text-muted">Nov 12</div>
+                        <p class="card-text mb-auto">
+                            This is a wider card with supporting text below as a natural lead-in
+                            to additional content.
+                        </p>
+                        <a href="#" class="stretched-link">Continue reading</a>
+                    </div>
+                </div>
+            </div>
+            <aside class="col-md-4 blog-sidebar">
+                <div class="p-4 mb-3 bg-light rounded">
+                    <h4 class="font-italic">ACTIVITY STREAM</h4>
+                    <p class="mb-0">
+                        <a href="#">sean.anderson</a> created community
+                        <a href="#">Museums of Istanbul</a>
+                    </p>
+                    <br/>
+                    <p class="mb-0">
+                        <a href="#">batidibek</a> commented on post in
+                        <a href="#">Tips for Tourists</a>
+                    </p>
+                    <br/>
+                    <p class="mb-0">
+                        <a href="#">kendrick</a> annotated a video on
+                        <a href="#">Istanbul Undergroun Music</a>
+                    </p>
+                </div>
+            </aside>
         </div>
-      </div>
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <!-- Buraya tag yazabiliriz -->
-          <strong class="d-inline-block mb-2 text-success">Health</strong>
-          <h3 class="mb-0">Featured post 3</h3>
-          <div class="mb-1 text-muted">Nov 12</div>
-          <p class="card-text mb-auto">
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content.
-          </p>
-          <a href="#" class="stretched-link">Continue reading</a>
-        </div>
-      </div>
-    </div>
-    <aside class="col-md-4 blog-sidebar">
-      <div class="p-4 mb-3 bg-light rounded">
-        <h4 class="font-italic">ACTIVITY STREAM</h4>
-        <p class="mb-0">
-          <a href="#">sean.anderson</a> created community
-          <a href="#">Museums of Istanbul</a>
-        </p>
-        <br />
-        <p class="mb-0">
-          <a href="#">batidibek</a> commented on post in
-          <a href="#">Tips for Tourists</a>
-        </p>
-        <br />
-        <p class="mb-0">
-          <a href="#">kendrick</a> annotated a video on
-          <a href="#">Istanbul Undergroun Music</a>
-        </p>
-      </div>
-    </aside>
-  </div>
-  {% endblock content %}
+{% endblock content %}
