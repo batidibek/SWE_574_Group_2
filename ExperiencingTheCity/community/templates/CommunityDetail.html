@@ -41,10 +41,11 @@
                                 </button>
                             {% endif %}
 
-
-                            <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
-                                Subscribe
-                            </button>
+                            {% if user.user != communityDetail.owner %}
+                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
+                                    Subscribe
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </form>
