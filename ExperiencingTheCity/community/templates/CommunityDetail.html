@@ -27,6 +27,14 @@
                         <span class="text-muted">198</span>
                     </li>
                 </ul>
+                <form class="card p-2">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-outline-success" style="width: 100%">
+                            <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link">Create
+                                Post Type</a>
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="col-md-9 order-md-1">
@@ -80,16 +88,6 @@
                         <input type="text" class="form-control" id="CommunityTags"
                                width="100%"
                                disabled>
-                    </div>
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-outline-success">
-                            <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link">Create
-                                Post Type</a>
-                        </button>
-
-                        {#                <button class="btn btn-outline-success">Create Post Type#}
-                        {#                    <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link"></a>#}
-                        {#                    </button>#}
                     </div>
                 </form>
 
