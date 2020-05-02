@@ -24,7 +24,7 @@ from django.db.models import Q
 # COMMUNITY LIST
 
 def community_list(request):
-    community_list = Community.objects.order_by('-creation_date')[:30]
+    community_list = Community.objects.filter(active=True).order_by('-creation_date')[:30]
     context = {'community_list': community_list}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -33,7 +33,7 @@ def community_list(request):
 
 
 def getCommunity(request, id):
-    communityDetail = get_object_or_404(Community, pk=id)
+    communityDetail = get_object_or_404(Community,  ~Q(active=True), pk=id)
     context = {'communityDetail': communityDetail}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -45,7 +45,7 @@ def getCommunityByFilter(request):
     filterString = request.GET.get("filterString", "")
     communities = list(
         Community.objects.filter(
-            Q(name__icontains=filterString) | Q(tags__tags__0__label__contains=filterString)).values())
+            Q(name__icontains=filterString, active=True) | Q(tags__tags__0__label__contains=filterString)).values())
     # Q(name__icontains=filterString) | Q(tags__contains=[{"tags": [{"label": filterString}]}])).values())
     return JsonResponse({"communities": communities}, safe=False)
 
