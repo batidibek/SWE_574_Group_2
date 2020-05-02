@@ -23,4 +23,5 @@ urlpatterns = [
     path('create-community/', community.create_community, name='create_community'),
     path('create-post-type', community.newPostType, name="create_post_type"),
     path('getCommunityByFilter', community.getCommunityByFilter),
+    path('getCommunityListByFilter', community.getCommunityListByFilter),
 ]
