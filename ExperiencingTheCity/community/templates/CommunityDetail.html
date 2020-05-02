@@ -29,10 +29,21 @@
                 </ul>
                 <form class="card p-2">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-outline-success" style="width: 100%">
-                            <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link">Create
-                                Post Type</a>
+                        <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'">
+                            Create Post Type
                         </button>
+
+                        <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px">
+                            Archive the Community
+                        </button>
+
+                        {% if user.user %}
+
+                            <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
+                                Subscribe
+                            </button>
+                        {% endif %}
                     </div>
                 </form>
             </div>
