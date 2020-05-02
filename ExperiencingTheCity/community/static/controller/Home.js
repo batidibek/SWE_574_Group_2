@@ -59,18 +59,19 @@ $(document).on('keypress', function (e) {
 
         console.log(idList);
 
-
+        var url = $("#Url").attr("data-url");
         jQuery.ajax({
-            type: "GET", url: "/getCommunityListByFilter",
+            type: "GET",
+            // url: "/getCommunityListByFilter",
+            url: url,
             data: {"idList[]": idList},
             async: false,
             dataType: "json",
             contentType: "application/x-www-form-urlencoded/json",
             success:
                 function (result) {
-
                     dataList.empty();
-                    $('#content').html(result);
+                    $('#cmnList').html(result);
                 },
             error:
                 function (returnVal) {

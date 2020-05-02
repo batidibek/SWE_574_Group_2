@@ -1,11 +1,12 @@
 {% extends "base.html" %} {% block content %}
     {% load static %}
     <script src="{% static 'controller/Home.js' %}"></script>
-    <div class="container" style="width: 1200px; margin:0 auto;">
+    <div id="cmnList" class="container" style="width: 1200px; margin:0 auto;">
         {% if error_message %}<p style="color: red"><strong>{{ error_message }}</strong></p>
         {% endif %}
 
         <div id="searchbar" style="width: 100%; height: 80px;">
+            <input type="hidden" id="Url" data-url="{% url 'community:home' %}" />
             <input id="searchInput" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
                    onkeyup="searchCommunity(this)" list="foundCommunities">
             <datalist id="foundCommunities">
@@ -47,7 +48,7 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <div id="cmnList" class="row">
+        <div  class="row">
             <div class="col-md-8 blog-main">
                 <nav class="blog-pagination">
                     <a class="btn btn-outline-primary" href="#">Older</a>
