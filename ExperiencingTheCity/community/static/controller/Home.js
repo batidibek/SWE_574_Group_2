@@ -10,6 +10,7 @@ function searchCommunity(event) {
 
     var selectedCommunity = $("#foundCommunities option[value='" + $('#searchInput').val() + "']").attr('text');
     if (selectedCommunity !== undefined) {
+        dataList.empty();
         var location = "communities/" + selectedCommunity;
         window.location.href = location;
     } else {
@@ -36,6 +37,7 @@ function searchCommunity(event) {
                 function (returnVal) {
                     dataList.empty();
                     console.log(returnVal);
+
                     if (returnVal.status === 404) {
 
                     }
@@ -70,6 +72,7 @@ $(document).on('keypress', function (e) {
             contentType: "application/x-www-form-urlencoded/json",
             success:
                 function (result) {
+                    console.log(result);
                     dataList.empty();
                     $('#cmnList').html(result);
                 },
@@ -77,6 +80,12 @@ $(document).on('keypress', function (e) {
                 function (returnVal) {
                     dataList.empty();
                     console.log(returnVal);
+                    if (returnVal.status === 200) {
+
+                        var result = $('#cmnList', returnVal.responseText)
+                        $('#cmnList').html(result);
+                    }
+
                     if (returnVal.status === 404) {
 
                     }
