@@ -22,5 +22,6 @@ urlpatterns = [
     path('log-out/', users.log_out, name='log_out'),
     path('create-community/', community.create_community, name='create_community'),
     path('create-post-type', community.newPostType, name="create_post_type"),
-    path('getCommunityByFilter', community.getCommunityByFilter)
+    path('getCommunityByFilter', community.getCommunityByFilter),
+    path('archive_community/<id>', community.archiveCommunity, name='archive_community' )
 ]

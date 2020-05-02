@@ -180,3 +180,14 @@ def getPostType(request, id):
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
     return render(request, "PostType.html", context)
+
+
+def archiveCommunity(request, id):
+    community = get_object_or_404(Community, pk=id)
+    community.active = False;
+    community.save()
+    context = {'communityDetail': community}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return HttpResponseRedirect(reverse('community:home'))

@@ -133,7 +133,9 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="location.href='{% url 'community:archive_community' communityDetail.id %}'">Yes
+                        </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
 
