@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 
 class Community(models.Model):
     name = models.CharField(max_length=100)
@@ -10,6 +13,7 @@ class Community(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     geolocation = JSONField(default="")
     tags = JSONField(default="")
+
     def __str__(self):
         return self.name
 
@@ -23,6 +27,7 @@ class PostType(models.Model):
         Community, default="", on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     complaint = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
 
@@ -82,9 +87,10 @@ class Notification(models.Model):
 class UserAdditionalInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.URLField(max_length=600, blank=True)
+
     # geolocation
     def __str__(self):
-        return self.user.username  
+        return self.user.username
 
 
 class Followership(models.Model):
@@ -94,3 +100,25 @@ class Followership(models.Model):
     # models.ManyToManyField(User)
     follower = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="Follower")
+
+# A model for generating a list of actions and sorted by time of creation
+class Action(models.Model):
+    user = models.ForeignKey(User,
+                             related_name='actions',
+                             db_index=True,
+                             on_delete=models.CASCADE)
+    verb = models.CharField(max_length=200)
+    target_ct = models.ForeignKey(ContentType,
+                                  blank=True,
+                                  null=True,
+                                  related_name='target_obj',
+                                  on_delete=models.CASCADE)
+    target_id = models.PositiveIntegerField(null=True,
+                                            blank=True,
+                                            db_index=True)
+    target = GenericForeignKey('target_ct', 'target_id')
+    created = models.DateTimeField(auto_now_add=True,
+                                   db_index=True)
+
+    class Meta:
+        ordering = ('-created',)

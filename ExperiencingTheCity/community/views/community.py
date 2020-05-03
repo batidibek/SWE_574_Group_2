@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
+from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
+    UserAdditionalInfo, Followership
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -17,6 +18,8 @@ from django.contrib.auth import authenticate, login, logout
 import requests
 from django.utils import timezone
 from ..utils import wiki_data
+from ..utils.activity_stream import create_action
+
 
 # COMMUNITY LIST
 
@@ -36,6 +39,7 @@ def getCommunity(request, id):
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
     return render(request, "CommunityDetail.html", context)
+
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
@@ -69,8 +73,8 @@ def create_community(request):
     lat = request.POST.getlist('latitude', "")
     lon = request.POST.getlist('longitude', "")
     geolocation = {"location": []}
-    for i in range (len(lat)):
-        geolocation["location"].append({"lat": lat[i], "lon": lon[i]}) # TODO: error handling for no location
+    for i in range(len(lat)):
+        geolocation["location"].append({"lat": lat[i], "lon": lon[i]})  # TODO: error handling for no location
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
     if "get_tag" in request.POST:
@@ -83,12 +87,12 @@ def create_community(request):
                 context["suggested_tags"] = suggested_tags
             return render(request, 'CommunityCreate.html', context)
     try:
-         old_community = Community.objects.get(name=name)
+        old_community = Community.objects.get(name=name)
     except:
         old_community = None
     if old_community:
         return render(request, 'CommunityCreate.html', {
-            'error_message': "There is another community named " + name, 
+            'error_message': "There is another community named " + name,
             'description': description
         })
     wiki_tags = {}
@@ -96,8 +100,9 @@ def create_community(request):
         wiki_tags["tags"] = []
         tags = request.POST.getlist('wiki_tag', "")
         for i in range(len(tags)):
-            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\""))) # TODO: error handling for empty tags
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation=geolocation, tags=wiki_tags)
+            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))  # TODO: error handling for empty tags
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True,
+                          owner=request.user, geolocation=geolocation, tags=wiki_tags)
     if community.name == "" or community.description == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
@@ -106,6 +111,8 @@ def create_community(request):
         })
     else:
         community.save()
+        # user created community action for activity stream
+        create_action(request.user, 'created a new community:', community)
 
         # Generic Post Type creation
         pt = PostType()
@@ -145,7 +152,10 @@ def newPostType(request):
     pt.creation_date = timezone.now()
     pt.complaint = False;
     pt.save()
+    # user created community action for activity stream
+    create_action(request.user, 'created a new post type:', PostType)
     return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
+
 
 ## GET POST TYPES
 
@@ -156,6 +166,7 @@ def getPostTypes(request, id):
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
     return render(request, "PostTypeList.html", context)
+
 
 def getPostType(request, id):
     post_type = get_object_or_404(PostType, pk=id)
