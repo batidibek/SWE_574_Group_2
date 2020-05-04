@@ -33,7 +33,7 @@ def community_list(request):
 
 
 def getCommunity(request, id):
-    communityDetail = get_object_or_404(Community,  ~Q(active=True), pk=id)
+    communityDetail = get_object_or_404(Community, pk=id)
     context = {'communityDetail': communityDetail}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
