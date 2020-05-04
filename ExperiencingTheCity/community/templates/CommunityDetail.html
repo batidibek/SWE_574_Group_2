@@ -1,6 +1,9 @@
 {% extends "base.html" %}{% block content %}
     {% load static %}
 
+
+
+
     <div class="container">
 
         <div class="row">
@@ -27,6 +30,30 @@
                         <span class="text-muted">198</span>
                     </li>
                 </ul>
+                <form class="card p-2">
+                    <div class="input-group-btn">
+                        {% if user.user %}
+                            <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                    onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'">
+                                Create Post Type
+                            </button>
+
+                            {% if user.user == communityDetail.owner %}
+                                <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                        data-toggle="modal" data-target="#myModal">
+                                    Archive the Community
+                                </button>
+
+                            {% endif %}
+
+                            {% if user.user != communityDetail.owner %}
+                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
+                                    Subscribe
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </form>
             </div>
 
             <div class="col-md-9 order-md-1">
@@ -81,21 +108,39 @@
                                width="100%"
                                disabled>
                     </div>
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-outline-success">
-                            <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link">Create
-                                Post Type</a>
-                        </button>
-
-                        {#                <button class="btn btn-outline-success">Create Post Type#}
-                        {#                    <a href="{% url 'community:new_post_type' communityDetail.id %}" class="stretched-link"></a>#}
-                        {#                    </button>#}
-                    </div>
                 </form>
 
             </div>
 
 
+        </div>
+
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Attention!</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to archive this community?
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="location.href='{% url 'community:archive_community' communityDetail.id %}'">Yes
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
         <br/><br/><br/><br/><br/>
     </div>

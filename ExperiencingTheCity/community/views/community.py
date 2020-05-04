@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
+from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
+    UserAdditionalInfo, Followership
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -17,11 +18,13 @@ from django.contrib.auth import authenticate, login, logout
 import requests
 from django.utils import timezone
 from ..utils import wiki_data
+from django.db.models import Q
+
 
 # COMMUNITY LIST
 
 def community_list(request):
-    community_list = Community.objects.order_by('-creation_date')[:30]
+    community_list = Community.objects.filter(active=True).order_by('-creation_date')[:30]
     context = {'community_list': community_list}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -36,6 +39,16 @@ def getCommunity(request, id):
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
     return render(request, "CommunityDetail.html", context)
+
+
+def getCommunityByFilter(request):
+    filterString = request.GET.get("filterString", "")
+    communities = list(
+        Community.objects.filter(
+            Q(name__icontains=filterString, active=True) | Q(tags__tags__0__label__contains=filterString)).values())
+    # Q(name__icontains=filterString) | Q(tags__contains=[{"tags": [{"label": filterString}]}])).values())
+    return JsonResponse({"communities": communities}, safe=False)
+
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
@@ -69,8 +82,8 @@ def create_community(request):
     lat = request.POST.getlist('latitude', "")
     lon = request.POST.getlist('longitude', "")
     geolocation = {"location": []}
-    for i in range (len(lat)):
-        geolocation["location"].append({"lat": lat[i], "lon": lon[i]}) # TODO: error handling for no location
+    for i in range(len(lat)):
+        geolocation["location"].append({"lat": lat[i], "lon": lon[i]})  # TODO: error handling for no location
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
     if "get_tag" in request.POST:
@@ -83,12 +96,12 @@ def create_community(request):
                 context["suggested_tags"] = suggested_tags
             return render(request, 'CommunityCreate.html', context)
     try:
-         old_community = Community.objects.get(name=name)
+        old_community = Community.objects.get(name=name)
     except:
         old_community = None
     if old_community:
         return render(request, 'CommunityCreate.html', {
-            'error_message': "There is another community named " + name, 
+            'error_message': "There is another community named " + name,
             'description': description
         })
     wiki_tags = {}
@@ -96,8 +109,9 @@ def create_community(request):
         wiki_tags["tags"] = []
         tags = request.POST.getlist('wiki_tag', "")
         for i in range(len(tags)):
-            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\""))) # TODO: error handling for empty tags
-    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True, owner=request.user, geolocation=geolocation, tags=wiki_tags)
+            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))  # TODO: error handling for empty tags
+    community = Community(name=name, description=description, creation_date=datetime.datetime.now(), active=True,
+                          owner=request.user, geolocation=geolocation, tags=wiki_tags)
     if community.name == "" or community.description == "":
         return render(request, 'CommunityCreate.html', {
             'error_message': "Name, Description or Tag fields cannot be empty.",
@@ -147,6 +161,7 @@ def newPostType(request):
     pt.save()
     return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
+
 ## GET POST TYPES
 
 def getPostTypes(request, id):
@@ -157,8 +172,22 @@ def getPostTypes(request, id):
         context["user"] = community_user
     return render(request, "PostTypeList.html", context)
 
+
 def getPostType(request, id):
     post_type = get_object_or_404(PostType, pk=id)
-    print("=====================")
-    print(post_type)
-    return render(request, "PostType.html", {"post_type": post_type})
+    context = {'post_type': post_type}
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    return render(request, "PostType.html", context)
+
+
+def archiveCommunity(request, id):
+    community = get_object_or_404(Community, pk=id)
+    community.active = False;
+    community.save()
+    context = {'communityDetail': community}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return HttpResponseRedirect(reverse('community:home'))
