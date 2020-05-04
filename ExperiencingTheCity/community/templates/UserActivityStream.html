@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block content %}
+    {% load static %}
+
+    <div class="container" style="width: 800px; margin:0 auto;">
+
+
+        <div class="row mb-2">
+
+            {% if activity_stream %}
+                {% for Action in activity_stream %}
+                    <div class="list-group">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <!-- Buraya tag yazabiliriz -->
+                                <h3><a href="{{ Action.user.id.get_absolute_url }}" class="stretched-link">{{ Action.user }}</a> {{ Action.verb }} <a href="{{ Action.target.id.get_absolute_url }}" class="stretched-link">{{ Action.target }}</a></h3>
+                                <div class="mb-1 text-muted">{{ Action.created }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <br/><br/><br/><br/><br/>
+    </div>
+{% endblock content %}%}
