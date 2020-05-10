@@ -164,12 +164,13 @@ def newPostType(request):
 
 ## GET POST TYPES
 
-def getPostTypes(request, id):
+def getPostTypes(request, id, activeStatus):
     communityPostTypes = PostType.objects.filter(community_id=id)
-    context = {'communityPostTypes': communityPostTypes}
+    context = {'communityPostTypes': communityPostTypes, 'communityActive': activeStatus}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
+    print(context)
     return render(request, "PostTypeList.html", context)
 
 
@@ -179,6 +180,7 @@ def getPostType(request, id):
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
+    print(context)
     return render(request, "PostType.html", context)
 
 
