@@ -170,7 +170,6 @@ def getPostTypes(request, id, activeStatus):
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
-    print(context)
     return render(request, "PostTypeList.html", context)
 
 
@@ -180,6 +179,7 @@ def getPostType(request, id):
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
+    print("===============================")
     print(context)
     return render(request, "PostType.html", context)
 
