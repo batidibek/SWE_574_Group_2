@@ -129,6 +129,7 @@
                 <a class="p-2 text-muted" href="#">USER PROFILE</a>
                 <a class="p-2 text-muted" href="{% url 'community:new_community' %}">NEW COMMUNITY</a>
             {% endif %}
+            <a id="annotate-text" class="p-2 text-primary" href="#" style="visibility: hidden;">ANNOTATE</a>
         </nav>
     </div>
     <br/>
@@ -153,6 +154,11 @@
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"
         crossorigin="anonymous"></script>
+<script>
+    function showAnnotate() {
+    document.getElementById("annotate-text").style.visibility = "visible";
+}
+</script>
 
 </body>
 </html>

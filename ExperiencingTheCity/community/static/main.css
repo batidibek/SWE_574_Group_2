@@ -141,19 +141,10 @@ h6 {
     z-index: 1;
   }
 
-.WikiItemTag:hover .textboxwWikiInfo {
+.WikiItemTag:hover .textboxWikiInfo {
     visibility: visible;
   }
 
-
-.bootstrap-tagsinput {
-    width: 100%;
-}
-
-.bootstrap-tagsinput .tag{
-    margin-right: 2px;
-    color: white !important;
-}
 .label-info {
     background-color: #5bc0de !important;
 }

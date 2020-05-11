@@ -104,4 +104,9 @@ def authenticate_user(request):
 
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse('community:home'))    
+    return HttpResponseRedirect(reverse('community:home'))
+
+## USER PROFILE
+
+def show_user_profile():
+    pass
