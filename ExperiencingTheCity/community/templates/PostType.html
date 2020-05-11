@@ -17,7 +17,7 @@
             var communityDataTypes = "{{ communityDataTypes|safe }}";
         </script>
         <!--    FORM -->
-        <form id="createpost"  method="POST" action="{% url 'community:create_post_type' %}">
+        <form id="createpost" method="POST" action="{% url 'community:create_post_type' %}">
             {% csrf_token %}
 
             <input hidden value="" name="postTypeFields" id="postTypeFields">
@@ -32,7 +32,8 @@
                     <input type="text" class="form-control" id="PostTypeFields" hidden
                            value="{{ post_type.formfields }}" name="PostTypeFields">
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
-                           value="{{ post_type.name }}" name="name">
+                           value="{{ post_type.name }}" name="name"
+                           {% if not communityActive == 'True' %}disabled{% endif %}>
                 {% else %}
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                            placeholder="Enter post type name" name="PostTypeName">
@@ -44,7 +45,8 @@
                 <label for="PostTypeDescription">Post Type Description</label>
                 {% if post_type %}
                     <textarea class="form-control" id="PostTypeDescription"
-                              rows="5" name="PostTypeDescription">{{ post_type.description }}</textarea>
+                              rows="5" name="PostTypeDescription"
+                              {% if not communityActive == 'True' %}disabled{% endif %}>{{ post_type.description }}</textarea>
                 {% else %}
                     <textarea class="form-control" id="PostTypeDescription"
                               placeholder="Briefly describe your post type"
@@ -69,15 +71,16 @@
                     <tr id="rowToClone_0">
                         <th scope="row">
                             <input type="text" class="dt_fieldposnr form-control"
-                                   name="dt_fieldposnr">
+                                   name="dt_fieldposnr" {% if not communityActive == 'True' %}disabled{% endif %}>
                         </th>
                         <th scope="row">
-                            <input type="text"  class="dt_fieldlabel form-control"
-                                   name="dt_fieldlabel">
+                            <input type="text" class="dt_fieldlabel form-control"
+                                   name="dt_fieldlabel" {% if not communityActive == 'True' %}disabled{% endif %}>
                         </th>
                         <td>
                             <select class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype"
-                                    onchange="onSelectFType(this)">
+                                    onchange="onSelectFType(this)"
+                                    {% if not communityActive == 'True' %}disabled{% endif %}>
                                 <option value="" disabled selected>Choose your option</option>
                                 <option value="TE">Text field</option>
                                 <option value="TA">Text area</option>
@@ -101,11 +104,11 @@
                             <input type="checkbox" checked="true" data-toggle="toggle"
                                    data-style="ios"
                                    name="dt_fieldrequire"
-                                   data-onstyle="success">
+                                   data-onstyle="success" {% if not communityActive == 'True' %}disabled{% endif %}>
                         </td>
                         <td>
                             <button type="button" class="btn addDataField"
-                                    id="addDataField"><span
+                                    id="addDataField" {% if not communityActive == 'True' %}disabled{% endif %}><span
                                     class="fa fa-plus"> </span></button>
                         </td>
                     </tr>
@@ -113,7 +116,9 @@
                 </table>
             </div>
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-outline-success" id="createPostType">Save</button>
+                <button type="submit" class="btn btn-outline-success" id="createPostType"
+                        {% if not communityActive == 'True' %}disabled{% endif %}>Save
+                </button>
                 <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
                         style="margin-left: 10px;">Cancel
                 </button>

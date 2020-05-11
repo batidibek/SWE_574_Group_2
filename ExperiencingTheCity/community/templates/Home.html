@@ -59,9 +59,11 @@
                     {% for Community in community_list %}
                         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                             <div class="col p-4 d-flex flex-column position-static">
-                                {% for tag in Community.tags.tags %}
-                                    <strong class="d-inline-block mb-2 text-primary">{{ tag.label }}</strong>
-                                {% endfor %}
+                                <strong class="d-inline-block mb-2 text-primary">
+                                    {% for tag in Community.tags.tags %}
+                                        {{ tag.label }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </strong>
                                 <h3 class="mb-0">{{ Community.name }}</h3>
                                 <div class="mb-1 text-muted">{{ Community.creation_date }}</div>
                                 <p class="card-text mb-auto">

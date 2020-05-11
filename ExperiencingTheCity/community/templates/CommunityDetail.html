@@ -14,7 +14,7 @@
                     <li class="list-group-item d-flex justify-content-between lh-condensed">
                         <div>
                             <h6 class="my-0">
-                                <a href="post_types/{{ communityDetail.id }}" class="stretched-link">Community Post
+                                <a href="post_types/{{ communityDetail.id }}/{{ communityDetail.active }}" class="stretched-link">Community Post
                                     Types</a>
                             </h6>
                             <small class="text-muted">Check post types and select or create to have a new post!</small>
@@ -34,20 +34,23 @@
                     <div class="input-group-btn">
                         {% if user.user %}
                             <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
-                                    onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'">
+                                    onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'"
+                                    {% if not communityDetail.active %}disabled{% endif %}>
                                 Create Post Type
                             </button>
 
                             {% if user.user == communityDetail.owner %}
                                 <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
-                                        data-toggle="modal" data-target="#myModal">
+                                        data-toggle="modal" data-target="#myModal"
+                                        {% if not communityDetail.active %}disabled{% endif %}>
                                     Archive the Community
                                 </button>
 
                             {% endif %}
 
                             {% if user.user != communityDetail.owner %}
-                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
+                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px"
+                                        {% if not communityDetail.active %}disabled{% endif %}>
                                     Subscribe
                                 </button>
                             {% endif %}

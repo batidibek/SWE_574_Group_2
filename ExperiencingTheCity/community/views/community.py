@@ -24,7 +24,7 @@ from django.db.models import Q
 # COMMUNITY LIST
 
 def community_list(request):
-    community_list = Community.objects.filter(active=True).order_by('-creation_date')[:30]
+    community_list = Community.objects.order_by('-creation_date')[:30]
     context = {'community_list': community_list}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -45,7 +45,7 @@ def getCommunityByFilter(request):
     filterString = request.GET.get("filterString", "")
     communities = list(
         Community.objects.filter(
-            Q(name__icontains=filterString, active=True) | Q(tags__tags__0__label__contains=filterString)).values())
+            Q(name__icontains=filterString) | Q(tags__tags__0__label__contains=filterString)).values())
     # Q(name__icontains=filterString) | Q(tags__contains=[{"tags": [{"label": filterString}]}])).values())
     return JsonResponse({"communities": communities}, safe=False)
 
@@ -164,21 +164,23 @@ def newPostType(request):
 
 ## GET POST TYPES
 
-def getPostTypes(request, id):
+def getPostTypes(request, id, activeStatus):
     communityPostTypes = PostType.objects.filter(community_id=id)
-    context = {'communityPostTypes': communityPostTypes}
+    context = {'communityPostTypes': communityPostTypes, 'communityActive': activeStatus}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
     return render(request, "PostTypeList.html", context)
 
 
-def getPostType(request, id):
+def getPostType(request, id, activeStatus):
     post_type = get_object_or_404(PostType, pk=id)
-    context = {'post_type': post_type}
+    context = {'post_type': post_type, 'communityActive': activeStatus}
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
+    print("===============================")
+    print(context)
     return render(request, "PostType.html", context)
 
 
