@@ -157,7 +157,12 @@ def newPostType(request):
     pt.owner_id = User.objects.get(username=request.user).id
     pt.formfields = fieldJson
     pt.creation_date = timezone.now()
-    pt.complaint = False;
+
+    if request.POST.get("isComplaint", "") == "0":
+        pt.complaint = True
+    else:
+        pt.complaint = False
+
     pt.save()
     return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
@@ -184,10 +189,132 @@ def getPostType(request, id):
 
 def archiveCommunity(request, id):
     community = get_object_or_404(Community, pk=id)
-    community.active = False;
+    community.active = False
     community.save()
     context = {'communityDetail': community}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
     return HttpResponseRedirect(reverse('community:home'))
+
+
+## POST OPERATIONS
+
+def new_post(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+
+    if post_type.formfields:
+        form_fields = json.loads(post_type.formfields)
+    else:
+        form_fields = []
+
+    return render(request, "PostCreate.html", { "post_type": post_type, "form_fields": form_fields})
+
+
+def create_post(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+
+    community = post_type.community_id
+    name = str(request.POST.get('name', "")).strip()
+    query = str(request.POST.get('tags', "")).strip()
+    description = str(request.POST.get('description', "")).strip()
+    context = {'post_name': name, 'description': description}
+    is_complaint = False
+    complaint_status = ""
+    wiki_tags = {}
+    column_names = ("fieldposnr", "fieldlabel", "fieldtype", "enumvals", "isRequired", "fieldValue")
+    json_response = {}
+
+    if(post_type.complaint == True):
+        is_complaint = True
+        complaint_status = "Open"
+
+    if(post_type.name != 'Generic Post Type' and post_type.name != 'Generic Post Type for Complaints'):
+        form_fields = json.loads(post_type.formfields)
+        for (k, v) in form_fields.items():
+            for (key, value) in v.items():     
+                fieldposnr = value["fieldposnr"]
+                fieldlabel = value["fieldlabel"]
+                fieldtype  = value["fieldtype"]
+                enumvals   = value["enumvals"]
+                isRequired = value["isRequired"]
+                fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+
+                if fieldposnr not in json_response:
+                    json_response[fieldposnr] = []
+                
+                json_element = {}
+                json_element[column_names[0]] = fieldposnr
+                json_element[column_names[1]] = fieldlabel
+                json_element[column_names[2]] = fieldtype
+                json_element[column_names[3]] = enumvals
+                json_element[column_names[4]] = isRequired
+                json_element[column_names[5]] = fieldValue
+
+                json_response[fieldposnr].append(json_element)
+
+
+    if name == "" or description == "":
+        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
+
+    if "cancel" in request.POST:
+        return HttpResponseRedirect(reverse('community:home'))
+
+    #if "get_tag" in request.POST:
+     #   if query == "":
+    #        context["error_message"] = "You need to enter a query to get tag suggestions."
+    #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
+    #        #return render(request, 'PostCreate.html/' + id, context)
+    #    else:
+    #        suggested_tags = wiki_data.suggest_tags(query)
+    #        if suggested_tags:
+    #            context["suggested_tags"] = suggested_tags
+    #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
+            
+            #return render(request, 'PostCreate.html/' + id, context)
+    
+    
+    #if "wiki_tag" in request.POST:
+    #    wiki_tags["tags"] = []
+    #    tags = request.POST.getlist('wiki_tag', "")
+    #
+    #    for i in range(len(tags)):
+    #        wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))
+
+    else:
+        post = Post(name=name, description=description, user_id=User.objects.get(username=request.user), creation_date=timezone.now(), community_id=community, 
+                    form_fields=json.dumps(json_response), posttype_id = post_type, complaint=is_complaint, complaint_status=complaint_status)
+        post.save()
+
+        return HttpResponseRedirect(reverse('community:home'))
+
+
+def getPosts(request, id):
+    communityPosts = Post.objects.filter(community_id=id)
+    context = {'communityPosts': communityPosts}
+
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+
+    return render(request, "PostList.html", context)
+
+
+def getPostDetail(request, id):
+    post = get_object_or_404(Post, pk=id)
+    post_type = post.posttype_id
+    # comments = get_object_or_404(Comments, post_id=id)
+
+    # context = {'post': post, 'post_type': post_type, 'comments':comments}
+    if post.form_fields:
+        form_fields = json.loads(post.form_fields)
+    else:
+        form_fields = []
+
+    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields }
+
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+
+    return render(request, "PostDetail.html", context)
