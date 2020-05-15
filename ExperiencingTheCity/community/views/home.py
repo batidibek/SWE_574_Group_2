@@ -27,7 +27,7 @@ def homepage(request):
     # return render(request, 'Home.html', context)
     idList = request.GET.getlist("idList[]", "")
     if not idList:
-        community_list = Community.objects.filter(active=True).order_by('-creation_date')[:30]
+        community_list = Community.objects.order_by('-creation_date')[:30]
     else:
         community_list = Community.objects.filter(active=True).filter(id__in=idList)
     context = {'community_list': community_list}

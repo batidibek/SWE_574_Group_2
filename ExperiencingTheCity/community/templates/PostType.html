@@ -88,7 +88,7 @@
             var communityDataTypes = "{{ communityDataTypes|safe }}";
         </script>
         <!--    FORM -->
-        <form id="createpost"  method="POST" action="{% url 'community:create_post_type' %}">
+        <form id="createpost" method="POST" action="{% url 'community:create_post_type' %}">
             {% csrf_token %}
 
             <input hidden value="" name="postTypeFields" id="postTypeFields">
@@ -103,7 +103,8 @@
                     <input type="text" class="form-control" id="PostTypeFields" hidden
                            value="{{ post_type.formfields }}" name="PostTypeFields">
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
-                           value="{{ post_type.name }}" name="name">
+                           value="{{ post_type.name }}" name="name"
+                           {% if not communityActive == 'True' %}disabled{% endif %}>
                 {% else %}
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                            placeholder="Enter post type name" name="PostTypeName">
@@ -115,7 +116,8 @@
                 <label for="PostTypeDescription">Post Type Description</label>
                 {% if post_type %}
                     <textarea class="form-control" id="PostTypeDescription"
-                              rows="5" name="PostTypeDescription">{{ post_type.description }}</textarea>
+                              rows="5" name="PostTypeDescription"
+                              {% if not communityActive == 'True' %}disabled{% endif %}>{{ post_type.description }}</textarea>
                 {% else %}
                     <textarea class="form-control" id="PostTypeDescription"
                               placeholder="Briefly describe your post type"
@@ -145,6 +147,7 @@
                     <tbody id="tableToModify">
                     <tr id="rowToClone_0">
                         <th scope="row">
+
                             <input type="text" id="fieldPostNo1" class="dt_fieldposnr form-control"
                                    name="dt_fieldposnr">
                         </th>
@@ -155,6 +158,7 @@
                         <td>
                             <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype"
                                     onchange="onSelectFType(this)">
+
                                 <option value="" disabled selected>Choose your option</option>
                                 <option value="TE">Text field</option>
                                 <option value="TA">Text area</option>
@@ -175,6 +179,7 @@
                                    name="enum_vals" data-role="tagsinput" disabled>
                         </td>
                         <td>
+
                               <label class="checkboxContainer" id="isReq">
                                 <input type="checkbox" checked="checked">
                                 <span class="checkmark"></span>
@@ -183,6 +188,7 @@
                         <td>
                             <button type="button" class="btn addDataField"
                                     id="addDataField"><span id="addDataBtn"
+
                                     class="fa fa-plus"> </span></button>
                         </td>
                     </tr>
@@ -190,7 +196,9 @@
                 </table>
             </div>
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-outline-success" id="createPostType">Save</button>
+                <button type="submit" class="btn btn-outline-success" id="createPostType"
+                        {% if not communityActive == 'True' %}disabled{% endif %}>Save
+                </button>
                 <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
                         style="margin-left: 10px;">Cancel
                 </button>

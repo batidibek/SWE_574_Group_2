@@ -20,13 +20,17 @@
                                 <div class="btn-group">
 
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
-                                            style="margin: 2px;">
-                                        <a href="detail/{{ PostType.id }}"> View fields </a>
+                                            style="margin: 2px;"
+                                            onclick="location.href='{% url 'community:post_type' PostType.id communityActive  %}'">
+                                        {#                                        <a href="detail/{{ PostType.id }}"> #}
+                                        View fields
                                     </button>
 
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
+
                                             style="margin: 2px;">
                                             <a href="{% url 'community:new_post' PostType.id %}"> Create post </a>
+
                                     </button>
                                 </div>
 

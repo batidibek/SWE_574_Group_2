@@ -12,14 +12,13 @@ urlpatterns = [
     path('communities/', community.community_list, name='community_list'),
     path('communities/<id>', community.getCommunity, name="community_detail"),
     path('communities/new-post-type/<id>', community.getCommunityHeader, name="new_post_type"),
+
     path('communities/post_types/<id>', community.getPostTypes, name="post_types"),
     path('communities/post_types/detail/<id>', community.getPostType, name="post_type"),
     path('communities/post_types/detail/<id>/createpost', community.getPostType, name="post_type"),
     path('communities/new_post/<id>', community.new_post, name="new_post"),
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
-
-
 
 
     # REQUESTS
