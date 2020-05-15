@@ -4,7 +4,7 @@
 
 
 
-    <div class="container">
+    <div class="container" id="page-container" onselect="showAnnotate()">
 
         <div class="row">
 
@@ -62,7 +62,7 @@
 
             <div class="col-md-9 order-md-1">
 
-                <h3>Community: {{ communityDetail.name }}</h3>
+                <h3  onselect="showAnnotate()">Community: {{ communityDetail.name }}</h3>
                 <br/>
                 <script src="{% static 'controller/CommunityDetail.js' %}"></script>
                 <form>
@@ -88,7 +88,7 @@
                                 var marker = L.marker({
                                     lon: "{{ location.lon }}",
                                     lat: "{{ location.lat }}"
-                                }).bindPopup("{{community.name}}").addTo(map);
+                                }).addTo(map);
                             </script>
                         {% endfor %}
                     </div>
