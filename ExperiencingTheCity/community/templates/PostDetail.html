@@ -1,0 +1,235 @@
+{% extends "base.html" %}{% block content %}
+    {% load static %}
+
+    <script src="{% static 'controller/Post.js' %}"></script>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 order-md-2 mb-4">
+                <h3>Also see</h3>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">
+                                <a href="" class="stretched-link">Community Post
+                                    Types</a>
+                            </h6>
+                            <small class="text-muted">Check post types and select or create to have a new post!</small>
+                        </div>
+                        <span class="text-muted">12</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0"><a href="" class="stretched-link">Community Posts</a>
+                            </h6>
+                            <small class="text-muted">View community posts and contribute!</small>
+                        </div>
+                        <span class="text-muted">198</span>
+                    </li>
+                </ul>
+                <form class="card p-2">
+                    <div class="input-group-btn">
+                        {% if user.user %}
+                            <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                    onclick="location.href=''">
+                                Create Post Type
+                            </button>
+
+                            {% if user.user == post.user_id %}
+                                <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                        data-toggle="modal" data-target="#myModal">
+                                    Archive the Community
+                                </button>
+                            {% endif %}
+
+                            {% if user.user != post.user_id %}
+                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
+                                    Subscribe
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-9 order-md-1">
+                <h3>{{ post.name }}</h3>
+                <br/>
+                <form>
+                    {% csrf_token %}
+                    {% if post_type.name == "Generic Post Type" %}
+                        <div class="form-group" style="display: flex">
+                            <label class="col-sm-2 control-label"><b>Name</b></label>
+                            <label class="col-sm-10 control-label">{{ post.name}}</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="PostDescription"><b>Description</b></label>
+                            <label class="col-sm-10 control-label">{{ post.description }}</label>
+                        </div>
+                    {% elif post_type.name == "Generic Post Type for Complaints" %}
+                        <div class="form-group" style="display: flex">
+                            <label class="col-sm-2 control-label"><b>Status</b></label>
+                            <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype" disabled=true>
+                                <option value="TE">Open</option>
+                                <option value="TA">In Progress</option>
+                                <option value="DA">Closed</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex">
+                            <label class="col-sm-2 control-label"><b>Name</b></label>
+                            <label for="PostName" class="col-sm-10 control-label">{{ post.name}}</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b>Description</b></label>
+                            <label class="col-sm-10 control-label">{{ post.description }}</label>
+                        </div>
+                    {% else %}
+                        {% if post_type.complaint == True %}
+                        <div class="form-group" style="display: flex">
+                            <label class="col-sm-2 control-label"><b>Status</b></label>
+                            <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype" disabled=true>
+                                <option value="TE">Open</option>
+                                <option value="TA">In Progress</option>
+                                <option value="DA">Closed</option>
+                            </select>
+                        </div>
+                        {% endif %}
+                        <div class="form-group" style="display: flex">
+                            <label class="col-sm-2 control-label"><b>Name</b></label>
+                            <label for="PostName" class="col-sm-10 control-label">{{ post.name}}</label>
+                        </div>
+                        <div class="form-group" style="display: flex">
+                            <label class="col-sm-2 control-label"><b>Description</b></label>
+                            <label class="col-sm-10 control-label">{{ post.description }}</label>
+                        </div>
+                        
+                        <!--Generate form from JSON field-->
+                        <!-- <div class="form-group" style="display: flex"> -->
+                            {% for key, value in form_fields.items %}
+                                {% for key2, value2 in value.items %}
+                                <div class="form-group" style="display: flex">
+                                    <label class="col-sm-2 control-label"><b> {{ value2.fieldlabel }} </b></label>
+        
+                                    <!-- "TE">Text field -->
+                                    {% if value2.fieldtype == "TE" %}
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+        
+                                    <!-- "TA">Text area -->
+                                    {% elif value2.fieldtype == "TA" %}
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+        
+                                    <!-- "DA">Date -->
+                                    {% elif value2.fieldtype == "DA" %}
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+        
+                                    <!-- "TI">Time -->
+                                    {% elif value2.fieldtype == "TI" %}
+                                    <!-- <input type="time" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+
+                                    <!-- "IN">Integer -->
+                                    {% elif value2.fieldtype == "IN" %}
+                                    <!-- <input type="number" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+
+        
+                                    <!-- "DE">Decimal -->
+                                    {% elif value2.fieldtype == "DE" %}
+                                    <!-- <input type="number" step=0.01 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+
+        
+                                    <!-- "IM">Image -->
+                                    {% elif value2.fieldtype == "IM" %}
+                                    <div class="input-group">
+                                        <div class="form-control">
+                                            <input type="file" accept=".jpg,.gif,.png" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
+                                        </div>
+                                    </div>
+        
+                                    <!-- "VI">Video -->
+                                    {% elif value2.fieldtype == "VI" %}
+                                    <div class="input-group">
+                                        <div class="form-control">
+                                            <input type="file" accept=".mp4" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
+                                        </div>
+                                    </div>
+        
+                                    <!-- "AU">Audio -->
+                                    {% elif value2.fieldtype == "AU" %}
+                                    <div class="input-group">
+                                        <div class="form-control">
+                                            <input type="file" accept=".mp3, .wav" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
+                                        </div>
+                                    </div>
+        
+                                    <!-- "UR">URI -->
+                                    {% elif value2.fieldtype == "UR" %}
+                                    <!-- <input type="url" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+
+                                    <!-- TODO : Location gösterimi eklenecek -->
+                                    <!-- "LO">Location -->
+                                    <!-- {% elif value2.fieldtype == "LO" %} -->
+                                    <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Latitude" name="{{value2.fieldlabel}}lat"> -->
+                                    <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Longitude" name="{{value2.fieldlabel}}lon"> -->
+        
+
+                                    <!-- "EN">Enumerated -->
+                                    {% elif value2.fieldtype == "EN" %}
+                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                    <br/>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% endfor %}
+                        <!-- </div> -->
+                    {% endif %}
+                    <!-- TODO : Post'a tag eklenince burası da açılacak -->
+                    <!-- {% if suggested_tags %}
+                        {% for item in suggested_tags.items %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="wiki_tag" value="{{item}}" >
+                            <label class="form-check-label" for="exampleCheck1">{{ item.id }} {{ item.label }}: {{ item.description }}</label>
+                        </div>
+                        {% endfor %}
+                    {% endif %} -->
+                    <br/>
+                    <br/>              
+                    <!-- <div class="form-group">
+                        <label for="CommunityTag">Tags</label>
+                        <input type="text" class="form-control" id="CommunityTags"
+                               width="100%"
+                               disabled>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Attention!</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to archive this post ?
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="">Yes
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/><br/><br/><br/><br/>
+    </div>
+{% endblock content %}

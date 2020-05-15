@@ -31,11 +31,9 @@ class Post(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     creation_date = models.DateTimeField('date published')
-    form_fields = JSONField()
-    community_id = models.ForeignKey(
-        Community, default="", on_delete=models.CASCADE)
-    posttype_id = models.ForeignKey(
-        PostType, default="", on_delete=models.CASCADE)
+    form_fields = JSONField(default="")
+    community_id = models.ForeignKey(Community, default="", on_delete=models.CASCADE)
+    posttype_id = models.ForeignKey(PostType, default="", on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     complaint = models.BooleanField(default=False)
     complaint_status = models.CharField(max_length=100)

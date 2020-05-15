@@ -12,9 +12,14 @@ urlpatterns = [
     path('communities/', community.community_list, name='community_list'),
     path('communities/<id>', community.getCommunity, name="community_detail"),
     path('communities/new-post-type/<id>', community.getCommunityHeader, name="new_post_type"),
-    path('communities/post_types/<id>/<activeStatus>', community.getPostTypes, name="post_types"),
-    path('communities/post_type/<id>/<activeStatus>', community.getPostType, name="post_type"),
-    path('communities/post_types/detail/<id>/createpost', community.getPostType, name="new_post"),
+
+    path('communities/post_types/<id>', community.getPostTypes, name="post_types"),
+    path('communities/post_types/detail/<id>', community.getPostType, name="post_type"),
+    path('communities/post_types/detail/<id>/createpost', community.getPostType, name="post_type"),
+    path('communities/new_post/<id>', community.new_post, name="new_post"),
+    path('communities/posts/<id>', community.getPosts, name="posts"),
+    path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
+
 
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),
@@ -23,5 +28,7 @@ urlpatterns = [
     path('create-community/', community.create_community, name='create_community'),
     path('create-post-type', community.newPostType, name="create_post_type"),
     path('getCommunityByFilter', community.getCommunityByFilter),
-    path('archive_community/<id>', community.archiveCommunity, name='archive_community' )
+    path('archive_community/<id>', community.archiveCommunity, name='archive_community' ),
+    path('create-post/<id>', community.create_post, name='create_post'),
+
 ]

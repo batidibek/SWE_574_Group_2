@@ -6,39 +6,25 @@
 
         <div class="row mb-2">
 
-            {% if communityPostTypes %}
-                {% for PostType in communityPostTypes %}
+            {% if communityPosts %}
+                {% for post in communityPosts %}
                     <div class="col-md-6">
                         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                             <div class="col p-4 d-flex flex-column position-static">
-                                <h3 class="mb-0">{{ PostType.name }}</h3>
-                                <div class="mb-1 text-muted">{{ PostType.creation_date }}</div>
+                                <h3 class="mb-0">{{ post.name }}</h3>
+                                <div class="mb-1 text-muted">{{ post.creation_date }}</div>
                                 <p class="card-text mb-auto">
-                                    {{ PostType.description }}
+                                    {{ post.description|truncatewords:15 }}
                                 </p>
-
                                 <div class="btn-group">
-
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
-                                            style="margin: 2px;"
-                                            onclick="location.href='{% url 'community:post_type' PostType.id communityActive  %}'">
-                                        {#                                        <a href="detail/{{ PostType.id }}"> #}
-                                        View fields
-                                    </button>
-
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"
-
                                             style="margin: 2px;">
-                                            <a href="{% url 'community:new_post' PostType.id %}"> Create post </a>
-
+                                        <a href="post_detail/{{ post.id }}"> View Detail </a>
                                     </button>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
-
                 {% endfor %}
             {% endif %}
         </div>
