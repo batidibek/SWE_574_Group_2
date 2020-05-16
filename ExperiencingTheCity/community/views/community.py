@@ -146,30 +146,35 @@ def create_community(request):
 ## NEW POST TYPE
 
 def newPostType(request):
-    fieldJson = request.POST.get("postTypeFields", "")
-    print(fieldJson)
     communityId = request.POST.get("communityId", "")
     postTypeId = request.POST.get("postTypeId", "")
-    print(postTypeId)
-    if (postTypeId != ''):
-        pt = PostType.objects.get(pk=postTypeId)
+    if "cancel" in request.POST:
+        #  onclick="location.href='{% url 'community:post_types' communityDetail.id communityDetail.active %}'">
+        return HttpResponseRedirect(reverse('community:post_types', args=(communityId, postTypeId,)))
     else:
-        pt = PostType()
-    pt.community_id = Community.objects.get(pk=communityId)
-    pt.name = request.POST.get("PostTypeName", "")
-    print(pt.name)
-    pt.description = request.POST.get("PostTypeDescription", "")
-    pt.owner_id = User.objects.get(username=request.user).id
-    pt.formfields = fieldJson
-    pt.creation_date = timezone.now()
+        fieldJson = request.POST.get("postTypeFields", "")
+        print(fieldJson)
 
-    if request.POST.get("isComplaint", "") == "0":
-        pt.complaint = True
-    else:
-        pt.complaint = False
+        print(postTypeId)
+        if (postTypeId != ''):
+            pt = PostType.objects.get(pk=postTypeId)
+        else:
+            pt = PostType()
+        pt.community_id = Community.objects.get(pk=communityId)
+        pt.name = request.POST.get("PostTypeName", "")
+        print(pt.name)
+        pt.description = request.POST.get("PostTypeDescription", "")
+        pt.owner_id = User.objects.get(username=request.user).id
+        pt.formfields = fieldJson
+        pt.creation_date = timezone.now()
 
-    pt.save()
-    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
+        if request.POST.get("isComplaint", "") == "0":
+            pt.complaint = True
+        else:
+            pt.complaint = False
+
+        pt.save()
+        return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 
 ## GET POST TYPES
