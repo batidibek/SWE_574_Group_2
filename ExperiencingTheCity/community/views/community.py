@@ -149,10 +149,15 @@ def newPostType(request):
     fieldJson = request.POST.get("postTypeFields", "")
     print(fieldJson)
     communityId = request.POST.get("communityId", "")
-
-    pt = PostType()
+    postTypeId = request.POST.get("postTypeId", "")
+    print(postTypeId)
+    if (postTypeId != ''):
+        pt = PostType.objects.get(pk=postTypeId)
+    else:
+        pt = PostType()
     pt.community_id = Community.objects.get(pk=communityId)
     pt.name = request.POST.get("PostTypeName", "")
+    print(pt.name)
     pt.description = request.POST.get("PostTypeDescription", "")
     pt.owner_id = User.objects.get(username=request.user).id
     pt.formfields = fieldJson

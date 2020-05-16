@@ -94,6 +94,9 @@
             <input hidden value="" name="postTypeFields" id="postTypeFields">
             <input hidden value="{{ communityDetail.id }}" name="communityId" id="communityId">
             <input hidden value="" name="isUpdate" id="isUpdate">
+            {% if post_type %}
+                <input hidden value="{{ post_type.id }}" name="postTypeId" id="postTypeId">
+            {% endif %}
             <div class="form-group">
                 <label for="PostTypeName">Post Type Name</label>
                 {% if post_type %}
@@ -103,7 +106,7 @@
                     <input type="text" class="form-control" id="PostTypeFields" hidden
                            value="{{ post_type.formfields }}" name="PostTypeFields">
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
-                           value="{{ post_type.name }}" name="name"
+                           value="{{ post_type.name }}" name="PostTypeName"
                            {% if not communityDetail.active %}disabled{% endif %}
                            {% if not post_type.owner == user.user %}disabled{% endif %}>
                 {% else %}
