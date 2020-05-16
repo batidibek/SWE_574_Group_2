@@ -101,6 +101,7 @@ class Followership(models.Model):
     follower = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="Follower")
 
+
 # A model for generating a list of actions and sorted by time of creation
 class Action(models.Model):
     user = models.ForeignKey(User,

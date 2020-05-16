@@ -153,7 +153,7 @@ def newPostType(request):
     pt.complaint = False;
     pt.save()
     # user created community action for activity stream
-    create_action(request.user, 'created a new post type:', PostType)
+    create_action(request.user, 'created a new post type:', pt)
     return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 

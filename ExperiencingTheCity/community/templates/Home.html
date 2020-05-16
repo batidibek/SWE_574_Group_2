@@ -84,8 +84,15 @@
       <div class="p-4 mb-3 bg-light rounded">
         <h4 class="font-italic">ACTIVITY STREAM</h4>
         <p class="mb-0">
-          <a href="#">sean.anderson</a> created community
-          <a href="#">Museums of Istanbul</a>
+          <div class="list-group">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <!-- Buraya tag yazabiliriz -->
+                                <h4><a href="{{ Action.user.id.get_absolute_url }}" class="stretched-link">{{ Action.user }}</a> {{ Action.verb }} <a href="{{ Action.target.object }}" class="stretched-link">{{ Action.target }}</a></h4>
+                                <div class="mb-1 text-muted">{{ Action.created }}</div>
+                            </div>
+                        </div>
+        </div>
         </p>
         <br />
         <p class="mb-0">
