@@ -184,8 +184,6 @@ def getPostType(request, id, activeStatus):
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
-    print("===============================")
-    print(context)
     return render(request, "PostType.html", context)
 
 
@@ -209,8 +207,11 @@ def new_post(request, id):
         form_fields = json.loads(post_type.formfields)
     else:
         form_fields = []
-
-    return render(request, "PostCreate.html", { "post_type": post_type, "form_fields": form_fields})
+    context = {'post_type': post_type, "form_fields": form_fields}
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    return render(request, "PostCreate.html", context)
 
 
 def create_post(request, id):
@@ -227,24 +228,24 @@ def create_post(request, id):
     column_names = ("fieldposnr", "fieldlabel", "fieldtype", "enumvals", "isRequired", "fieldValue")
     json_response = {}
 
-    if(post_type.complaint == True):
+    if (post_type.complaint == True):
         is_complaint = True
         complaint_status = "Open"
 
-    if(post_type.name != 'Generic Post Type' and post_type.name != 'Generic Post Type for Complaints'):
+    if (post_type.name != 'Generic Post Type' and post_type.name != 'Generic Post Type for Complaints'):
         form_fields = json.loads(post_type.formfields)
         for (k, v) in form_fields.items():
-            for (key, value) in v.items():     
+            for (key, value) in v.items():
                 fieldposnr = value["fieldposnr"]
                 fieldlabel = value["fieldlabel"]
-                fieldtype  = value["fieldtype"]
-                enumvals   = value["enumvals"]
+                fieldtype = value["fieldtype"]
+                enumvals = value["enumvals"]
                 isRequired = value["isRequired"]
                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
 
                 if fieldposnr not in json_response:
                     json_response[fieldposnr] = []
-                
+
                 json_element = {}
                 json_element[column_names[0]] = fieldposnr
                 json_element[column_names[1]] = fieldlabel
@@ -255,15 +256,14 @@ def create_post(request, id):
 
                 json_response[fieldposnr].append(json_element)
 
-
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
 
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
 
-    #if "get_tag" in request.POST:
-     #   if query == "":
+    # if "get_tag" in request.POST:
+    #   if query == "":
     #        context["error_message"] = "You need to enter a query to get tag suggestions."
     #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
     #        #return render(request, 'PostCreate.html/' + id, context)
@@ -272,11 +272,10 @@ def create_post(request, id):
     #        if suggested_tags:
     #            context["suggested_tags"] = suggested_tags
     #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
-            
-            #return render(request, 'PostCreate.html/' + id, context)
-    
-    
-    #if "wiki_tag" in request.POST:
+
+    # return render(request, 'PostCreate.html/' + id, context)
+
+    # if "wiki_tag" in request.POST:
     #    wiki_tags["tags"] = []
     #    tags = request.POST.getlist('wiki_tag', "")
     #
@@ -284,8 +283,10 @@ def create_post(request, id):
     #        wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))
 
     else:
-        post = Post(name=name, description=description, user_id=User.objects.get(username=request.user), creation_date=timezone.now(), community_id=community, 
-                    form_fields=json.dumps(json_response), posttype_id = post_type, complaint=is_complaint, complaint_status=complaint_status)
+        post = Post(name=name, description=description, user_id=User.objects.get(username=request.user),
+                    creation_date=timezone.now(), community_id=community,
+                    form_fields=json.dumps(json_response), posttype_id=post_type, complaint=is_complaint,
+                    complaint_status=complaint_status)
         post.save()
 
         return HttpResponseRedirect(reverse('community:home'))
@@ -313,7 +314,7 @@ def getPostDetail(request, id):
     else:
         form_fields = []
 
-    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields }
+    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields}
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)

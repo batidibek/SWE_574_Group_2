@@ -197,7 +197,7 @@
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-outline-success" id="createPostType"
-                        {% if not communityActive == 'True' %}disabled{% endif %}>Save
+                        {% if not communityDetail.active %}disabled{% endif %}>Save
                 </button>
                 <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
                         style="margin-left: 10px;">Cancel
