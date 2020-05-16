@@ -189,7 +189,9 @@
                         <td>
 
                             <label class="checkboxContainer" id="isReq">
-                                <input type="checkbox" checked="checked">
+                                <input type="checkbox" checked="checked"
+                                       {% if not communityDetail.active %}disabled{% endif %}
+                                       {% if not post_type.owner == user.user %}disabled{% endif %}>
                                 <span class="checkmark"></span>
                             </label>
                         </td>
