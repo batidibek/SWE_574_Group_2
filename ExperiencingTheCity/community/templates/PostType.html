@@ -83,9 +83,10 @@
                         <div class="input-group-btn">
                             {% if user.user %}
                                 <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
-                                        onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'"
+                                        onclick="location.href='{% url 'community:new_post' post_type.id %}'"
                                         {% if not communityDetail.active %}disabled{% endif %}
-                                        {% if not post_type.active %}disabled{% endif %}
+                                        {% if post_type %}
+                                        {% if not post_type.active %}disabled{% endif %} {% endif %}
                                 >
                                     Create Post
                                 </button>
@@ -94,7 +95,9 @@
                                     <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
                                             data-toggle="modal" data-target="#myModal"
                                             {% if not communityDetail.active %}disabled{% endif %}
-                                            {% if not post_type.active %}disabled{% endif %}>
+                                            {% if post_type %}
+                                            {% if not post_type.active %}disabled{% endif %}
+                                            {% endif %}>
                                         Archive This Post Type
                                     </button>
 
@@ -141,7 +144,7 @@
                                    value="{{ post_type.name }}" name="PostTypeName"
                                    {% if not communityDetail.active %}disabled{% endif %}
                                    {% if not post_type.owner == user.user %}disabled{% endif %}
-                                   {% if not post_type.active %}disabled{% endif %}>
+                                    {% if post_type %} {% if not post_type.active %}disabled{% endif %} {% endif %}>
                         {% else %}
                             <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                                    placeholder="Enter post type name" name="PostTypeName">
@@ -156,7 +159,8 @@
                                       rows="5" name="PostTypeDescription"
                                       {% if not communityDetail.active %}disabled{% endif %}
                                       {% if not post_type.owner == user.user %}disabled{% endif %}
-                                      {% if not post_type.active %}disabled{% endif %}>{{ post_type.description }}</textarea>
+                                    {% if post_type %}{% if not post_type.active %}disabled
+                                      {% endif %} {% endif %}>{{ post_type.description }}</textarea>
                         {% else %}
                             <textarea class="form-control" id="PostTypeDescription"
                                       placeholder="Briefly describe your post type"
@@ -170,7 +174,7 @@
                                                                               name="isComplaint"
                                                                               {% if not communityDetail.active %}disabled{% endif %}
                                                                               {% if not post_type.owner == user.user %}disabled{% endif %}
-                                                                              {% if not post_type.active %}disabled{% endif %}><span
+                                {% if post_type %}  {% if not post_type.active %}disabled{% endif %} {% endif %}><span
                                 class="checkmark"
                         ></span>
                         </label>
@@ -196,13 +200,15 @@
                                     <input type="text" id="fieldPostNo1" class="dt_fieldposnr form-control"
                                            name="dt_fieldposnr" {% if not communityDetail.active %}disabled{% endif %}
                                            {% if not post_type.owner == user.user %}disabled{% endif %}
-                                           {% if not post_type.active %}disabled{% endif %}>
+                                            {% if post_type %}
+                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </th>
                                 <th scope="row">
                                     <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
                                            name="dt_fieldlabel" {% if not communityDetail.active %}disabled{% endif %}
                                            {% if not post_type.owner == user.user %}disabled{% endif %}
-                                           {% if not post_type.active %}disabled{% endif %}>
+                                            {% if post_type %}
+                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </th>
                                 <td>
                                     <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
@@ -210,7 +216,8 @@
                                             onchange="onSelectFType(this)"
                                             {% if not communityDetail.active %}disabled{% endif %}
                                             {% if not post_type.owner == user.user %}disabled{% endif %}
-                                            {% if not post_type.active %}disabled{% endif %}>
+                                            {% if post_type %}
+                                            {% if not post_type.active %}disabled{% endif %} {% endif %}>
 
                                         <option value="" disabled selected>Choose your option</option>
                                         <option value="TE">Text field</option>
@@ -230,7 +237,8 @@
                                 <td>
                                     <input type="text" id="enumValues1" class="enum_vals form-control "
                                            name="enum_vals" data-role="tagsinput" disabled
-                                           {% if not post_type.active %}disabled{% endif %}>
+                                            {% if post_type %}
+                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </td>
                                 <td>
 
@@ -238,7 +246,8 @@
                                         <input type="checkbox" checked="checked"
                                                {% if not communityDetail.active %}disabled{% endif %}
                                                {% if not post_type.owner == user.user %}disabled{% endif %}
-                                               {% if not post_type.active %}disabled{% endif %}
+                                                {% if post_type %}
+                                               {% if not post_type.active %}disabled{% endif %} {% endif %}
                                         >
                                         <span class="checkmark"></span>
                                     </label>
@@ -248,7 +257,8 @@
                                             id="addDataField"
                                             {% if not communityDetail.active %}disabled{% endif %}
                                             {% if not post_type.owner == user.user %}disabled{% endif %}
-                                            {% if not post_type.active %}disabled{% endif %}>
+                                            {% if post_type %}
+                                            {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                         <span id="addDataBtn" class="fa fa-plus"> </span>
                                     </button>
                                 </td>
@@ -263,7 +273,8 @@
                                                        name="dt_fieldposnr"
                                                        {% if not communityDetail.active %}disabled{% endif %}
                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
-                                                       {% if not post_type.active %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
                                                        value="{{ value2.fieldposnr }}">
                                             </th>
                                             <th scope="row">
@@ -271,7 +282,8 @@
                                                        name="dt_fieldlabel"
                                                        {% if not communityDetail.active %}disabled{% endif %}
                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
-                                                       {% if not post_type.active %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
                                                        value="{{ value2.fieldlabel }}">
                                             </th>
                                             <td>
@@ -280,66 +292,68 @@
                                                         onchange="onSelectFType(this)"
                                                         {% if not communityDetail.active %}disabled{% endif %}
                                                         {% if not post_type.owner == user.user %}disabled{% endif %}
-                                                        {% if not post_type.active %}disabled{% endif %}>
+                                                        {% if post_type %}
+                                                        {% if not post_type.active %}disabled{% endif %} {% endif %}>
 
-                                                    <option value="" disabled>Choose your option</option>
-                                                    <option value="TE"
-                                                            {% if value2.fieldtype == "TE" %}selected{% endif %}>
-                                                        Text
-                                                        field
-                                                    </option>
-                                                    <option value="TA"
-                                                            {% if value2.fieldtype == "TA" %}selected{% endif %}>
-                                                        Text
-                                                        area
-                                                    </option>
-                                                    <option value="DA"
-                                                            {% if value2.fieldtype == "DA" %}selected{% endif %}>
-                                                        Date
-                                                    </option>
-                                                    <option value="TI"
-                                                            {% if value2.fieldtype == "TI" %}selected{% endif %}>
-                                                        Time
-                                                    </option>
-                                                    <option value="IN"
-                                                            {% if value2.fieldtype == "IN" %}selected{% endif %}>
-                                                        Integer
-                                                    </option>
-                                                    <option value="DE"
-                                                            {% if value2.fieldtype == "DE" %}selected{% endif %}>
-                                                        Decimal
-                                                    </option>
-                                                    <option value="IM"
-                                                            {% if value2.fieldtype == "IM" %}selected{% endif %}>
-                                                        Image
-                                                    </option>
-                                                    <option value="VI"
-                                                            {% if value2.fieldtype == "VI" %}selected{% endif %}>
-                                                        Video
-                                                    </option>
-                                                    <option value="AU"
-                                                            {% if value2.fieldtype == "AU" %}selected{% endif %}>
-                                                        Audio
-                                                    </option>
-                                                    <option value="UR"
-                                                            {% if value2.fieldtype == "UR" %}selected{% endif %}>
-                                                        URI
-                                                    </option>
-                                                    <option value="LO"
-                                                            {% if value2.fieldtype == "LO" %}selected{% endif %}>
-                                                        Location
-                                                    </option>
-                                                    <option value="EN"
-                                                            {% if value2.fieldtype == "EN" %}selected{% endif %}>
-                                                        Enumerated
-                                                    </option>
+                                                <option value="" disabled>Choose your option</option>
+                                                <option value="TE"
+                                                        {% if value2.fieldtype == "TE" %}selected{% endif %}>
+                                                    Text
+                                                    field
+                                                </option>
+                                                <option value="TA"
+                                                        {% if value2.fieldtype == "TA" %}selected{% endif %}>
+                                                    Text
+                                                    area
+                                                </option>
+                                                <option value="DA"
+                                                        {% if value2.fieldtype == "DA" %}selected{% endif %}>
+                                                    Date
+                                                </option>
+                                                <option value="TI"
+                                                        {% if value2.fieldtype == "TI" %}selected{% endif %}>
+                                                    Time
+                                                </option>
+                                                <option value="IN"
+                                                        {% if value2.fieldtype == "IN" %}selected{% endif %}>
+                                                    Integer
+                                                </option>
+                                                <option value="DE"
+                                                        {% if value2.fieldtype == "DE" %}selected{% endif %}>
+                                                    Decimal
+                                                </option>
+                                                <option value="IM"
+                                                        {% if value2.fieldtype == "IM" %}selected{% endif %}>
+                                                    Image
+                                                </option>
+                                                <option value="VI"
+                                                        {% if value2.fieldtype == "VI" %}selected{% endif %}>
+                                                    Video
+                                                </option>
+                                                <option value="AU"
+                                                        {% if value2.fieldtype == "AU" %}selected{% endif %}>
+                                                    Audio
+                                                </option>
+                                                <option value="UR"
+                                                        {% if value2.fieldtype == "UR" %}selected{% endif %}>
+                                                    URI
+                                                </option>
+                                                <option value="LO"
+                                                        {% if value2.fieldtype == "LO" %}selected{% endif %}>
+                                                    Location
+                                                </option>
+                                                <option value="EN"
+                                                        {% if value2.fieldtype == "EN" %}selected{% endif %}>
+                                                    Enumerated
+                                                </option>
                                                 </select>
                                             </td>
                                             <td>
                                                 <input type="text" class="enum_vals form-control "
                                                        name="enum_vals" data-role="tagsinput"
                                                        {% if not value2.fieldtype == "EN" %}disabled{% endif %}
-                                                       {% if not post_type.active %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
                                                        value="{{ value2.enumvals }}">
                                             </td>
                                             <td>
@@ -349,7 +363,8 @@
                                                            {% if value2.isRequired == "true" %}checked{% endif %}
                                                            {% if not communityDetail.active %}disabled{% endif %}
                                                            {% if not post_type.owner == user.user %}disabled{% endif %}
-                                                           {% if not post_type.active %}disabled{% endif %}>
+                                                            {% if post_type %}
+                                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                                     <span class="checkmark"></span>
                                                 </label>
                                             </td>
@@ -358,7 +373,8 @@
                                                         onclick="removePostField(this)"
                                                         {% if not communityDetail.active %}disabled{% endif %}
                                                         {% if not post_type.owner == user.user %}disabled{% endif %}
-                                                        {% if not post_type.active %}disabled{% endif %}><span
+                                                        {% if post_type %}{% if not post_type.active %}disabled
+                                                        {% endif %} {% endif %}><span
                                                         id="removeData"
                                                         class="fa fa-minus"
                                                 > </span>
@@ -376,7 +392,9 @@
                         <button type="submit" class="btn btn-outline-success" id="createPostType"
                                 {% if not communityDetail.active %}disabled{% endif %}
                                 {% if not post_type.owner == user.user %}disabled{% endif %}
-                                {% if not post_type.active %}disabled{% endif %}>Save
+                                {% if post_type %}
+                                {% if not post_type.active %}disabled{% endif %}
+                                {% endif %}>Save
                         </button>
                         <button class="btn btn-outline-danger" name="cancel" value="cancel"
                                 style="margin-left: 10px;"
