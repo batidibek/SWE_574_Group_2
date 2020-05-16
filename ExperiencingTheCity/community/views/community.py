@@ -265,7 +265,8 @@ def create_post(request, id):
                 json_element[column_names[4]] = isRequired
                 json_element[column_names[5]] = fieldValue
 
-                json_response[fieldposnr].append(json_element)
+                json_response[fieldposnr] = json_element
+
 
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
@@ -304,8 +305,6 @@ def create_post(request, id):
 
 
 def getPosts(request, id):
-    print("======================")
-    print(id)
     communityPosts = Post.objects.filter(community_id=id)
     context = {'communityPosts': communityPosts}
 
