@@ -10,6 +10,7 @@ urlpatterns = [
     path('sign-in/', users.sign_in, name='sign_in'),
     path('new-community/', community.new_community, name='new_community'),
     path('communities/', community.community_list, name='community_list'),
+    path('posts/', community.community_list, name='post_list'),
     path('communities/<id>', community.getCommunity, name="community_detail"),
     path('communities/new-post-type/<id>', community.getCommunityHeader, name="new_post_type"),
 

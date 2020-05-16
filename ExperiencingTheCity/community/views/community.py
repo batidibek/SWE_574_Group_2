@@ -293,6 +293,8 @@ def create_post(request, id):
 
 
 def getPosts(request, id):
+    print("======================")
+    print(id)
     communityPosts = Post.objects.filter(community_id=id)
     context = {'communityPosts': communityPosts}
 
