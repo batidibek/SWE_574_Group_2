@@ -23,6 +23,7 @@ class PostType(models.Model):
         Community, default="", on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     complaint = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
 

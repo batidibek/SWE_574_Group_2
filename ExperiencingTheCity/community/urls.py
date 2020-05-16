@@ -30,6 +30,7 @@ urlpatterns = [
     path('create-post-type', community.newPostType, name="create_post_type"),
     path('getCommunityByFilter', community.getCommunityByFilter),
     path('archive_community/<id>', community.archiveCommunity, name='archive_community' ),
+    path('archive_posttype/<id>', community.archivePostType, name='archive_posttype' ),
     path('create-post/<id>', community.create_post, name='create_post'),
 
 ]

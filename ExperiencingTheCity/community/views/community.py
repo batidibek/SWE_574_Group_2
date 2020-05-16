@@ -208,6 +208,15 @@ def archiveCommunity(request, id):
         context["user"] = community_user
     return HttpResponseRedirect(reverse('community:home'))
 
+def archivePostType(request, id):
+    pt = get_object_or_404(PostType, pk=id)
+    pt.active = False
+    pt.save()
+    context = {'post_type': pt}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return HttpResponseRedirect(reverse('community:post_types', args=(pt.community_id_id, True,)))
 
 ## POST OPERATIONS
 
