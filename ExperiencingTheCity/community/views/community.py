@@ -210,6 +210,9 @@ def archiveCommunity(request, id):
 
 def archivePostType(request, id):
     pt = get_object_or_404(PostType, pk=id)
+    print("=================")
+    print(pt.id)
+    print(id)
     pt.active = False
     pt.save()
     context = {'post_type': pt}
