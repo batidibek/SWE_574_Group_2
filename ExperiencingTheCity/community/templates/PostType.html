@@ -208,8 +208,89 @@
                             </button>
                         </td>
                     </tr>
+                    {% for key, value in form_fields.items %}
+                        {% for key2, value2 in value.items %}
+                            <tr>
+                                <th scope="row">
+
+                                    <input type="text" class="dt_fieldposnr form-control"
+                                           name="dt_fieldposnr" {% if not communityDetail.active %}disabled{% endif %}
+                                           {% if not post_type.owner == user.user %}disabled{% endif %}
+                                           value="{{ value2.fieldposnr }}">
+                                </th>
+                                <th scope="row">
+                                    <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
+                                           name="dt_fieldlabel" {% if not communityDetail.active %}disabled{% endif %}
+                                           {% if not post_type.owner == user.user %}disabled{% endif %}
+                                           value="{{ value2.fieldlabel }}">
+                                </th>
+                                <td>
+                                    <select class="dt_fieldtype mdb-select md-form form-control"
+                                            name="dt_fieldtype"
+                                            onchange="onSelectFType(this)"
+                                            {% if not communityDetail.active %}disabled{% endif %}
+                                            {% if not post_type.owner == user.user %}disabled{% endif %}>
+
+                                        <option value="" disabled>Choose your option</option>
+                                        <option value="TE" {% if value2.fieldtype == "TE" %}selected{% endif %}>Text
+                                            field
+                                        </option>
+                                        <option value="TA" {% if value2.fieldtype == "TA" %}selected{% endif %}>>Text
+                                            area
+                                        </option>
+                                        <option value="DA" {% if value2.fieldtype == "DA" %}selected{% endif %}>>Date
+                                        </option>
+                                        <option value="TI" {% if value2.fieldtype == "TI" %}selected{% endif %}>>Time
+                                        </option>
+                                        <option value="IN" {% if value2.fieldtype == "IN" %}selected{% endif %}>>Integer
+                                        </option>
+                                        <option value="DE" {% if value2.fieldtype == "DE" %}selected{% endif %}>>Decimal
+                                        </option>
+                                        <option value="IM" {% if value2.fieldtype == "IM" %}selected{% endif %}>>Image
+                                        </option>
+                                        <option value="VI" {% if value2.fieldtype == "VI" %}selected{% endif %}>>Video
+                                        </option>
+                                        <option value="AU" {% if value2.fieldtype == "AU" %}selected{% endif %}>>Audio
+                                        </option>
+                                        <option value="UR" {% if value2.fieldtype == "UR" %}selected{% endif %}>>URI
+                                        </option>
+                                        <option value="LO" {% if value2.fieldtype == "LO" %}selected{% endif %}>
+                                            >Location
+                                        </option>
+                                        <option value="EN" {% if value2.fieldtype == "EN" %}selected{% endif %}>
+                                            >Enumerated
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="enum_vals form-control "
+                                           name="enum_vals" data-role="tagsinput"
+                                           {% if not value2.fieldtype == "EN" %}disabled{% endif %}
+                                           value="{{ value2.enumvals }}">
+                                </td>
+                                <td>
+
+                                    <label class="checkboxContainer">
+                                        <input type="checkbox"
+                                               {% if value2.isRequired == "true" %}checked{% endif %}
+                                               {% if not communityDetail.active %}disabled{% endif %}
+                                               {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn addDataField" onclick="removePostField(this)"><span id="removeData"
+                                                                                         class="fa fa-minus"
+                                                                                         {% if not communityDetail.active %}disabled{% endif %}
+                                                                                         {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
+
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-outline-success" id="createPostType"
