@@ -15,7 +15,7 @@ urlpatterns = [
     path('communities/new-post-type/<id>', community.getCommunityHeader, name="new_post_type"),
 
     path('communities/post_types/<id>/<activeStatus>', community.getPostTypes, name="post_types"),
-    path('communities/post_types/<id>/<activeStatus>', community.getPostType, name="post_type"),
+    path('communities/post_type/<id>/<activeStatus>', community.getPostType, name="post_type"),
     path('communities/post_types/detail/<id>/createpost', community.getPostType, name="new_post"),
     path('communities/new_post/<id>', community.new_post, name="new_post"),
     path('communities/posts/<id>', community.getPosts, name="posts"),

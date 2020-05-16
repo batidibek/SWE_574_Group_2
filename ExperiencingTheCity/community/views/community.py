@@ -179,6 +179,8 @@ def getPostTypes(request, id, activeStatus):
 
 
 def getPostType(request, id, activeStatus):
+    print("=====================")
+    print(id)
     post_type = get_object_or_404(PostType, pk=id)
     context = {'post_type': post_type, 'communityActive': activeStatus}
     if request.user.is_authenticated:
