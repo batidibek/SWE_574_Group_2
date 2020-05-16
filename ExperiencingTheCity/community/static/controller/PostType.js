@@ -11,7 +11,8 @@ $(document).ready(function () {
     }
 
     $("#addDataField").on("click", function () {
-        var new_row = $("#PostTypeFieldsTable tr:last").clone().find('input').val('').end();
+        // var new_row = $("#PostTypeFieldsTable tr:last").clone().find('input').val('').end();
+        var new_row = $("#rowToClone_0").clone().removeAttr("id");
         new_row.find('#addDataBtn').removeClass('fa fa-plus');
         new_row.find('#addDataBtn').addClass('fa fa-minus').attr('onclick', 'removePostField(this)');
         new_row.find('.bootstrap-tagsinput').remove();
@@ -36,7 +37,7 @@ function addDataTypeFields(oFormFields) {
     if (oFormFields !== "") {
         var flds = JSON.parse(oFormFields);
 
-        var fieldList = flds['theFields'];
+        var fieldList = flds['fields'];
 
         var lv_fieldtype = "";
         var obj = JSON.parse(fieldJson);
