@@ -5,72 +5,72 @@
     <style>
         /* The container */
         .checkboxContainer {
-          display: block;
-          position: relative;
-          padding-left: 35px;
-          margin-bottom: 12px;
-          cursor: pointer;
-          font-size: 22px;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 22px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-        
+
         /* Hide the browser's default checkbox */
         .checkboxContainer input {
-          position: absolute;
-          opacity: 0;
-          cursor: pointer;
-          height: 0;
-          width: 0;
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
         }
-        
+
         /* Create a custom checkbox */
         .checkmark {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 25px;
-          width: 25px;
-          background-color: #eee;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
         }
-        
+
         /* On mouse-over, add a grey background color */
         .checkboxContainer:hover input ~ .checkmark {
-          background-color: #ccc;
+            background-color: #ccc;
         }
-        
+
         /* When the checkbox is checked, add a blue background */
         .checkboxContainer input:checked ~ .checkmark {
-          background-color: #2196F3;
+            background-color: #2196F3;
         }
-        
+
         /* Create the checkmark/indicator (hidden when not checked) */
         .checkmark:after {
-          content: "";
-          position: absolute;
-          display: none;
+            content: "";
+            position: absolute;
+            display: none;
         }
-        
+
         /* Show the checkmark when checked */
         .checkboxContainer input:checked ~ .checkmark:after {
-          display: block;
+            display: block;
         }
-        
+
         /* Style the checkmark/indicator */
         .checkboxContainer .checkmark:after {
-          left: 9px;
-          top: 5px;
-          width: 5px;
-          height: 10px;
-          border: solid white;
-          border-width: 0 3px 3px 0;
-          -webkit-transform: rotate(45deg);
-          -ms-transform: rotate(45deg);
-          transform: rotate(45deg);
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
         }
-        </style>
+    </style>
 
     <div class="container" style="width: 800px; margin:0 auto;">
         {% if post_type %}
@@ -104,7 +104,8 @@
                            value="{{ post_type.formfields }}" name="PostTypeFields">
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                            value="{{ post_type.name }}" name="name"
-                           {% if not communityActive == 'True' %}disabled{% endif %}>
+                           {% if not communityDetail.active %}disabled{% endif %}
+                           {% if not post_type.owner == user.user %}disabled{% endif %}>
                 {% else %}
                     <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                            placeholder="Enter post type name" name="PostTypeName">
@@ -117,7 +118,8 @@
                 {% if post_type %}
                     <textarea class="form-control" id="PostTypeDescription"
                               rows="5" name="PostTypeDescription"
-                              {% if not communityActive == 'True' %}disabled{% endif %}>{{ post_type.description }}</textarea>
+                              {% if not communityDetail.active %}disabled{% endif %}
+                              {% if not post_type.owner == user.user %}disabled{% endif %}>{{ post_type.description }}</textarea>
                 {% else %}
                     <textarea class="form-control" id="PostTypeDescription"
                               placeholder="Briefly describe your post type"
@@ -127,8 +129,9 @@
             </div>
 
             <div class="form-group">
-                    <label class="checkboxContainer">Complaint Type<input type="checkbox" value="0" name="isComplaint"><span class="checkmark"></span>
-                      </label>  
+                <label class="checkboxContainer">Complaint Type<input type="checkbox" value="0" name="isComplaint"><span
+                        class="checkmark"></span>
+                </label>
             </div>
             <br/>
             <br/>
@@ -149,15 +152,20 @@
                         <th scope="row">
 
                             <input type="text" id="fieldPostNo1" class="dt_fieldposnr form-control"
-                                   name="dt_fieldposnr">
+                                   name="dt_fieldposnr" {% if not communityDetail.active %}disabled{% endif %}
+                                   {% if not post_type.owner == user.user %}disabled{% endif %}>
                         </th>
                         <th scope="row">
                             <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
-                                   name="dt_fieldlabel">
+                                   name="dt_fieldlabel" {% if not communityDetail.active %}disabled{% endif %}
+                                   {% if not post_type.owner == user.user %}disabled{% endif %}>
                         </th>
                         <td>
-                            <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype"
-                                    onchange="onSelectFType(this)">
+                            <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
+                                    name="dt_fieldtype"
+                                    onchange="onSelectFType(this)"
+                                    {% if not communityDetail.active %}disabled{% endif %}
+                                    {% if not post_type.owner == user.user %}disabled{% endif %}>
 
                                 <option value="" disabled selected>Choose your option</option>
                                 <option value="TE">Text field</option>
@@ -180,16 +188,19 @@
                         </td>
                         <td>
 
-                              <label class="checkboxContainer" id="isReq">
+                            <label class="checkboxContainer" id="isReq">
                                 <input type="checkbox" checked="checked">
                                 <span class="checkmark"></span>
-                              </label>                              
+                            </label>
                         </td>
                         <td>
                             <button type="button" class="btn addDataField"
                                     id="addDataField"><span id="addDataBtn"
 
-                                    class="fa fa-plus"> </span></button>
+                                                            class="fa fa-plus"
+                                                            {% if not communityDetail.active %}disabled{% endif %}
+                                                            {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
+                            </button>
                         </td>
                     </tr>
                     </tbody>
@@ -197,7 +208,8 @@
             </div>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-outline-success" id="createPostType"
-                        {% if not communityDetail.active %}disabled{% endif %}>Save
+                        {% if not communityDetail.active %}disabled{% endif %}
+                        {% if not post_type.owner == user.user %}disabled{% endif %}>Save
                 </button>
                 <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
                         style="margin-left: 10px;">Cancel
