@@ -210,6 +210,7 @@
                     </tr>
                     {% for key, value in form_fields.items %}
                         {% for key2, value2 in value.items %}
+                            {% if not value2.fieldposnr  ==  "" %}
                             <tr>
                                 <th scope="row">
 
@@ -287,6 +288,7 @@
                                     </button>
                                 </td>
                             </tr>
+                            {% endif %}
                         {% endfor %}
                     {% endfor %}
                     </tbody>
