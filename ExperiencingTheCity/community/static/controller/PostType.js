@@ -19,6 +19,7 @@ $(document).ready(function () {
         new_row.find('#enumValues1').tagsinput();
 
         $("#PostTypeFieldsTable").append(new_row);
+        $("#rowToClone_0").find('input').val('').end();
     });
 
     $("#createPostType").on("click", function (event) {

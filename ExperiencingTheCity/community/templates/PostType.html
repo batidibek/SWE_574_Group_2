@@ -235,27 +235,27 @@
                                         <option value="TE" {% if value2.fieldtype == "TE" %}selected{% endif %}>Text
                                             field
                                         </option>
-                                        <option value="TA" {% if value2.fieldtype == "TA" %}selected{% endif %}>>Text
+                                        <option value="TA" {% if value2.fieldtype == "TA" %}selected{% endif %}>Text
                                             area
                                         </option>
-                                        <option value="DA" {% if value2.fieldtype == "DA" %}selected{% endif %}>>Date
+                                        <option value="DA" {% if value2.fieldtype == "DA" %}selected{% endif %}>Date
                                         </option>
-                                        <option value="TI" {% if value2.fieldtype == "TI" %}selected{% endif %}>>Time
+                                        <option value="TI" {% if value2.fieldtype == "TI" %}selected{% endif %}>Time
                                         </option>
-                                        <option value="IN" {% if value2.fieldtype == "IN" %}selected{% endif %}>>Integer
+                                        <option value="IN" {% if value2.fieldtype == "IN" %}selected{% endif %}>Integer
                                         </option>
-                                        <option value="DE" {% if value2.fieldtype == "DE" %}selected{% endif %}>>Decimal
+                                        <option value="DE" {% if value2.fieldtype == "DE" %}selected{% endif %}>Decimal
                                         </option>
-                                        <option value="IM" {% if value2.fieldtype == "IM" %}selected{% endif %}>>Image
+                                        <option value="IM" {% if value2.fieldtype == "IM" %}selected{% endif %}>Image
                                         </option>
-                                        <option value="VI" {% if value2.fieldtype == "VI" %}selected{% endif %}>>Video
+                                        <option value="VI" {% if value2.fieldtype == "VI" %}selected{% endif %}>Video
                                         </option>
-                                        <option value="AU" {% if value2.fieldtype == "AU" %}selected{% endif %}>>Audio
+                                        <option value="AU" {% if value2.fieldtype == "AU" %}selected{% endif %}>Audio
                                         </option>
-                                        <option value="UR" {% if value2.fieldtype == "UR" %}selected{% endif %}>>URI
+                                        <option value="UR" {% if value2.fieldtype == "UR" %}selected{% endif %}>URI
                                         </option>
                                         <option value="LO" {% if value2.fieldtype == "LO" %}selected{% endif %}>
-                                            >Location
+                                            Location
                                         </option>
                                         <option value="EN" {% if value2.fieldtype == "EN" %}selected{% endif %}>
                                             >Enumerated
@@ -279,10 +279,11 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn addDataField" onclick="removePostField(this)"><span id="removeData"
-                                                                                         class="fa fa-minus"
-                                                                                         {% if not communityDetail.active %}disabled{% endif %}
-                                                                                         {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
+                                    <button type="button" class="btn addDataField" onclick="removePostField(this)"><span
+                                            id="removeData"
+                                            class="fa fa-minus"
+                                            {% if not communityDetail.active %}disabled{% endif %}
+                                            {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
                                     </button>
                                 </td>
                             </tr>
