@@ -75,49 +75,35 @@
     <div class="container" style="width: 100%; margin:0 auto;">
 
         <div class="row">
-            <div class="col-md-3 order-md-2 mb-4">
-                <h3>Also see</h3>
-                {#                <ul class="list-group mb-3">#}
-                {#                    <li class="list-group-item d-flex justify-content-between lh-condensed">#}
-                {#                        <div>#}
-                {#                            <h6 class="my-0">#}
-                {#                                <a href="post_types/{{ communityDetail.id }}/{{ communityDetail.active }}"#}
-                {#                                   class="stretched-link">Community Post#}
-                {#                                    Types</a>#}
-                {#                            </h6>#}
-                {#                            <small class="text-muted">Check post types and select or create to have a new post!</small>#}
-                {#                        </div>#}
-                {#                        <span class="text-muted">12</span>#}
-                {#                    </li>#}
-                {#                </ul>#}
-                <form class="card p-2">
-                    <div class="input-group-btn">
-                        {% if user.user %}
-                            {#                            <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"#}
-                            {#                                    onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'"#}
-                            {#                                    {% if not communityDetail.active %}disabled{% endif %}>#}
-                            {#                                Create Post Type#}
-                            {#                            </button>#}
 
-                            {% if user.user == post_type.owner %}
-                                <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
-                                        data-toggle="modal" data-target="#myModal"
-                                        {% if not communityDetail.active %}disabled{% endif %}>
-                                    Archive This Post Type
+            {% if post_type %}
+                <div class="col-md-3 order-md-2 mb-4">
+                    <h3>Also see</h3>
+                    <form class="card p-2">
+                        <div class="input-group-btn">
+                            {% if user.user %}
+                                <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                        onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'"
+                                        {% if not communityDetail.active %}disabled{% endif %}
+                                        {% if not post_type.active %}disabled{% endif %}
+                                >
+                                    Create Post
                                 </button>
 
-                            {% endif %}
+                                {% if user.user == post_type.owner and post_type.id != "" %}
+                                    <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                            data-toggle="modal" data-target="#myModal"
+                                            {% if not communityDetail.active %}disabled{% endif %}
+                                            {% if not post_type.active %}disabled{% endif %}>
+                                        Archive This Post Type
+                                    </button>
 
-                            {% if user.user != communityDetail.owner %}
-                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px"
-                                        {% if not communityDetail.active %}disabled{% endif %}>
-                                    Subscribe
-                                </button>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </div>
-                </form>
-            </div>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
             <div class="col-md-9 order-md-1">
                 {% if post_type %}
                     <h3>Post Type: "{{ post_type.name }}"</h3>
@@ -154,7 +140,8 @@
                             <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                                    value="{{ post_type.name }}" name="PostTypeName"
                                    {% if not communityDetail.active %}disabled{% endif %}
-                                   {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                   {% if not post_type.owner == user.user %}disabled{% endif %}
+                                   {% if not post_type.active %}disabled{% endif %}>
                         {% else %}
                             <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
                                    placeholder="Enter post type name" name="PostTypeName">
@@ -168,7 +155,8 @@
                             <textarea class="form-control" id="PostTypeDescription"
                                       rows="5" name="PostTypeDescription"
                                       {% if not communityDetail.active %}disabled{% endif %}
-                                      {% if not post_type.owner == user.user %}disabled{% endif %}>{{ post_type.description }}</textarea>
+                                      {% if not post_type.owner == user.user %}disabled{% endif %}
+                                      {% if not post_type.active %}disabled{% endif %}>{{ post_type.description }}</textarea>
                         {% else %}
                             <textarea class="form-control" id="PostTypeDescription"
                                       placeholder="Briefly describe your post type"
@@ -179,8 +167,12 @@
 
                     <div class="form-group">
                         <label class="checkboxContainer">Complaint Type<input type="checkbox" value="0"
-                                                                              name="isComplaint"><span
-                                class="checkmark"></span>
+                                                                              name="isComplaint"
+                                                                              {% if not communityDetail.active %}disabled{% endif %}
+                                                                              {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                                              {% if not post_type.active %}disabled{% endif %}><span
+                                class="checkmark"
+                        ></span>
                         </label>
                     </div>
                     <br/>
@@ -203,19 +195,22 @@
 
                                     <input type="text" id="fieldPostNo1" class="dt_fieldposnr form-control"
                                            name="dt_fieldposnr" {% if not communityDetail.active %}disabled{% endif %}
-                                           {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                           {% if not post_type.owner == user.user %}disabled{% endif %}
+                                           {% if not post_type.active %}disabled{% endif %}>
                                 </th>
                                 <th scope="row">
                                     <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
                                            name="dt_fieldlabel" {% if not communityDetail.active %}disabled{% endif %}
-                                           {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                           {% if not post_type.owner == user.user %}disabled{% endif %}
+                                           {% if not post_type.active %}disabled{% endif %}>
                                 </th>
                                 <td>
                                     <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
                                             name="dt_fieldtype"
                                             onchange="onSelectFType(this)"
                                             {% if not communityDetail.active %}disabled{% endif %}
-                                            {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                            {% if not post_type.owner == user.user %}disabled{% endif %}
+                                            {% if not post_type.active %}disabled{% endif %}>
 
                                         <option value="" disabled selected>Choose your option</option>
                                         <option value="TE">Text field</option>
@@ -234,24 +229,27 @@
                                 </td>
                                 <td>
                                     <input type="text" id="enumValues1" class="enum_vals form-control "
-                                           name="enum_vals" data-role="tagsinput" disabled>
+                                           name="enum_vals" data-role="tagsinput" disabled
+                                           {% if not post_type.active %}disabled{% endif %}>
                                 </td>
                                 <td>
 
                                     <label class="checkboxContainer" id="isReq">
                                         <input type="checkbox" checked="checked"
                                                {% if not communityDetail.active %}disabled{% endif %}
-                                               {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                               {% if not post_type.owner == user.user %}disabled{% endif %}
+                                               {% if not post_type.active %}disabled{% endif %}
+                                        >
                                         <span class="checkmark"></span>
                                     </label>
                                 </td>
                                 <td>
                                     <button type="button" class="btn addDataField"
-                                            id="addDataField"><span id="addDataBtn"
-
-                                                                    class="fa fa-plus"
-                                                                    {% if not communityDetail.active %}disabled{% endif %}
-                                                                    {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
+                                            id="addDataField"
+                                            {% if not communityDetail.active %}disabled{% endif %}
+                                            {% if not post_type.owner == user.user %}disabled{% endif %}
+                                            {% if not post_type.active %}disabled{% endif %}>
+                                        <span id="addDataBtn" class="fa fa-plus"> </span>
                                     </button>
                                 </td>
                             </tr>
@@ -265,6 +263,7 @@
                                                        name="dt_fieldposnr"
                                                        {% if not communityDetail.active %}disabled{% endif %}
                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                       {% if not post_type.active %}disabled{% endif %}
                                                        value="{{ value2.fieldposnr }}">
                                             </th>
                                             <th scope="row">
@@ -272,6 +271,7 @@
                                                        name="dt_fieldlabel"
                                                        {% if not communityDetail.active %}disabled{% endif %}
                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                       {% if not post_type.active %}disabled{% endif %}
                                                        value="{{ value2.fieldlabel }}">
                                             </th>
                                             <td>
@@ -279,7 +279,8 @@
                                                         name="dt_fieldtype"
                                                         onchange="onSelectFType(this)"
                                                         {% if not communityDetail.active %}disabled{% endif %}
-                                                        {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                        {% if not post_type.active %}disabled{% endif %}>
 
                                                     <option value="" disabled>Choose your option</option>
                                                     <option value="TE"
@@ -338,6 +339,7 @@
                                                 <input type="text" class="enum_vals form-control "
                                                        name="enum_vals" data-role="tagsinput"
                                                        {% if not value2.fieldtype == "EN" %}disabled{% endif %}
+                                                       {% if not post_type.active %}disabled{% endif %}
                                                        value="{{ value2.enumvals }}">
                                             </td>
                                             <td>
@@ -346,17 +348,20 @@
                                                     <input type="checkbox"
                                                            {% if value2.isRequired == "true" %}checked{% endif %}
                                                            {% if not communityDetail.active %}disabled{% endif %}
-                                                           {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                                           {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                           {% if not post_type.active %}disabled{% endif %}>
                                                     <span class="checkmark"></span>
                                                 </label>
                                             </td>
                                             <td>
                                                 <button type="button" class="btn addDataField"
-                                                        onclick="removePostField(this)"><span
+                                                        onclick="removePostField(this)"
+                                                        {% if not communityDetail.active %}disabled{% endif %}
+                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                        {% if not post_type.active %}disabled{% endif %}><span
                                                         id="removeData"
                                                         class="fa fa-minus"
-                                                        {% if not communityDetail.active %}disabled{% endif %}
-                                                        {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
+                                                > </span>
                                                 </button>
                                             </td>
                                         </tr>
@@ -370,10 +375,13 @@
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-outline-success" id="createPostType"
                                 {% if not communityDetail.active %}disabled{% endif %}
-                                {% if not post_type.owner == user.user %}disabled{% endif %}>Save
+                                {% if not post_type.owner == user.user %}disabled{% endif %}
+                                {% if not post_type.active %}disabled{% endif %}>Save
                         </button>
-                        <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
-                                style="margin-left: 10px;">Cancel
+                        <button class="btn btn-outline-danger" name="cancel" value="cancel"
+                                style="margin-left: 10px;"
+                                onclick="location.href='{% url 'community:post_types' communityDetail.id communityDetail.active %}'">
+                            Cancel
                         </button>
                     </div>
                 </form>
@@ -400,10 +408,12 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"
-                                onclick="location.href='{% url 'community:archive_posttype' post_type.id %}'">Yes
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        {% if post_type %}
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                    onclick="location.href='{% url 'community:archive_posttype' post_type.id %}'">Yes
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        {% endif %}
                     </div>
 
                 </div>
