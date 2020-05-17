@@ -333,7 +333,15 @@ def create_post(request, id):
 
 def getPosts(request, id):
     communityPosts = Post.objects.filter(community_id=id)
-    context = {'communityPosts': communityPosts}
+    posts = []
+
+    for post in communityPosts:
+        report_count = InappropriatePosts.objects.filter(post_id=post).count()
+
+        if report_count <= 5:
+            posts.append(post)
+
+    context = {'communityPosts': posts}
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
