@@ -5,46 +5,14 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3 order-md-2 mb-4">
-                <h3>Also see</h3>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">
-                                <a href="" class="stretched-link">Community Post
-                                    Types</a>
-                            </h6>
-                            <small class="text-muted">Check post types and select or create to have a new post!</small>
-                        </div>
-                        <span class="text-muted">12</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0"><a href="" class="stretched-link">Community Posts</a>
-                            </h6>
-                            <small class="text-muted">View community posts and contribute!</small>
-                        </div>
-                        <span class="text-muted">198</span>
-                    </li>
-                </ul>
+            <div class="col-md-3 order-md-2 mb-4">             
                 <form class="card p-2">
                     <div class="input-group-btn">
                         {% if user.user %}
-                            <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
-                                    onclick="location.href=''">
-                                Create Post Type
-                            </button>
-
                             {% if user.user == post.user_id %}
                                 <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
                                         data-toggle="modal" data-target="#myModal">
                                     Archive the Community
-                                </button>
-                            {% endif %}
-
-                            {% if user.user != post.user_id %}
-                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
-                                    Subscribe
                                 </button>
                             {% endif %}
                         {% endif %}
@@ -56,7 +24,8 @@
                     <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
                 <br/>
                 <hr style="border: 1px solid gray;" />
-                <form>
+            <form id="postdetail" method="POST" action="{% url 'community:create_comment' post.id %}">
+            {% csrf_token %}>
                     {% csrf_token %}
                     {% if post_type.name == "Generic Post Type" %}
                         <div class="form-group" style="display: flex">
@@ -192,6 +161,20 @@
                                width="100%"
                                disabled>
                     </div> -->
+
+                    {% if user.user %}
+                    <div class="form-group">
+                        <!-- <input type="text" class="form-control" placeholder="Write your comment here!"/> -->
+                        <textarea class="form-control" placeholder="Write your comment here!" rows="5" name="commentbox"></textarea>
+                        <br>
+                        <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button>
+                    </div>
+                    <!-- <input type="textarea" rows=5 name="comment" style="width: 800px; height: 145px;"> -->
+                    <!-- <textarea placeholder="Write your comment here!"></textarea> -->
+                    <!-- <br />
+                    <br />
+                    <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button> -->
+                    {% endif %}
                 </form>
             </div>
         </div>

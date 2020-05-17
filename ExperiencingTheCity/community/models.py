@@ -56,8 +56,8 @@ class MemberShip(models.Model):
 class Comments(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
-    comment_body = JSONField()
-    comment_media = JSONField()
+    comment_body = JSONField(default="")
+    comment_media = JSONField(default="")
 
 
 class InappropriatePosts(models.Model):

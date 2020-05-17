@@ -361,3 +361,14 @@ def getPostDetail(request, id):
         context["user"] = community_user
 
     return render(request, "PostDetail.html", context)
+
+
+def create_comment(request, id):
+    post = get_object_or_404(Post, pk=id)
+    commentbox = str(request.POST.get('commentbox', "")).strip()
+    
+    if commentbox:
+        comment = Comments(comment_body=commentbox, post_id=post, user_id=User.objects.get(username=request.user))
+        comment.save()
+
+    return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
