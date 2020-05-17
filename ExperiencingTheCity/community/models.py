@@ -39,6 +39,7 @@ class Post(models.Model):
     complaint_status = models.CharField(max_length=100)
     inappropriate = models.BooleanField(default=False)
     tags = JSONField(default="")
+    active = models.BooleanField(default=True)
 
 
 class SemanticTags(models.Model):

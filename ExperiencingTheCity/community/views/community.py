@@ -294,6 +294,7 @@ def create_post(request, id):
 
                 json_response[fieldposnr] = json_element
 
+
     if "wiki_tag" in request.POST:
         wiki_tags["tags"] = []
         tags = request.POST.getlist('wiki_tag', "")
@@ -378,3 +379,12 @@ def report_post(request, id):
     inappropriatePosts.save()
 
     return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
+
+
+def archive_post(request, id):
+    post = get_object_or_404(Post, pk=id)
+    community = post.community_id
+    post.active = False
+    post.save()
+
+    return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))

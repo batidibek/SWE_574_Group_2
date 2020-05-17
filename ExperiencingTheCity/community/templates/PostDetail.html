@@ -12,18 +12,18 @@
             <div class="col-md-3 order-md-2 mb-4">             
                 <form class="card p-2">
                     <div class="input-group-btn">
-                        <!-- {% if user.user %}
+                        {% if user.user %}
                             {% if user.user == post.user_id %}
-                                <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                <!-- <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
                                     data-toggle="modal" data-target="#myModal">
                                     Edit Post
-                                </button>
+                                </button> -->
                                 <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
-                                        data-toggle="modal" data-target="#myModal">
+                                        data-toggle="modal" data-target="#archivePostModal">
                                     Archive Post
                                 </button>
                             {% endif %}
-                        {% endif %} -->
+                        {% endif %}
                     </div>
                 </form>
             </div>            
@@ -245,6 +245,38 @@
                 </div>
             </div>
         </div>
+
+         <!-- The Modal -->
+         <div class="modal" id="archivePostModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Attention!</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to archive this post ?
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        onclick="location.href='{% url 'community:archive_post' post.id %}'">Yes
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <br/><br/><br/><br/><br/>
+
+
+        
+
     </div>
 {% endblock content %}
