@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
+
 class Community(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
@@ -10,6 +11,7 @@ class Community(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     geolocation = JSONField(default="")
     tags = JSONField(default="")
+
     def __str__(self):
         return self.name
 
@@ -23,6 +25,7 @@ class PostType(models.Model):
         Community, default="", on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     complaint = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
 
@@ -80,16 +83,31 @@ class Notification(models.Model):
 class UserAdditionalInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.URLField(max_length=600, blank=True)
+
     # geolocation
     def __str__(self):
-        return self.user.username  
+        return self.user.username
 
 
 class Followership(models.Model):
-    user_id = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='User')
+    follows = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='follows')
     # discuss further
     # models.ManyToManyField(User)
-    follower = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="Follower")
+    followed = models.ForeignKey(
+        'auth.User', on_delete=models.CASCADE, related_name="followed")
 
+    created = models.DateTimeField(auto_now_add=True,
+                                   db_index=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return '{} follows {}'.format(self.follows, self.followed)
+
+
+User.add_to_class('following',
+                  models.ManyToManyField('self',
+                                         through=Followership,
+                                         related_name='followers',
+                                         symmetrical=False))

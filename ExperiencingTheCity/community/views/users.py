@@ -150,3 +150,16 @@ def user_communities(request, id):
     return render(request, "UserCommunities.html", {'userProfile': userProfile,
                                                     'userCommunities': userCommunities,
                                                     'user': community_user})
+
+
+def user_list(request, id):
+
+    userProfile = get_object_or_404(User, pk=id)
+    users = User.objects.all()
+
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+
+    return render(request, "UserFollows.html", {'userProfile': userProfile,
+                                                  'users': users,
+                                                  'user': community_user})

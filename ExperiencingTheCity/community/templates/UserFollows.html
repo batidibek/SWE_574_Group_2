@@ -2,8 +2,6 @@
     {% load static %}
 
     <div class="container" style="width: 800px; margin:0 auto;">
-
-
         <h2>{{ userProfile }}</h2>
         <div class="nav-scroller py-1 mb-2">
             <nav class="nav d-flex justify-content-between">
@@ -14,22 +12,17 @@
             </nav>
         </div>
         <div class="row mb-2">
-            {% for Community in userCommunities %}
+            {% for user in users %}
                 <div class="col-md-6">
                     <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
-                            <!-- Buraya tag yazabiliriz -->
-                            <strong class="d-inline-block mb-2 text-primary">
-                                {% for tag in Community.tags.tags %}
-                                    {{ tag.label }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </strong>
-                            <h3 class="mb-0">{{ Community.name }}</h3>
-                            <div class="mb-1 text-muted">{{ Community.creation_date }}</div>
-                            <p class="card-text mb-auto">
-                                {{ Community.description }}
-                            </p>
-                            <a href="{{ Community.id }}" class="stretched-link">Continue reading</a>
+                            <h3 class="mb-0">{{ user }}</h3>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        style="margin: 2px;">
+                                    <a href=' /user_profile/{{user.pk}}'> View Profile </a>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

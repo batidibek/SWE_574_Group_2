@@ -25,6 +25,7 @@ urlpatterns = [
     path('user_profile/<id>', users.user_profile, name='user_profile'),
     path('user_profile/<id>/posts/', users.user_posts, name='user_posts'),
     path('user_profile/<id>/communities/', users.user_communities, name='user_communities'),
+    path('user_profile/<id>/follows/', users.user_list, name='user_follows'),
 
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),
