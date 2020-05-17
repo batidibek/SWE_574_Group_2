@@ -218,20 +218,17 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <!-- <div class="form-group">
-                <label for="CommunityDescription">Tags</label>
+
+            <div class="form-group">
+                <label for="Tags">Tags</label>
                 <br/>
-                <input type="text" class="form-control" data-role="tagsinput" name="tags" style="width: 500px; float: left"/>
-                <button class="btn btn-outline-primary" type="submit" name="get_tag" value="get_tag" style="margin-left: 10px; float: left">Get Tag Suggestions</button>
+                <input id="searchTerm" name="search" placeholder="Search.." style="width: 500px; float: left">
+                <button id='search' type="button" class ="btn btn-outline-primary" style="margin-left: 10px; float: left">Get Tag Suggestions</button>
             </div>
-            {% if suggested_tags %}
-                {% for item in suggested_tags.items %}
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1" name="wiki_tag" value="{{item}}" >
-                    <label class="form-check-label" for="exampleCheck1">{{ item.id }} {{ item.label }}: {{ item.description }}</label>
-                </div>
-                {% endfor %}
-            {% endif %} -->
+            <br/>
+            <br/>
+            <div id="wikidataResult">
+            </div>        
             <br/>
             <br/>
             <div class="input-group-btn">

@@ -236,7 +236,6 @@ def create_post(request, id):
     name = str(request.POST.get('name', "")).strip()
     query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    context = {'post_name': name, 'description': description}
     is_complaint = False
     complaint_status = ""
     wiki_tags = {}
@@ -295,37 +294,21 @@ def create_post(request, id):
 
                 json_response[fieldposnr] = json_element
 
+    if "wiki_tag" in request.POST:
+        tags = request.POST.getlist('wiki_tag', "")
+        for i in range(len(tags)):
+            wiki_tags[i] = tags  
+       
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
 
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
-
-    # if "get_tag" in request.POST:
-    #   if query == "":
-    #        context["error_message"] = "You need to enter a query to get tag suggestions."
-    #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
-    #        #return render(request, 'PostCreate.html/' + id, context)
-    #    else:
-    #        suggested_tags = wiki_data.suggest_tags(query)
-    #        if suggested_tags:
-    #            context["suggested_tags"] = suggested_tags
-    #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
-
-    # return render(request, 'PostCreate.html/' + id, context)
-
-    # if "wiki_tag" in request.POST:
-    #    wiki_tags["tags"] = []
-    #    tags = request.POST.getlist('wiki_tag', "")
-    #
-    #    for i in range(len(tags)):
-    #        wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))
-
     else:
         post = Post(name=name, description=description, user_id=User.objects.get(username=request.user),
                     creation_date=timezone.now(), community_id=community,
                     form_fields=json.dumps(json_response), posttype_id=post_type, complaint=is_complaint,
-                    complaint_status=complaint_status)
+                    complaint_status=complaint_status, tags=wiki_tags)
         post.save()
 
         return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
