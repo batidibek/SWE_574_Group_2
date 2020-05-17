@@ -295,9 +295,10 @@ def create_post(request, id):
                 json_response[fieldposnr] = json_element
 
     if "wiki_tag" in request.POST:
+        wiki_tags["tags"] = []
         tags = request.POST.getlist('wiki_tag', "")
         for i in range(len(tags)):
-            wiki_tags[i] = tags  
+            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))
        
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))

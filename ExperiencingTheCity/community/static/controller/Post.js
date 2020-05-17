@@ -33,7 +33,7 @@ $(function() {
 
                 for(var i = 0; i < data['search'].length; i++){
                     result = data['search'][i];
-                    input_value = '{ "id":"' + result.id + '", "label":"' + result.label + '", "description":"' + result.description + '"}';
+                    input_value = '{ "id":"' + result.id + '", "label":"' + result.label + '", "description":"' + result.description + '", "url":"' + result.url + '"}';
 
                     var div_node = document.createElement("DIV");
                     div_node.setAttribute("class", "form-check");

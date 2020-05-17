@@ -184,12 +184,16 @@
                     {% endif %}
                     <br/>
                     <br/>              
-                    <!-- <div class="form-group">
+                    <div class="form-group">
                         <label for="CommunityTag">Tags</label>
-                        <input type="text" class="form-control" id="CommunityTags"
-                               width="100%"
-                               disabled>
-                    </div> -->
+                        <ul>
+                        {% for tag in post.tags.tags %}
+                            <li>
+                                <a href="{{ tag.url }}">{{ tag.label }} : {{ tag.description }}</a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
 
                     <!-- COMMENTS -->
                     <h5><i>Comments</i></h5>
