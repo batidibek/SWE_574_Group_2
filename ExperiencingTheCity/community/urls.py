@@ -8,6 +8,7 @@ urlpatterns = [
     path('', home.homepage, name='home'),
     path('sign-up/', users.sign_up, name='sign_up'),
     path('sign-in/', users.sign_in, name='sign_in'),
+
     path('new-community/', community.new_community, name='new_community'),
     path('communities/', community.community_list, name='community_list'),
     path('posts/', community.community_list, name='post_list'),
@@ -21,6 +22,9 @@ urlpatterns = [
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
 
+    path('user_profile/<id>', users.user_profile, name='user_profile'),
+    path('user_profile/<id>/posts/', users.user_posts, name='user_posts'),
+    path('user_profile/<id>/communities/', users.user_communities, name='user_communities'),
 
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),

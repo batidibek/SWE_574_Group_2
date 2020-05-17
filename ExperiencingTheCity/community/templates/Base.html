@@ -109,7 +109,7 @@
                     </svg>
                 </a>
                 {% if user.user %}
-                    <a class="nav-link disabled">Hi, {{ user.user.username }}!</a>
+                    <a class="nav-link" href=' /user_profile/{{user.user.pk}}'>Hi, {{user.user.username}}!</a>
                     <a class="btn btn-sm btn-outline-secondary" href="{% url 'community:log_out' %}">Log Out</a>
                 {% else %}
                     <a class="btn btn-sm btn-outline-primary" href="{% url 'community:sign_in' %}">Sign in</a>
@@ -126,7 +126,7 @@
             <a class="p-2 text-muted" href="{% url 'community:community_list' %}">COMMUNITIES</a>
             <a class="p-2 text-muted" href="#">POSTS</a>
             {% if user.user %}
-                <a class="p-2 text-muted" href="#">USER PROFILE</a>
+                <a class="p-2 text-muted" href=' /user_profile/{{user.user.pk}}'>USER PROFILE</a>
                 <a class="p-2 text-muted" href="{% url 'community:new_community' %}">NEW COMMUNITY</a>
             {% endif %}
             <a id="annotate-text" class="p-2 text-primary" href="#" style="visibility: hidden;">ANNOTATE</a>
