@@ -256,7 +256,23 @@ def create_post(request, id):
                 fieldtype = value["fieldtype"]
                 enumvals = value["enumvals"]
                 isRequired = value["isRequired"]
-                fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+
+                if fieldtype == "LO":
+                    lat = request.POST.getlist('latitude', "")
+                    lon = request.POST.getlist('longitude', "")
+                    
+                    geolocation = {}
+                    
+                    for i in range(len(lat)):
+                        point = {}
+                        point["lat"] = lat[i]
+                        point["lon"] = lon[i]
+
+                        geolocation[i] = point
+
+                    fieldValue = geolocation
+                else:
+                    fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
 
                 if fieldposnr not in json_response:
                     json_response[fieldposnr] = []

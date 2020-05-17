@@ -160,8 +160,42 @@
 
                             <!-- "LO">Location -->
                             {% elif value2.fieldtype == "LO" %}
-                            <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Latitude" name="{{value2.fieldlabel}}lat">
-                            <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Longitude" name="{{value2.fieldlabel}}lon">
+                            <div id="map" style="width: 760px; height: 350px;"></div>    
+                            <script>
+                                // initialize Leaflet
+                                let map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
+                            
+                                // add the OpenStreetMap tiles
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 19,
+                                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                                }).addTo(map);
+                            
+                                // show the scale bar on the lower left corner
+                                L.control.scale().addTo(map);
+                            
+                                // show a marker on the map
+                                //var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
+                                let lat = 41.02;
+                                let lon = 28.98;
+                            
+                                map.on('click', function (e) {
+                                    L.marker({lon: e.latlng.lng, lat: e.latlng.lat}).addTo(map);
+                                    lat = e.latlng.lat;
+                                    lon = e.latlng.lng;
+                                    let latInput = document.createElement("input");
+                                    latInput.name = "latitude";
+                                    latInput.type = "hidden";
+                                    latInput.value = lat;
+                                    document.getElementById("map").appendChild(latInput);
+                                    let lonInput = document.createElement("input");
+                                    lonInput.name = "longitude"
+                                    lonInput.type = "hidden";
+                                    lonInput.value = lon;
+                                    document.getElementById("map").appendChild(lonInput);
+                                });
+                            </script>                      
+                        
 
                             <!-- "EN">Enumerated -->
                             {% elif value2.fieldtype == "EN" %}
