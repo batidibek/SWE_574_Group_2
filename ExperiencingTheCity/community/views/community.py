@@ -253,8 +253,8 @@ def create_post(request, id):
             for (key, value) in v.items():
                 fieldposnr = value["fieldposnr"]
                 fieldlabel = value["fieldlabel"]
-                fieldtype = value["fieldtype"]
-                enumvals = value["enumvals"]
+                fieldtype  = value["fieldtype"]
+                enumvals   = value["enumvals"]
                 isRequired = value["isRequired"]
 
                 if fieldtype == "LO":
@@ -271,6 +271,14 @@ def create_post(request, id):
                         geolocation[i] = point
 
                     fieldValue = geolocation
+
+                elif fieldtype in ["IM", "VI", "AU"]:
+                    if bool(request.FILES.get(fieldlabel, False)) == True:
+                        file = request.FILES[fieldlabel]
+                        save_file = default_storage.save(file.name, file)
+                        fieldValue = file.name
+                    else:
+                        fieldValue = ""
                 else:
                     fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
 
@@ -284,19 +292,17 @@ def create_post(request, id):
                 json_element[column_names[3]] = enumvals
                 json_element[column_names[4]] = isRequired
                 json_element[column_names[5]] = fieldValue
+                
+
+                # if fieldtype in ["IM", "VI", "AU"]:
+                #     if bool(request.FILES.get(fieldlabel, False)) == True:
+                #         file = request.FILES[fieldlabel]
+                #         save_file = default_storage.save(file.name, file)
+                #         json_element[column_names[5]] = file.name
+                # else:
+                #     json_element[column_names[5]] = fieldValue
 
                 json_response[fieldposnr] = json_element
-
-                if fieldtype in ["IM", "VI", "AU"]:
-                    # if bool(request.FILES.get(fieldlabel, False)) == True:
-                    print("-----------------------")
-                    file = request.FILES[fieldlabel]
-                    print("-----------------------" + file.name)
-                    save_file = default_storage.save(file.name, file)
-                    print("-----------------------" + file.name)
-                    file_path = default_storage.url(file.name)
-                    json_element[column_names[5]] = file.name
-                    print(file_path)
 
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
@@ -355,6 +361,7 @@ def getPostDetail(request, id):
 
         for key, value in form_fields.items():    
             if value["fieldtype"] in ["IM", "VI", "AU"]:
+                print("--------------------->" + value["fieldValue"])
                 file_name = value["fieldValue"]
                 if file_name:
                     file_path = default_storage.url(file_name)

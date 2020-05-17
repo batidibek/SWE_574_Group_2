@@ -111,19 +111,32 @@
     
                                 <!-- "IM">Image -->
                                 {% elif value2.fieldtype == "IM" %}
-                                <img src="{{ value2.fieldValue }}" height="550px" width="800px">
+                                    {% if value2.fieldValue %}
+                                        <img src="{{ value2.fieldValue }}" height="550px" width="800px">
+                                    {% else %}
+                                        <label class="col-sm-10 control-label"><i>No content.</i></label>
+                                    {% endif %}
 
                                 <!-- "VI">Video -->
                                 {% elif value2.fieldtype == "VI" %}
-                                <video width="320" height="240" controls>
-                                    <source src="{{ value2.fieldValue }}" type="video/mp4">
-                                </video>
+                                    {% if value2.fieldValue %}
+                                        <video width="320" height="240" controls>
+                                            <source src="{{ value2.fieldValue }}" type="video/mp4">
+                                        </video>
+                                    {% else %}
+                                        <label class="col-sm-10 control-label"><i>No content.</i></label>
+                                    {% endif %}
+
         
                                 <!-- "AU">Audio -->
                                 {% elif value2.fieldtype == "AU" %}
-                                <audio controls>
-                                    <source src="{{ value2.fieldValue }}" type="audio/mpeg">
-                                </audio>
+                                    {% if value2.fieldValue %}
+                                        <audio controls>
+                                            <source src="{{ value2.fieldValue }}" type="audio/mpeg">
+                                        </audio>
+                                    {% else %}
+                                        <label class="col-sm-10 control-label"><i>No content.</i></label>
+                                    {% endif %}
 
                                 <!-- "UR">URI -->
                                 {% elif value2.fieldtype == "UR" %}
