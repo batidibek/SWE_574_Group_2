@@ -292,15 +292,6 @@ def create_post(request, id):
                 json_element[column_names[3]] = enumvals
                 json_element[column_names[4]] = isRequired
                 json_element[column_names[5]] = fieldValue
-                
-
-                # if fieldtype in ["IM", "VI", "AU"]:
-                #     if bool(request.FILES.get(fieldlabel, False)) == True:
-                #         file = request.FILES[fieldlabel]
-                #         save_file = default_storage.save(file.name, file)
-                #         json_element[column_names[5]] = file.name
-                # else:
-                #     json_element[column_names[5]] = fieldValue
 
                 json_response[fieldposnr] = json_element
 
@@ -361,7 +352,6 @@ def getPostDetail(request, id):
 
         for key, value in form_fields.items():    
             if value["fieldtype"] in ["IM", "VI", "AU"]:
-                print("--------------------->" + value["fieldValue"])
                 file_name = value["fieldValue"]
                 if file_name:
                     file_path = default_storage.url(file_name)
@@ -385,5 +375,14 @@ def create_comment(request, id):
     if commentbox:
         comment = Comments(comment_body=commentbox, post_id=post, user_id=User.objects.get(username=request.user), creation_date=timezone.now())
         comment.save()
+
+    return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
+
+
+def report_post(request, id):
+    post = get_object_or_404(Post, pk=id)
+    
+    inappropriatePosts = InappropriatePosts(inappropriate=True, post_id=post, user_id=User.objects.get(username=request.user))
+    inappropriatePosts.save()
 
     return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))

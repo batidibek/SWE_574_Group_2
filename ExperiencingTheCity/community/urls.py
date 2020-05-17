@@ -32,4 +32,5 @@ urlpatterns = [
     path('archive_community/<id>', community.archiveCommunity, name='archive_community'),
     path('create-post/<id>', community.create_post, name='create_post'),
     path('create-comment/<id>', community.create_comment, name='create_comment'),
+    path('report-post/<id>', community.report_post, name='report_post'),
 ]

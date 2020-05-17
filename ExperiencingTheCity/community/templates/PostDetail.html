@@ -2,6 +2,10 @@
     {% load static %}
 
     <script src="{% static 'controller/Post.js' %}"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+        button.reportPostBtn { background:none;border:none; }
+    </style>
 
     <div class="container">
         <div class="row">
@@ -27,6 +31,9 @@
                 <h3>{{ post.name }}</h3>
                 {% if user.user %}
                     <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
+                    <h9 style="float: right;">
+                        <a href="{% url 'community:report_post' post.id %}"><i class="far fa-flag" style="color: gray;">Report Post</i></a>
+                    </h9>
                 {% else %}
                     <h8>{{ post.creation_date }}</h8>
                 {% endif %}                
