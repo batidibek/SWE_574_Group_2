@@ -11,8 +11,12 @@
                         {% if user.user %}
                             {% if user.user == post.user_id %}
                                 <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                    data-toggle="modal" data-target="#myModal">
+                                    Edit Post
+                                </button>
+                                <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
                                         data-toggle="modal" data-target="#myModal">
-                                    Archive the Community
+                                    Archive Post
                                 </button>
                             {% endif %}
                         {% endif %}
@@ -20,13 +24,16 @@
                 </form>
             </div>            
             <div class="col-md-9 order-md-1">
-                    <h3>{{ post.name }}</h3>
+                <h3>{{ post.name }}</h3>
+                {% if user.user %}
                     <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
+                {% else %}
+                    <h8>{{ post.creation_date }}</h8>
+                {% endif %}                
                 <br/>
                 <hr style="border: 1px solid gray;" />
             <form id="postdetail" method="POST" action="{% url 'community:create_comment' post.id %}">
-            {% csrf_token %}>
-                    {% csrf_token %}
+            {% csrf_token %}
                     {% if post_type.name == "Generic Post Type" %}
                         <div class="form-group" style="display: flex">
                             <label class="col-sm-2 control-label"><b>Name</b></label>
@@ -74,85 +81,67 @@
                         </div>
                         
                         <!--Generate form from JSON field-->
-                        <!-- <div class="form-group" style="display: flex"> -->
-                            {% for key2, value2 in form_fields.items %}
-                                <div class="form-group" style="display: flex">
-                                    <label class="col-sm-2 control-label"><b>{{ value2.fieldlabel }}</b></label>
+                        {% for key2, value2 in form_fields.items %}
+                            <div class="form-group" style="display: flex">
+                                <label class="col-sm-2 control-label"><b>{{ value2.fieldlabel }}</b></label>
+    
+                                <!-- "TE">Text field -->
+                                {% if value2.fieldtype == "TE" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "TE">Text field -->
-                                    {% if value2.fieldtype == "TE" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "TA">Text area -->
+                                {% elif value2.fieldtype == "TA" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "TA">Text area -->
-                                    {% elif value2.fieldtype == "TA" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "DA">Date -->
+                                {% elif value2.fieldtype == "DA" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "DA">Date -->
-                                    {% elif value2.fieldtype == "DA" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-        
-                                    <!-- "TI">Time -->
-                                    {% elif value2.fieldtype == "TI" %}
-                                    <!-- <input type="time" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "TI">Time -->
+                                {% elif value2.fieldtype == "TI" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
 
-                                    <!-- "IN">Integer -->
-                                    {% elif value2.fieldtype == "IN" %}
-                                    <!-- <input type="number" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-
+                                <!-- "IN">Integer -->
+                                {% elif value2.fieldtype == "IN" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "DE">Decimal -->
-                                    {% elif value2.fieldtype == "DE" %}
-                                    <!-- <input type="number" step=0.01 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "DE">Decimal -->
+                                {% elif value2.fieldtype == "DE" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+    
+                                <!-- "IM">Image -->
+                                {% elif value2.fieldtype == "IM" %}
+                                <img src="{{ value2.fieldValue }}" height="550px" width="800px">
 
+                                <!-- "VI">Video -->
+                                {% elif value2.fieldtype == "VI" %}
+                                <video width="320" height="240" controls>
+                                    <source src="{{ value2.fieldValue }}" type="video/mp4">
+                                </video>
         
-                                    <!-- "IM">Image -->
-                                    {% elif value2.fieldtype == "IM" %}
-                                    <img src="{{ value2.fieldValue }}" height="550px" width="800px">
+                                <!-- "AU">Audio -->
+                                {% elif value2.fieldtype == "AU" %}
+                                <audio controls>
+                                    <source src="{{ value2.fieldValue }}" type="audio/mpeg">
+                                </audio>
 
-                                    <!-- "VI">Video -->
-                                    {% elif value2.fieldtype == "VI" %}
-                                    <video width="320" height="240" controls>
-                                        <source src="{{ value2.fieldValue }}" type="video/mp4">
-                                    </video>
-        
-                                    <!-- "AU">Audio -->
-                                    {% elif value2.fieldtype == "AU" %}
-                                    <audio controls>
-                                        <source src="{{ value2.fieldValue }}" type="audio/mpeg">
-                                    </audio>
+                                <!-- "UR">URI -->
+                                {% elif value2.fieldtype == "UR" %}
+                                <a href="{{ value2.fieldValue }}" target="_blank">{{ value2.fieldValue }}</a>
 
-                                    <!-- "UR">URI -->
-                                    {% elif value2.fieldtype == "UR" %}
-                                    <a href="{{ value2.fieldValue }}" target="_blank">{{ value2.fieldValue }}</a>
-
-                                    <!-- TODO : Location gösterimi eklenecek -->
-                                    <!-- "LO">Location -->
-                                    <!-- {% elif value2.fieldtype == "LO" %} -->
-                                    <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Latitude" name="{{value2.fieldlabel}}lat"> -->
-                                    <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Longitude" name="{{value2.fieldlabel}}lon"> -->
-        
-
-                                    <!-- "EN">Enumerated -->
-                                    {% elif value2.fieldtype == "EN" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-                                    <br/>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        <!-- </div> -->
-                    {% endif %}
-                    <!-- TODO : Post'a tag eklenince burası da açılacak -->
-                    <!-- {% if suggested_tags %}
-                        {% for item in suggested_tags.items %}
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="wiki_tag" value="{{item}}" >
-                            <label class="form-check-label" for="exampleCheck1">{{ item.id }} {{ item.label }}: {{ item.description }}</label>
-                        </div>
+                                <!-- TODO : Location gösterimi eklenecek -->
+                                <!-- "LO">Location -->
+                                <!-- {% elif value2.fieldtype == "LO" %} -->
+                                <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Latitude" name="{{value2.fieldlabel}}lat"> -->
+                                <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Longitude" name="{{value2.fieldlabel}}lon"> -->
+    
+                                <!-- "EN">Enumerated -->
+                                {% elif value2.fieldtype == "EN" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                {% endif %}
+                            </div>
                         {% endfor %}
-                    {% endif %} -->
+                    {% endif %}
                     <br/>
                     <br/>              
                     <!-- <div class="form-group">
@@ -162,18 +151,29 @@
                                disabled>
                     </div> -->
 
+                    <!-- COMMENTS -->
+                    <h5><i>Comments</i></h5>
+                    <hr style="border: 0.5px solid gray;" />
+                    {% if comments%}                       
+                        {% for comment in comments %}
+                        <div class="form-check">
+                            <label>({{ comment.creation_date}}) <b>{{ comment.user_id.username }}</b> said: </label>
+                            <label>{{ comment.comment_body }}</label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <label><i>There is no comment yet.</i></label>
+                    {% endif %}
+                    <br/>
+                    <br/>
+                    <br/>
+                    <!-- COMMENTBOX -->
                     {% if user.user %}
                     <div class="form-group">
-                        <!-- <input type="text" class="form-control" placeholder="Write your comment here!"/> -->
                         <textarea class="form-control" placeholder="Write your comment here!" rows="5" name="commentbox"></textarea>
                         <br>
                         <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button>
                     </div>
-                    <!-- <input type="textarea" rows=5 name="comment" style="width: 800px; height: 145px;"> -->
-                    <!-- <textarea placeholder="Write your comment here!"></textarea> -->
-                    <!-- <br />
-                    <br />
-                    <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button> -->
                     {% endif %}
                 </form>
             </div>

@@ -332,29 +332,21 @@ def getPosts(request, id):
 def getPostDetail(request, id):
     post = get_object_or_404(Post, pk=id)
     post_type = post.posttype_id
-    # comments = get_object_or_404(Comments, post_id=id)
+    comments = Comments.objects.filter(post_id=id)
 
-    # context = {'post': post, 'post_type': post_type, 'comments':comments}
     if post.form_fields:
         form_fields = json.loads(post.form_fields)
 
         for key, value in form_fields.items():    
-            print(key)
-            print(value)
-            print(value["fieldtype"])
-            print(value["fieldValue"])
-
             if value["fieldtype"] in ["IM", "VI", "AU"]:
                 file_name = value["fieldValue"]
                 if file_name:
                     file_path = default_storage.url(file_name)
                     value["fieldValue"] = file_path
-                    
-
     else:
         form_fields = []
 
-    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields}
+    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields, 'comments':comments}
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -368,7 +360,7 @@ def create_comment(request, id):
     commentbox = str(request.POST.get('commentbox', "")).strip()
     
     if commentbox:
-        comment = Comments(comment_body=commentbox, post_id=post, user_id=User.objects.get(username=request.user))
+        comment = Comments(comment_body=commentbox, post_id=post, user_id=User.objects.get(username=request.user), creation_date=timezone.now())
         comment.save()
 
     return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))

@@ -58,6 +58,7 @@ class Comments(models.Model):
     post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
     comment_body = JSONField(default="")
     comment_media = JSONField(default="")
+    creation_date = models.DateTimeField('date published')
 
 
 class InappropriatePosts(models.Model):
