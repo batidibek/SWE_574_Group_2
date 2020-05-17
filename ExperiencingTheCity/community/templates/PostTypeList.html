@@ -23,16 +23,17 @@
                                             style="margin: 2px;"
                                             onclick="location.href='{% url 'community:post_type' PostType.id communityActive %}'">
                                         {#                                        <a href="detail/{{ PostType.id }}"> #}
-                                        View fields
+                                        View Fields
                                     </button>
 
+                                    {% if user.user %}
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
                                             style="margin: 2px;"
                                             {% if not communityActive == 'True' %}disabled{% endif %}
                                             onclick="location.href='{% url 'community:new_post' PostType.id %}'">
-                                        Create post
-
+                                        Create Post
                                     </button>
+                                    {% endif %}
                                 </div>
 
 
