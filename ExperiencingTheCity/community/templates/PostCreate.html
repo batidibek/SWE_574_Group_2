@@ -1,4 +1,6 @@
 {% extends "base.html" %} {% block content %}
+{% load static %}
+<script src="{% static 'controller/Post.js' %}"></script>
 
 <div class="container" style="width: 800px; margin:0 auto;">
         <h3>{{ post_type.name }}</h3>
@@ -6,7 +8,7 @@
             <p style="color: red"><strong>{{ error_message }}</strong></p>
         {% endif %}
         <br/>
-        <form action="{% url 'community:create_post' post_type.id %}" method="post">
+        <form action="{% url 'community:create_post' post_type.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% if post_type.name == "Generic Post Type" %}
                 <div class="form-group">
@@ -99,7 +101,6 @@
                 <div class="form-group">
                     {% for key, value in form_fields.items %}
                         {% for key2, value2 in value.items %}
-                            <label>{{value2.fieldposnr}}</label>
                             <label>{{value2.fieldlabel}}</label>
 
                             <!-- "TE">Text field -->
@@ -131,7 +132,7 @@
                             <div class="input-group">
                                 <div class="form-control">
                                     <input type="file" accept=".jpg,.gif,.png" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                    <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
+                                    <label class="custom-file-label" for="{{value2.fieldlabel}}">Choose a file to upload</label>
                                 </div>
                             </div>
 
@@ -140,7 +141,7 @@
                             <div class="input-group">
                                 <div class="form-control">
                                     <input type="file" accept=".mp4" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                    <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
+                                    <label class="custom-file-label" for="{{value2.fieldlabel}}">Choose a file to upload</label>
                                 </div>
                             </div>
 
@@ -149,7 +150,7 @@
                             <div class="input-group">
                                 <div class="form-control">
                                     <input type="file" accept=".mp3, .wav" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                    <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
+                                    <label class="custom-file-label" for="{{value2.fieldlabel}}">Choose a file to upload</label>
                                 </div>
                             </div>
 

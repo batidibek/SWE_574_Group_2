@@ -19,6 +19,7 @@ import requests
 from django.utils import timezone
 from ..utils import wiki_data
 from django.db.models import Q
+from django.core.files.storage import default_storage
 
 
 # COMMUNITY LIST
@@ -138,7 +139,7 @@ def create_community(request):
         pt.owner = User.objects.get(username=request.user)
         pt.creation_date = datetime.datetime.now()
         pt.creation_date = datetime.datetime.now()
-        pt.complaint = True;
+        pt.complaint = True
         pt.save()
         return HttpResponseRedirect(reverse('community:home'))
 
@@ -218,10 +219,13 @@ def new_post(request, id):
         form_fields = json.loads(post_type.formfields)
     else:
         form_fields = []
+
     context = {'post_type': post_type, "form_fields": form_fields}
+    
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
+    
     return render(request, "PostCreate.html", context)
 
 
@@ -267,6 +271,16 @@ def create_post(request, id):
 
                 json_response[fieldposnr] = json_element
 
+                if fieldtype in ["IM", "VI", "AU"]:
+                    # if bool(request.FILES.get(fieldlabel, False)) == True:
+                    print("-----------------------")
+                    file = request.FILES[fieldlabel]
+                    print("-----------------------" + file.name)
+                    save_file = default_storage.save(file.name, file)
+                    print("-----------------------" + file.name)
+                    file_path = default_storage.url(file.name)
+                    json_element[column_names[5]] = file.name
+                    print(file_path)
 
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
@@ -301,7 +315,7 @@ def create_post(request, id):
                     complaint_status=complaint_status)
         post.save()
 
-        return HttpResponseRedirect(reverse('community:home'))
+        return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
 
 
 def getPosts(request, id):
@@ -323,6 +337,20 @@ def getPostDetail(request, id):
     # context = {'post': post, 'post_type': post_type, 'comments':comments}
     if post.form_fields:
         form_fields = json.loads(post.form_fields)
+
+        for key, value in form_fields.items():    
+            print(key)
+            print(value)
+            print(value["fieldtype"])
+            print(value["fieldValue"])
+
+            if value["fieldtype"] in ["IM", "VI", "AU"]:
+                file_name = value["fieldValue"]
+                if file_name:
+                    file_path = default_storage.url(file_name)
+                    value["fieldValue"] = file_path
+                    
+
     else:
         form_fields = []
 
