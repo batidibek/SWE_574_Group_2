@@ -41,6 +41,8 @@ class Post(models.Model):
     complaint = models.BooleanField(default=False)
     complaint_status = models.CharField(max_length=100)
     inappropriate = models.BooleanField(default=False)
+    tags = JSONField(default="")
+    active = models.BooleanField(default=True)
 
 
 class SemanticTags(models.Model):
@@ -59,8 +61,9 @@ class MemberShip(models.Model):
 class Comments(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
-    comment_body = JSONField()
-    comment_media = JSONField()
+    comment_body = JSONField(default="")
+    comment_media = JSONField(default="")
+    creation_date = models.DateTimeField('date published')
 
 
 class InappropriatePosts(models.Model):

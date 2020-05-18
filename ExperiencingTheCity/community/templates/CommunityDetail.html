@@ -31,9 +31,9 @@
                         <span class="text-muted">198</span>
                     </li>
                 </ul>
+                {% if user.user %}
                 <form class="card p-2">
                     <div class="input-group-btn">
-                        {% if user.user %}
                             <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
                                     onclick="location.href='{% url 'community:new_post_type' communityDetail.id %}'"
                                     {% if not communityDetail.active %}disabled{% endif %}>
@@ -46,7 +46,6 @@
                                         {% if not communityDetail.active %}disabled{% endif %}>
                                     Archive the Community
                                 </button>
-
                             {% endif %}
 
                             {% if user.user != communityDetail.owner %}
@@ -55,9 +54,9 @@
                                     Subscribe
                                 </button>
                             {% endif %}
-                        {% endif %}
                     </div>
                 </form>
+                {% endif %}
             </div>
 
             <div class="col-md-9 order-md-1">

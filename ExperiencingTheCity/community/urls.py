@@ -36,7 +36,9 @@ urlpatterns = [
     path('create-community/', community.create_community, name='create_community'),
     path('create-post-type', community.newPostType, name="create_post_type"),
     path('getCommunityByFilter', community.getCommunityByFilter),
-    path('archive_community/<id>', community.archiveCommunity, name='archive_community' ),
+    path('archive_community/<id>', community.archiveCommunity, name='archive_community'),
     path('create-post/<id>', community.create_post, name='create_post'),
-
+    path('create-comment/<id>', community.create_comment, name='create_comment'),
+    path('report-post/<id>', community.report_post, name='report_post'),
+    path('archive-post/<id>', community.archive_post, name='archive_post'),
 ]
