@@ -140,6 +140,7 @@ def user_posts(request, id):
                                               'userPosts': userPosts,
                                               'user': community_user})
 
+
 def user_communities(request, id):
     userProfile = get_object_or_404(User, pk=id)
     userCommunities = Community.objects.filter(owner=id)
@@ -153,7 +154,6 @@ def user_communities(request, id):
 
 
 def user_list(request, id):
-
     userProfile = get_object_or_404(User, pk=id)
     users = User.objects.all()
 
@@ -161,5 +161,24 @@ def user_list(request, id):
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
 
     return render(request, "UserFollows.html", {'userProfile': userProfile,
-                                                  'users': users,
-                                                  'user': community_user})
+                                                'users': users,
+                                                'user': community_user})
+
+
+# @ajax_required
+# @require_POST
+# @login_required
+
+def user_follow(request, id):
+    userProfile = get_object_or_404(User, pk=id)
+
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+
+    data = {}
+    if userProfile.follows.filter(id=user_profile.id).exists():
+        data['message'] = "You are already following this user."
+    else:
+        community_user.follows.add(user_profile)
+        data['message'] = "You are now following {}".format(userProfile)
+    return JsonResponse(data, safe=False)
