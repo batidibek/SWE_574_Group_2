@@ -6,3 +6,5 @@ sqlparse==0.3.0
 requests==2.22.0
 wheel==0.33.6
 gunicorn==19.9.0
+boto3==1.13.11
+django-storages==1.9.1
