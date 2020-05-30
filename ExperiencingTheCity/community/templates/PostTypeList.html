@@ -30,6 +30,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
                                             style="margin: 2px;"
                                             {% if not communityActive == 'True' %}disabled{% endif %}
+                                            {% if not PostType.active %} disabled {% endif %}
                                             onclick="location.href='{% url 'community:new_post' PostType.id %}'">
                                         Create Post
                                     </button>
