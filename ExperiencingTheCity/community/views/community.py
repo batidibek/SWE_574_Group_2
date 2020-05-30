@@ -402,3 +402,17 @@ def archive_post(request, id):
     post.save()
 
     return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
+
+
+def advanced_search(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+
+    if post_type.formfields:
+        form_fields = json.loads(post_type.formfields)
+    else:
+        form_fields = []
+    context = {'post_type': post_type, 'form_fields' : form_fields }
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, 'AdvancedSearch.html', context )
