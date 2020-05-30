@@ -2,60 +2,45 @@
     {% load static %}
 
     <script src="{% static 'controller/Post.js' %}"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+        button.reportPostBtn { background:none;border:none; }
+    </style>
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3 order-md-2 mb-4">
-                <h3>Also see</h3>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">
-                                <a href="" class="stretched-link">Community Post
-                                    Types</a>
-                            </h6>
-                            <small class="text-muted">Check post types and select or create to have a new post!</small>
-                        </div>
-                        <span class="text-muted">12</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0"><a href="" class="stretched-link">Community Posts</a>
-                            </h6>
-                            <small class="text-muted">View community posts and contribute!</small>
-                        </div>
-                        <span class="text-muted">198</span>
-                    </li>
-                </ul>
+            <div class="col-md-3 order-md-2 mb-4">             
                 <form class="card p-2">
                     <div class="input-group-btn">
                         {% if user.user %}
-                            <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
-                                    onclick="location.href=''">
-                                Create Post Type
-                            </button>
-
                             {% if user.user == post.user_id %}
+                                <!-- <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                    data-toggle="modal" data-target="#myModal">
+                                    Edit Post
+                                </button> -->
                                 <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
-                                        data-toggle="modal" data-target="#myModal">
-                                    Archive the Community
-                                </button>
-                            {% endif %}
-
-                            {% if user.user != post.user_id %}
-                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px">
-                                    Subscribe
+                                        data-toggle="modal" data-target="#archivePostModal">
+                                    Archive Post
                                 </button>
                             {% endif %}
                         {% endif %}
                     </div>
                 </form>
-            </div>
+            </div>            
             <div class="col-md-9 order-md-1">
                 <h3>{{ post.name }}</h3>
+                {% if user.user %}
+                    <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
+                    <h9 style="float: right;">
+                        <a href="{% url 'community:report_post' post.id %}"><i class="far fa-flag" style="color: gray;">Report Post</i></a>
+                    </h9>
+                {% else %}
+                    <h8>{{ post.creation_date }}</h8>
+                {% endif %}                
                 <br/>
-                <form>
-                    {% csrf_token %}
+                <hr style="border: 1px solid gray;" />
+            <form id="postdetail" method="POST" action="{% url 'community:create_comment' post.id %}">
+            {% csrf_token %}
                     {% if post_type.name == "Generic Post Type" %}
                         <div class="form-group" style="display: flex">
                             <label class="col-sm-2 control-label"><b>Name</b></label>
@@ -103,107 +88,137 @@
                         </div>
                         
                         <!--Generate form from JSON field-->
-                        <!-- <div class="form-group" style="display: flex"> -->
-                            {% for key, value in form_fields.items %}
-                                {% for key2, value2 in value.items %}
-                                <div class="form-group" style="display: flex">
-                                    <label class="col-sm-2 control-label"><b> {{ value2.fieldlabel }} </b></label>
+                        {% for key2, value2 in form_fields.items %}
+                            <div class="form-group" style="display: flex">
+                                <label class="col-sm-2 control-label"><b>{{ value2.fieldlabel }}</b></label>
+    
+                                <!-- "TE">Text field -->
+                                {% if value2.fieldtype == "TE" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "TE">Text field -->
-                                    {% if value2.fieldtype == "TE" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "TA">Text area -->
+                                {% elif value2.fieldtype == "TA" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "TA">Text area -->
-                                    {% elif value2.fieldtype == "TA" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "DA">Date -->
+                                {% elif value2.fieldtype == "DA" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "DA">Date -->
-                                    {% elif value2.fieldtype == "DA" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-        
-                                    <!-- "TI">Time -->
-                                    {% elif value2.fieldtype == "TI" %}
-                                    <!-- <input type="time" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                <!-- "TI">Time -->
+                                {% elif value2.fieldtype == "TI" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
 
-                                    <!-- "IN">Integer -->
-                                    {% elif value2.fieldtype == "IN" %}
-                                    <!-- <input type="number" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-
+                                <!-- "IN">Integer -->
+                                {% elif value2.fieldtype == "IN" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
         
-                                    <!-- "DE">Decimal -->
-                                    {% elif value2.fieldtype == "DE" %}
-                                    <!-- <input type="number" step=0.01 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-
-        
-                                    <!-- "IM">Image -->
-                                    {% elif value2.fieldtype == "IM" %}
-                                    <div class="input-group">
-                                        <div class="form-control">
-                                            <input type="file" accept=".jpg,.gif,.png" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
-                                        </div>
-                                    </div>
-        
-                                    <!-- "VI">Video -->
-                                    {% elif value2.fieldtype == "VI" %}
-                                    <div class="input-group">
-                                        <div class="form-control">
-                                            <input type="file" accept=".mp4" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
-                                        </div>
-                                    </div>
-        
-                                    <!-- "AU">Audio -->
-                                    {% elif value2.fieldtype == "AU" %}
-                                    <div class="input-group">
-                                        <div class="form-control">
-                                            <input type="file" accept=".mp3, .wav" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose a file to upload</label>
-                                        </div>
-                                    </div>
-        
-                                    <!-- "UR">URI -->
-                                    {% elif value2.fieldtype == "UR" %}
-                                    <!-- <input type="url" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}"> -->
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-
-                                    <!-- TODO : Location gösterimi eklenecek -->
-                                    <!-- "LO">Location -->
-                                    <!-- {% elif value2.fieldtype == "LO" %} -->
-                                    <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Latitude" name="{{value2.fieldlabel}}lat"> -->
-                                    <!-- <input type="number" step=0.0000001 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Longitude" name="{{value2.fieldlabel}}lon"> -->
-        
-
-                                    <!-- "EN">Enumerated -->
-                                    {% elif value2.fieldtype == "EN" %}
-                                    <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
-                                    <br/>
+                                <!-- "DE">Decimal -->
+                                {% elif value2.fieldtype == "DE" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+    
+                                <!-- "IM">Image -->
+                                {% elif value2.fieldtype == "IM" %}
+                                    {% if value2.fieldValue %}
+                                        <img src="{{ value2.fieldValue }}" height="550px" width="800px">
+                                    {% else %}
+                                        <label class="col-sm-10 control-label"><i>No content.</i></label>
                                     {% endif %}
-                                </div>
-                                {% endfor %}
-                            {% endfor %}
-                        <!-- </div> -->
-                    {% endif %}
-                    <!-- TODO : Post'a tag eklenince burası da açılacak -->
-                    <!-- {% if suggested_tags %}
-                        {% for item in suggested_tags.items %}
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="wiki_tag" value="{{item}}" >
-                            <label class="form-check-label" for="exampleCheck1">{{ item.id }} {{ item.label }}: {{ item.description }}</label>
-                        </div>
+
+                                <!-- "VI">Video -->
+                                {% elif value2.fieldtype == "VI" %}
+                                    {% if value2.fieldValue %}
+                                        <video width="320" height="240" controls>
+                                            <source src="{{ value2.fieldValue }}" type="video/mp4">
+                                        </video>
+                                    {% else %}
+                                        <label class="col-sm-10 control-label"><i>No content.</i></label>
+                                    {% endif %}
+
+        
+                                <!-- "AU">Audio -->
+                                {% elif value2.fieldtype == "AU" %}
+                                    {% if value2.fieldValue %}
+                                        <audio controls>
+                                            <source src="{{ value2.fieldValue }}" type="audio/mpeg">
+                                        </audio>
+                                    {% else %}
+                                        <label class="col-sm-10 control-label"><i>No content.</i></label>
+                                    {% endif %}
+
+                                <!-- "UR">URI -->
+                                {% elif value2.fieldtype == "UR" %}
+                                <a href="{{ value2.fieldValue }}" target="_blank">{{ value2.fieldValue }}</a>
+
+                                <!-- "LO">Location -->
+                                {% elif value2.fieldtype == "LO" %}
+                                <div id="map" style="width: 760px; height: 350px;"></div>
+                                <script>
+                                    // initialize Leaflet
+                                    var map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
+        
+                                    // add the OpenStreetMap tiles
+                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                        maxZoom: 19,
+                                        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                                    }).addTo(map);
+        
+                                    // show the scale bar on the lower left corner
+                                    L.control.scale().addTo(map);
+                                </script> 
+                                {% for key, location in value2.fieldValue.items %}
+                                <script>
+                                    var marker = L.marker({
+                                               lon: "{{ location.lon }}",
+                                               lat: "{{ location.lat }}"
+                                           }).addTo(map);
+                                </script>
+                               {% endfor %} 
+                         
+
+                                <!-- "EN">Enumerated -->
+                                {% elif value2.fieldtype == "EN" %}
+                                <label class="col-sm-10 control-label">{{ value2.fieldValue }}</label>
+                                {% endif %}
+                            </div>
                         {% endfor %}
-                    {% endif %} -->
+                    {% endif %}
                     <br/>
                     <br/>              
-                    <!-- <div class="form-group">
+                    <div class="form-group">
                         <label for="CommunityTag">Tags</label>
-                        <input type="text" class="form-control" id="CommunityTags"
-                               width="100%"
-                               disabled>
-                    </div> -->
+                        <ul>
+                        {% for tag in post.tags.tags %}
+                            <li>
+                                <a href="{{ tag.url }}">{{ tag.label }} : {{ tag.description }}</a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- COMMENTS -->
+                    <h5><i>Comments</i></h5>
+                    <hr style="border: 0.5px solid gray;" />
+                    {% if comments%}                       
+                        {% for comment in comments %}
+                        <div class="form-check">
+                            <label>({{ comment.creation_date}}) <b>{{ comment.user_id.username }}</b> said: </label>
+                            <label>{{ comment.comment_body }}</label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <label><i>There is no comment yet.</i></label>
+                    {% endif %}
+                    <br/>
+                    <br/>
+                    <br/>
+                    <!-- COMMENTBOX -->
+                    {% if user.user %}
+                    <div class="form-group">
+                        <textarea class="form-control" placeholder="Write your comment here!" rows="5" name="commentbox"></textarea>
+                        <br>
+                        <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button>
+                    </div>
+                    {% endif %}
                 </form>
             </div>
         </div>
@@ -230,6 +245,38 @@
                 </div>
             </div>
         </div>
+
+         <!-- The Modal -->
+         <div class="modal" id="archivePostModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Attention!</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to archive this post ?
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        onclick="location.href='{% url 'community:archive_post' post.id %}'">Yes
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <br/><br/><br/><br/><br/>
+
+
+        
+
     </div>
 {% endblock content %}

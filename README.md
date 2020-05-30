@@ -19,8 +19,6 @@ This wiki is the main source of documentation for **developers** working with (o
 ### Table of Contents
 
 * [Meetings](https://github.com/batidibek/SWE_574_Group_2/wiki/Meetings)
-  * [Meeting #1 - 15.02.2020](https://github.com/batidibek/SWE_574_Group_2/wiki/Meeting-%231-15.02.2020) 
-  * [Meeting #2 - 20.02.2020](https://github.com/batidibek/SWE_574_Group_2/wiki/Meeting-%232-20.02.2020) 
           
 * [Requirements](https://github.com/batidibek/SWE_574_Group_2/wiki/Requirements)   
       
@@ -29,10 +27,5 @@ This wiki is the main source of documentation for **developers** working with (o
 * [Project Design](https://github.com/batidibek/SWE_574_Group_2/wiki/Project-Design)  
 
 * [Assignments](https://github.com/batidibek/SWE_574_Group_2/wiki/Assignments)
-  * [HW #1](https://github.com/batidibek/SWE_574_Group_2/wiki/HW-%231---17.02.2020)
-  * [HW #2](https://github.com/batidibek/SWE_574_Group_2/wiki/HW-%232-24.02.2020)
     
 * [Researches](https://github.com/batidibek/SWE_574_Group_2/wiki/Researches)  
-  * [W3C Activity Stream](https://github.com/batidibek/SWE_574_Group_2/wiki/W3C-Activity-Stream)  
-  * [Web Annotation Data Model](https://github.com/batidibek/SWE_574_Group_2/wiki/Web-Annotation-Data-Model)   
-  * [WikiData](https://github.com/batidibek/SWE_574_Group_2/wiki/WikiData)    
