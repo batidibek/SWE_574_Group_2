@@ -33,6 +33,8 @@ function filterPosts(postList) {
             console.log(post);
             var postFields = JSON.parse(post.form_fields);
             console.log(postFields);
+
+            var postTags = post.tags.tags;
             for (var sField in postFields) {
                 if (postFields.hasOwnProperty(sField)) {
 
@@ -53,10 +55,13 @@ function filterPosts(postList) {
                             break;
                         case "CS":
                             if (value1 !== "") {
-                                return postFields[sField].fieldValue.toLowerCase().includes(value2.toLowerCase());
+                                return postFields[sField].fieldValue.toLowerCase().includes(value1.toLowerCase());
                             }
                             break;
                         case "GT":
+                            if (value1 !== "") {
+                                return postFields[sField].fieldValue.toLowerCase().includes(value1.toLowerCase());
+                            }
                             break;
                         case "GE":
                             break;
@@ -67,6 +72,46 @@ function filterPosts(postList) {
                         case "BT":
                             break;
                     }
+                }
+            }
+
+            searchCriteria = document.getElementById("searchForm").elements.namedItem("tags_sc").value;
+            var tags1 = document.getElementById("searchForm").elements.namedItem("tags1").value;
+            var tags2 = document.getElementById("searchForm").elements.namedItem("tags2").value;
+
+            for (var tag in postTags) {
+                if (postFields.hasOwnProperty(tag)) {
+                    switch (searchCriteria) {
+                        case "EQ":
+                            return (postTags[tag].label.toLowerCase() === tags1.toLowerCase()) ||
+                                   (postTags[tag].description.toLowerCase() === tags1.toLowerCase()) ;
+                            break;
+                        case "CS":
+                            return (postTags[tag].label.toLowerCase().includes(tags1.toLowerCase())) ||
+                                   (postTags[tag].description.toLowerCase().includes(tags1.toLowerCase())) ; ;
+                            break;
+                        case "GT":
+                            return postTags[tag].label.toLowerCase() > tags1.toLowerCase() ||
+                                   postTags[tag].description.toLowerCase() > tags1.toLowerCase();
+                            break;
+                        case "GE":
+                            return postTags[tag].label.toLowerCase() >= tags1.toLowerCase() ||
+                                   postTags[tag].description.toLowerCase() >= tags1.toLowerCase();
+                            break;
+                        case "LT":
+                            return postTags[tag].label.toLowerCase() < tags1.toLowerCase() ||
+                                   postTags[tag].description.toLowerCase() < tags1.toLowerCase()  ;
+                            break;
+                        case "LE":
+                            return postTags[tag].label.toLowerCase() <= tags1.toLowerCase() ||
+                                   postTags[tag].description.toLowerCase() <= tags1.toLowerCase();
+                            break;
+                        case "BT":
+                            return (postTags[tag].label.toLowerCase() >= tags1.toLowerCase() && postTags[tag].label.toLowerCase() <= tags2.toLowerCase()) ||
+                                   (postTags[tag].description.toLowerCase() >= tags1.toLowerCase() && postTags[tag].description.toLowerCase() <= tags2.toLowerCase()) ;
+                            break;
+                    }
+
                 }
             }
 
@@ -81,14 +126,19 @@ function filterPosts(postList) {
                     return post.name.toLowerCase().includes(name1.toLowerCase());
                     break;
                 case "GT":
+                    return post.name.toLowerCase() > name1.toLowerCase();
                     break;
                 case "GE":
+                    return post.name.toLowerCase() >= name1.toLowerCase();
                     break;
                 case "LT":
+                    return post.name.toLowerCase() < name1.toLowerCase();
                     break;
                 case "LE":
+                    return post.name.toLowerCase() <= name1.toLowerCase();
                     break;
                 case "BT":
+                    return (post.name.toLowerCase() >= name1.toLowerCase()) && (post.name.toLowerCase() <= name2.toLowerCase());
                     break;
             }
 
@@ -98,20 +148,25 @@ function filterPosts(postList) {
 
             switch (searchCriteria) {
                 case "EQ":
-                    return post.description.toLowerCase() === name1.toLowerCase();
+                    return post.description.toLowerCase() === desc1.toLowerCase();
                     break;
                 case "CS":
-                    return post.description.toLowerCase().includes(name1.toLowerCase());
+                    return post.description.toLowerCase().includes(desc1.toLowerCase());
                     break;
                 case "GT":
+                    return post.description.toLowerCase() > desc1.toLowerCase();
                     break;
                 case "GE":
+                    return post.description.toLowerCase() >= desc1.toLowerCase();
                     break;
                 case "LT":
+                    return post.description.toLowerCase() < desc1.toLowerCase();
                     break;
                 case "LE":
+                    return post.description.toLowerCase() <= desc1.toLowerCase();
                     break;
                 case "BT":
+                    return (post.description.toLowerCase() >= desc1.toLowerCase()) && (post.description.toLowerCase() <= desc2.toLowerCase());
                     break;
             }
 
