@@ -1,13 +1,16 @@
 {% extends "base.html" %} {% block content %}
     {% load static %}
 
-
+    <script src="{% static 'controller/AdvancedSearch.js' %}"></script>
     <div class="container" style="width: 100%; margin:0 auto;">
 
         {% if post_type %}
             <h3>Search Posts Under '{{ post_type.name }}'</h3>
             <br/><br/><br/>
-            <form id="searchpost" method="POST">
+
+            <input id="postTypeId" hidden value="{{ post_type.id }}">
+            <input id="communityId" hidden value="{{ post_type.community_id_id }}">
+            <form>
                 {% csrf_token %}
 
                 <div class="form-row">
@@ -16,7 +19,7 @@
                     </div>
                     <div class="col-2">
                         <select class="dt_fieldtype mdb-select md-form form-control"
-                                name="searchCriteria"
+                                name="searchCriteria_name"
                                 onchange="onSearchCriteria(this)">
                             <option value="EQ" selected>Equals To</option>
                             <option value="CS">Contains</option>
@@ -28,10 +31,10 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <input id="name1" class="form-control">
+                        <input id="name1" name="name1" class="form-control">
                     </div>
                     <div class="col-4">
-                        <input id="name2" class="form-control">
+                        <input id="name2" name="name2" class="form-control">
                     </div>
 
                 </div>
@@ -42,7 +45,7 @@
                     </div>
                     <div class="col-2">
                         <select class="dt_fieldtype mdb-select md-form form-control"
-                                name="searchCriteria"
+                                name="searchCriteria_desc"
                                 onchange="onSearchCriteria(this)">
                             <option value="EQ" selected>Equals To</option>
                             <option value="CS">Contains</option>
@@ -54,10 +57,10 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <input id="description1" class="form-control">
+                        <input id="description1" name="description1" class="form-control">
                     </div>
                     <div class="col-4">
-                        <input id="description2" class="form-control">
+                        <input id="description2" name="description2" class="form-control">
                     </div>
 
                 </div>
@@ -85,40 +88,40 @@
                             <div class="col-4">
                                 <!-- "TE">Text field -->
                                 {% if value2.fieldtype == "TE" %}
-                                    <input type="text" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="text" class="form-control" id="{{ value2.fieldlabel }}_1"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="Enter {{ value2.fieldlabel }}" name="{{ value2.fieldlabel }}">
 
                                     <!-- "TA">Text area -->
                                 {% elif value2.fieldtype == "TA" %}
-                                    <textarea class="form-control" id="{{ value2.fieldlabel }}"
+                                    <textarea class="form-control" id="{{ value2.fieldlabel }}_1"
                                               placeholder="{{ value2.fieldlabel }}" rows="5"
                                               name="{{ value2.fieldlabel }}"></textarea>
 
                                     <!-- "DA">Date -->
                                 {% elif value2.fieldtype == "DA" %}
-                                    <input type="date" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="date" class="form-control" id="{{ value2.fieldlabel }}_1"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
 
                                     <!-- "TI">Time -->
                                 {% elif value2.fieldtype == "TI" %}
-                                    <input type="time" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="time" class="form-control" id="{{ value2.fieldlabel }}_1"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
 
                                     <!-- "IN">Integer -->
                                 {% elif value2.fieldtype == "IN" %}
-                                    <input type="number" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="number" class="form-control" id="{{ value2.fieldlabel }}_1"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
 
                                     <!-- "DE">Decimal -->
                                 {% elif value2.fieldtype == "DE" %}
-                                    <input type="number" step=0.01 class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="number" step=0.01 class="form-control" id="{{ value2.fieldlabel }}_1"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
@@ -128,40 +131,40 @@
                             <div class="col-4">
                                 <!-- "TE">Text field -->
                                 {% if value2.fieldtype == "TE" %}
-                                    <input type="text" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="text" class="form-control" id="{{ value2.fieldlabel }}_2"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="Enter {{ value2.fieldlabel }}" name="{{ value2.fieldlabel }}">
 
                                     <!-- "TA">Text area -->
                                 {% elif value2.fieldtype == "TA" %}
-                                    <textarea class="form-control" id="{{ value2.fieldlabel }}"
+                                    <textarea class="form-control" id="{{ value2.fieldlabel }}_2"
                                               placeholder="{{ value2.fieldlabel }}" rows="5"
                                               name="{{ value2.fieldlabel }}"></textarea>
 
                                     <!-- "DA">Date -->
                                 {% elif value2.fieldtype == "DA" %}
-                                    <input type="date" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="date" class="form-control" id="{{ value2.fieldlabel }}_2"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
 
                                     <!-- "TI">Time -->
                                 {% elif value2.fieldtype == "TI" %}
-                                    <input type="time" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="time" class="form-control" id="{{ value2.fieldlabel }}_2"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
 
                                     <!-- "IN">Integer -->
                                 {% elif value2.fieldtype == "IN" %}
-                                    <input type="number" class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="number" class="form-control" id="{{ value2.fieldlabel }}_2"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
 
                                     <!-- "DE">Decimal -->
                                 {% elif value2.fieldtype == "DE" %}
-                                    <input type="number" step=0.01 class="form-control" id="{{ value2.fieldlabel }}"
+                                    <input type="number" step=0.01 class="form-control" id="{{ value2.fieldlabel }}_2"
                                            aria-describedby="{{ value2.fieldlabel }}"
                                            placeholder="{{ value2.fieldlabel }}"
                                            name="{{ value2.fieldlabel }}">
@@ -174,7 +177,7 @@
 
 
                 <div class="input-group-btn">
-                    <button type="submit" class="btn btn-outline-success" id="searchAdvanced">Search
+                    <button  class="btn btn-outline-success" id="searchPostBtn" onclick="searchPost();">Search
                     </button>
                     <button class="btn btn-outline-danger" name="cancel" value="cancel"
                             style="margin-left: 10px;">
