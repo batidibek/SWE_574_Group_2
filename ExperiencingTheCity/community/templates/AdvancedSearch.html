@@ -10,7 +10,7 @@
 
             <input id="postTypeId" hidden value="{{ post_type.id }}">
             <input id="communityId" hidden value="{{ post_type.community_id_id }}">
-            <form>
+            <form id="searchForm">
                 {% csrf_token %}
 
                 <div class="form-row">
@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-2">
                         <select class="dt_fieldtype mdb-select md-form form-control"
-                                name="searchCriteria_name"
+                                name="searchCriteria_name" id="name_sc"
                                 onchange="onSearchCriteria(this)">
                             <option value="EQ" selected>Equals To</option>
                             <option value="CS">Contains</option>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-2">
                         <select class="dt_fieldtype mdb-select md-form form-control"
-                                name="searchCriteria_desc"
+                                name="searchCriteria_desc" id="desc_sc"
                                 onchange="onSearchCriteria(this)">
                             <option value="EQ" selected>Equals To</option>
                             <option value="CS">Contains</option>
@@ -74,7 +74,7 @@
                             </div>
                             <div class="col-2">
                                 <select class="dt_fieldtype mdb-select md-form form-control"
-                                        name="searchCriteria"
+                                        name="{{ value2.fieldlabel }}_sc" id="{{ value2.fieldlabel }}_sc"
                                         onchange="onSearchCriteria(this)">
                                     <option value="EQ" selected>Equals To</option>
                                     <option value="CS">Contains</option>

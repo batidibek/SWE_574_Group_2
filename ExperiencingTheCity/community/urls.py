@@ -22,6 +22,7 @@ urlpatterns = [
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
     path('communities/advanced_search/<id>', community.advanced_search, name="advanced_search"),
+    path('getPostsOfPostType', community.getPostsOfPostType),
     # path('communities/search/<id>', community.search, name="search"),
 
     path('user_profile/<id>', users.user_profile, name='user_profile'),

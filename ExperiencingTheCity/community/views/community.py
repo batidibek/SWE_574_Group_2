@@ -417,6 +417,16 @@ def advanced_search(request, id):
         context["user"] = community_user
     return render(request, 'AdvancedSearch.html', context )
 
+
+
+def getPostsOfPostType(request):
+    pt_id = request.GET.get("pt_id", "")
+    posts = list(Post.objects.filter(posttype_id_id=pt_id).values())
+    print("=================")
+    print(posts)
+    response = { "posts": posts }
+    return JsonResponse(response, safe=False)
+
 # def search(request, id):
 #     post_type = get_object_or_404(PostType, pk=id)
 #     name1 = str(request.POST.get('name1', "")).strip()
