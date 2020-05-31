@@ -4,12 +4,14 @@
     <script src="{% static 'controller/AdvancedSearch.js' %}"></script>
     <div class="container" style="width: 100%; margin:0 auto;">
 
+
         {% if post_type %}
             <h3>Search Posts Under '{{ post_type.name }}'</h3>
             <br/><br/><br/>
 
             <input id="postTypeId" hidden value="{{ post_type.id }}">
             <input id="communityId" hidden value="{{ post_type.community_id_id }}">
+            <input id="filtered_posts" hidden>
             <form id="searchForm">
                 {% csrf_token %}
 
@@ -177,7 +179,8 @@
 
 
                 <div class="input-group-btn">
-                    <button  class="btn btn-outline-success" id="searchPostBtn" onclick="searchPost();">Search
+                    <button class="btn btn-outline-success" type="button" id="searchPostBtn" onclick="searchPost();">
+                        Search
                     </button>
                     <button class="btn btn-outline-danger" name="cancel" value="cancel"
                             style="margin-left: 10px;">
@@ -187,6 +190,14 @@
             </form>
 
         {% endif %}
+
+        <br/><br/><br/><br/><br/>
+
+        <div class="row" id="filteredposts">
+
+        </div>
+
+
         <br/><br/><br/><br/><br/>
     </div>
 {% endblock content %}

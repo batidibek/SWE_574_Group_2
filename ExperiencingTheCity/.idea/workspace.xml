@@ -6,8 +6,6 @@
       <change beforePath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ExperiencingTheCity/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/static/controller/AdvancedSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/community/static/controller/AdvancedSearch.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/community/templates/AdvancedSearch.html" beforeDir="false" afterPath="$PROJECT_DIR$/community/templates/AdvancedSearch.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/community/views/community.py" beforeDir="false" afterPath="$PROJECT_DIR$/community/views/community.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,7 +104,7 @@
       <workItem from="1589628813112" duration="13073000" />
       <workItem from="1589644930542" duration="1304000" />
       <workItem from="1589646266095" duration="2298000" />
-      <workItem from="1590851466377" duration="18086000" />
+      <workItem from="1590851466377" duration="22544000" />
     </task>
     <servers />
   </component>
@@ -125,5 +123,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="django-line">
+          <url>file://$PROJECT_DIR$/community/templates/AdvancedSearch.html</url>
+          <line>7</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
