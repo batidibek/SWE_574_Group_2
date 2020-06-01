@@ -1,8 +1,11 @@
 from flask import Flask, request
-import service
+import service, db
 
 app = Flask(__name__)
 
+@app.before_first_request
+def create_tables():
+    db.create_annotation_table()
 
 @app.route('/annotations', methods=['POST'])
 def new_annotation():

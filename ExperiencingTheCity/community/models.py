@@ -93,6 +93,3 @@ class Followership(models.Model):
     follower = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="Follower")
 
-class Annotation(models.Model):
-    annotation_id = models.CharField(max_length=100, default="")
-    annotation_model = JSONField(default="")

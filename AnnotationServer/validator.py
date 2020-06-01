@@ -19,7 +19,7 @@ def validate_body(data):
     elif data["body"]["type"] not in body_types:
         return "Invalid body type. Valid body types are Audio, Video, Image and TextualBody."
     elif data["body"]["format"] not in body_formats:
-        return "Invalid body format. Valid body formats are audio/mpeg, video/mp4, image/jpeg, image/png and text/plain."
+        return "Invalid body format."
     elif not validate_type_format(data["body"]["type"], data["body"]["format"]):
         return "Body type and format do not match."
     return True

@@ -3,14 +3,30 @@ import json
 
 db_engine = sqlalchemy.create_engine(
     sqlalchemy.engine.url.URL(
-        drivername='postgresql+psycopg2',
-        username='kajuyatjzemxvb',
-        password='31d522de25d83c38b5b31a4c51e1aacf7c266147d4caf932253e4cce19bb970b',
-        database='dcakhbp4q7nbn7',
-        host='ec2-52-207-93-32.compute-1.amazonaws.com',
-        port='5432'
-    )
+        drivername='postgres+pg8000',
+        username='user_anno',
+        password='pass_anno',
+        database='db_anno',
+        query={
+            'unix_sock': '/cloudsql/{}/.s.PGSQL.5432'.format('swe574-278917:us-central1:annotation574')
+        }
+    ),
+    pool_size=5,
+
+    max_overflow=2,
+
+    pool_timeout=30,
+
+    pool_recycle=1800,
 )
+
+def create_annotation_table():
+    with db_engine.connect() as conn:
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS community_annotation "
+            "( annotation_id VARCHAR(255) PRIMARY KEY, "
+            "annotation_model jsonb);"
+        )
 
 def add_to_memory(annotation):
     annotation_id = annotation["id"]
