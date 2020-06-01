@@ -19,6 +19,7 @@ import requests
 from django.utils import timezone
 from ..utils import wiki_data
 from django.db.models import Q
+from django.core.files.storage import default_storage
 
 
 # COMMUNITY LIST
@@ -138,7 +139,7 @@ def create_community(request):
         pt.owner = User.objects.get(username=request.user)
         pt.creation_date = datetime.datetime.now()
         pt.creation_date = datetime.datetime.now()
-        pt.complaint = True;
+        pt.complaint = True
         pt.save()
         return HttpResponseRedirect(reverse('community:home'))
 
@@ -146,25 +147,35 @@ def create_community(request):
 ## NEW POST TYPE
 
 def newPostType(request):
-    fieldJson = request.POST.get("postTypeFields", "")
-    print(fieldJson)
     communityId = request.POST.get("communityId", "")
-
-    pt = PostType()
-    pt.community_id = Community.objects.get(pk=communityId)
-    pt.name = request.POST.get("PostTypeName", "")
-    pt.description = request.POST.get("PostTypeDescription", "")
-    pt.owner_id = User.objects.get(username=request.user).id
-    pt.formfields = fieldJson
-    pt.creation_date = timezone.now()
-
-    if request.POST.get("isComplaint", "") == "0":
-        pt.complaint = True
+    postTypeId = request.POST.get("postTypeId", "")
+    if "cancel" in request.POST:
+        #  onclick="location.href='{% url 'community:post_types' communityDetail.id communityDetail.active %}'">
+        return HttpResponseRedirect(reverse('community:post_types', args=(communityId, postTypeId,)))
     else:
-        pt.complaint = False
+        fieldJson = request.POST.get("postTypeFields", "")
+        print(fieldJson)
 
-    pt.save()
-    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
+        print(postTypeId)
+        if (postTypeId != ''):
+            pt = PostType.objects.get(pk=postTypeId)
+        else:
+            pt = PostType()
+        pt.community_id = Community.objects.get(pk=communityId)
+        pt.name = request.POST.get("PostTypeName", "")
+        print(pt.name)
+        pt.description = request.POST.get("PostTypeDescription", "")
+        pt.owner_id = User.objects.get(username=request.user).id
+        pt.formfields = fieldJson
+        pt.creation_date = timezone.now()
+
+        if request.POST.get("isComplaint", "") == "0":
+            pt.complaint = True
+        else:
+            pt.complaint = False
+
+        pt.save()
+        return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 
 ## GET POST TYPES
@@ -180,12 +191,16 @@ def getPostTypes(request, id, activeStatus):
 
 def getPostType(request, id, activeStatus):
     post_type = get_object_or_404(PostType, pk=id)
-    context = {'post_type': post_type, 'communityActive': activeStatus}
+    communityDetail = get_object_or_404(Community, id=post_type.community_id_id)
+    if post_type.formfields:
+        form_fields = json.loads(post_type.formfields)
+    else:
+        form_fields = []
+    context = {'post_type': post_type, 'communityDetail': communityDetail, "form_fields": form_fields}
+
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = user
-    print("===============================")
-    print(context)
     return render(request, "PostType.html", context)
 
 
@@ -199,6 +214,15 @@ def archiveCommunity(request, id):
         context["user"] = community_user
     return HttpResponseRedirect(reverse('community:home'))
 
+def archivePostType(request, id):
+    pt = get_object_or_404(PostType, pk=id)
+    pt.active = False
+    pt.save()
+    context = {'post_type': pt}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return HttpResponseRedirect(reverse('community:post_types', args=(pt.community_id_id, True,)))
 
 ## POST OPERATIONS
 
@@ -210,7 +234,13 @@ def new_post(request, id):
     else:
         form_fields = []
 
-    return render(request, "PostCreate.html", { "post_type": post_type, "form_fields": form_fields})
+    context = {'post_type': post_type, "form_fields": form_fields}
+    
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    
+    return render(request, "PostCreate.html", context)
 
 
 def create_post(request, id):
@@ -220,31 +250,54 @@ def create_post(request, id):
     name = str(request.POST.get('name', "")).strip()
     query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
-    context = {'post_name': name, 'description': description}
     is_complaint = False
     complaint_status = ""
     wiki_tags = {}
     column_names = ("fieldposnr", "fieldlabel", "fieldtype", "enumvals", "isRequired", "fieldValue")
     json_response = {}
 
-    if(post_type.complaint == True):
+    if (post_type.complaint == True):
         is_complaint = True
         complaint_status = "Open"
 
-    if(post_type.name != 'Generic Post Type' and post_type.name != 'Generic Post Type for Complaints'):
+    if (post_type.name != 'Generic Post Type' and post_type.name != 'Generic Post Type for Complaints'):
         form_fields = json.loads(post_type.formfields)
         for (k, v) in form_fields.items():
-            for (key, value) in v.items():     
+            for (key, value) in v.items():
                 fieldposnr = value["fieldposnr"]
                 fieldlabel = value["fieldlabel"]
                 fieldtype  = value["fieldtype"]
                 enumvals   = value["enumvals"]
                 isRequired = value["isRequired"]
-                fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+
+                if fieldtype == "LO":
+                    lat = request.POST.getlist('latitude', "")
+                    lon = request.POST.getlist('longitude', "")
+                    
+                    geolocation = {}
+                    
+                    for i in range(len(lat)):
+                        point = {}
+                        point["lat"] = lat[i]
+                        point["lon"] = lon[i]
+
+                        geolocation[i] = point
+
+                    fieldValue = geolocation
+
+                elif fieldtype in ["IM", "VI", "AU"]:
+                    if bool(request.FILES.get(fieldlabel, False)) == True:
+                        file = request.FILES[fieldlabel]
+                        save_file = default_storage.save(file.name, file)
+                        fieldValue = file.name
+                    else:
+                        fieldValue = ""
+                else:
+                    fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
 
                 if fieldposnr not in json_response:
                     json_response[fieldposnr] = []
-                
+
                 json_element = {}
                 json_element[column_names[0]] = fieldposnr
                 json_element[column_names[1]] = fieldlabel
@@ -253,47 +306,41 @@ def create_post(request, id):
                 json_element[column_names[4]] = isRequired
                 json_element[column_names[5]] = fieldValue
 
-                json_response[fieldposnr].append(json_element)
+                json_response[fieldposnr] = json_element
 
 
+    if "wiki_tag" in request.POST:
+        wiki_tags["tags"] = []
+        tags = request.POST.getlist('wiki_tag', "")
+        for i in range(len(tags)):
+            wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))
+       
     if name == "" or description == "":
         return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
 
     if "cancel" in request.POST:
         return HttpResponseRedirect(reverse('community:home'))
-
-    #if "get_tag" in request.POST:
-     #   if query == "":
-    #        context["error_message"] = "You need to enter a query to get tag suggestions."
-    #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
-    #        #return render(request, 'PostCreate.html/' + id, context)
-    #    else:
-    #        suggested_tags = wiki_data.suggest_tags(query)
-    #        if suggested_tags:
-    #            context["suggested_tags"] = suggested_tags
-    #        return HttpResponseRedirect(reverse('community:new_post', args=(id,)))
-            
-            #return render(request, 'PostCreate.html/' + id, context)
-    
-    
-    #if "wiki_tag" in request.POST:
-    #    wiki_tags["tags"] = []
-    #    tags = request.POST.getlist('wiki_tag', "")
-    #
-    #    for i in range(len(tags)):
-    #        wiki_tags["tags"].append(json.loads(tags[i].replace("\'", "\"")))
-
     else:
-        post = Post(name=name, description=description, user_id=User.objects.get(username=request.user), creation_date=timezone.now(), community_id=community, 
-                    form_fields=json.dumps(json_response), posttype_id = post_type, complaint=is_complaint, complaint_status=complaint_status)
+        post = Post(name=name, description=description, user_id=User.objects.get(username=request.user),
+                    creation_date=timezone.now(), community_id=community,
+                    form_fields=json.dumps(json_response), posttype_id=post_type, complaint=is_complaint,
+                    complaint_status=complaint_status, tags=wiki_tags)
         post.save()
 
-        return HttpResponseRedirect(reverse('community:home'))
+        return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
 
 
 def getPosts(request, id):
     communityPosts = Post.objects.filter(community_id=id)
-    context = {'communityPosts': communityPosts}
+    posts = []
+
+    for post in communityPosts:
+        report_count = InappropriatePosts.objects.filter(post_id=post).count()
+
+        if report_count <= 5:
+            posts.append(post)
+
+    context = {'communityPosts': posts}
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -305,18 +352,53 @@ def getPosts(request, id):
 def getPostDetail(request, id):
     post = get_object_or_404(Post, pk=id)
     post_type = post.posttype_id
-    # comments = get_object_or_404(Comments, post_id=id)
+    comments = Comments.objects.filter(post_id=id)
 
-    # context = {'post': post, 'post_type': post_type, 'comments':comments}
     if post.form_fields:
         form_fields = json.loads(post.form_fields)
+
+        for key, value in form_fields.items():    
+            if value["fieldtype"] in ["IM", "VI", "AU"]:
+                file_name = value["fieldValue"]
+                if file_name:
+                    file_path = default_storage.url(file_name)
+                    value["fieldValue"] = file_path
     else:
         form_fields = []
 
-    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields }
+    context = {'post': post, 'post_type': post_type, 'form_fields': form_fields, 'comments':comments}
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
 
     return render(request, "PostDetail.html", context)
+
+
+def create_comment(request, id):
+    post = get_object_or_404(Post, pk=id)
+    commentbox = str(request.POST.get('commentbox', "")).strip()
+    
+    if commentbox:
+        comment = Comments(comment_body=commentbox, post_id=post, user_id=User.objects.get(username=request.user), creation_date=timezone.now())
+        comment.save()
+
+    return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
+
+
+def report_post(request, id):
+    post = get_object_or_404(Post, pk=id)
+    
+    inappropriatePosts = InappropriatePosts(inappropriate=True, post_id=post, user_id=User.objects.get(username=request.user))
+    inappropriatePosts.save()
+
+    return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
+
+
+def archive_post(request, id):
+    post = get_object_or_404(Post, pk=id)
+    community = post.community_id
+    post.active = False
+    post.save()
+
+    return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
