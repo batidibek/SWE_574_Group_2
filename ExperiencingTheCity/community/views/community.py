@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
-    UserAdditionalInfo, Followership
+    UserAdditionalInfo, Followership, Action
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -20,7 +20,7 @@ from django.utils import timezone
 from ..utils import wiki_data
 from django.db.models import Q
 from django.core.files.storage import default_storage
-
+from ..utils.activity_stream import create_action
 
 # COMMUNITY LIST
 
@@ -121,6 +121,8 @@ def create_community(request):
         })
     else:
         community.save()
+        # user created community action for activity stream
+        create_action(request.user, 'created a new community:', community)
 
         # Generic Post Type creation
         pt = PostType()
@@ -175,6 +177,8 @@ def newPostType(request):
             pt.complaint = False
 
         pt.save()
+        # user created community action for activity stream
+        create_action(request.user, 'created a new post type:', pt)
         return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 
