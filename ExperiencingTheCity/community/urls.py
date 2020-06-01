@@ -29,6 +29,9 @@ urlpatterns = [
     path('user_profile/<id>/followed/', users.user_list, name='user_followers'),
     path('user_profile/<id>/follow/', users.user_follow, name='user_follow'),
 
+    # TEMPORARY
+    path('UserActivityStream', users.activity_stream, name='activity_stream'),
+
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),
     path('authenticate-user/', users.authenticate_user, name='authenticate_user'),

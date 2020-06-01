@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import loader, context
 from django.http import HttpResponse, HttpResponseRedirect
 from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
-    UserAdditionalInfo, Followership
+    UserAdditionalInfo, Followership, Action
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -182,3 +182,11 @@ def user_follow(request, id):
         community_user.follows.add(user_profile)
         data['message'] = "You are now following {}".format(userProfile)
     return JsonResponse(data, safe=False)
+
+def activity_stream(request):
+    action = Action.objects.all()
+    context = {'activity_stream': action}
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    return render(request, 'UserActivityStream.html', context)
