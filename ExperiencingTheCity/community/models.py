@@ -114,3 +114,4 @@ User.add_to_class('following',
                                          through=Followership,
                                          related_name='followers',
                                          symmetrical=False))
+
