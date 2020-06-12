@@ -29,12 +29,15 @@ function searchPost() {
 
 function filterPosts(postList) {
     var searchCriteria = "";
+
+    var mylist = postList;
     filtered_posts = postList.filter(function (post) {
             console.log(post);
             var postFields = JSON.parse(post.form_fields);
             console.log(postFields);
 
             var postTags = post.tags.tags;
+            console.log(postTags);
             for (var sField in postFields) {
                 if (postFields.hasOwnProperty(sField)) {
 
@@ -45,33 +48,44 @@ function filterPosts(postList) {
                     var inputname2 = postFields[sField].fieldlabel + "_2";
                     var value2 = document.getElementById("searchForm").elements.namedItem(inputname2).value;
 
-
-                    switch (searchCriteria) {
-                        case "EQ":
-                            if (value1 !== "") {
-                                return postFields[sField].fieldValue.toLowerCase() === value1.toLowerCase();
-                            }
-
-                            break;
-                        case "CS":
-                            if (value1 !== "") {
+                    if (value1 !== "") {
+                        switch (searchCriteria) {
+                            case "EQ":
+                                if (value1 !== "") {
+                                    return postFields[sField].fieldValue.toLowerCase() === value1.toLowerCase();
+                                }
+                                break;
+                            case "CS":
                                 return postFields[sField].fieldValue.toLowerCase().includes(value1.toLowerCase());
-                            }
-                            break;
-                        case "GT":
-                            if (value1 !== "") {
-                                return postFields[sField].fieldValue.toLowerCase().includes(value1.toLowerCase());
-                            }
-                            break;
-                        case "GE":
-                            break;
-                        case "LT":
-                            break;
-                        case "LE":
-                            break;
-                        case "BT":
-                            break;
+                                break;
+                            case "GT":
+                                if (value1 !== "") {
+                                    return postFields[sField].fieldValue.toLowerCase() > value1.toLowerCase();
+                                }
+                                break;
+                            case "GE":
+                                if (value1 !== "") {
+                                    return postFields[sField].fieldValue.toLowerCase() >= value1.toLowerCase();
+                                }
+                                break;
+                            case "LT":
+                                if (value1 !== "") {
+                                    return postFields[sField].fieldValue.toLowerCase() < value1.toLowerCase();
+                                }
+                                break;
+                            case "LE":
+                                if (value1 !== "") {
+                                    return postFields[sField].fieldValue.toLowerCase() <= value1.toLowerCase();
+                                }
+                                break;
+                            case "BT":
+                                if (value1 !== "") {
+                                    return (postFields[sField].fieldValue.toLowerCase() >= value1.toLowerCase() && postFields[sField].fieldValue.toLowerCase() <= value2.toLowerCase());
+                                }
+                                break;
+                        }
                     }
+
                 }
             }
 
@@ -79,103 +93,118 @@ function filterPosts(postList) {
             var tags1 = document.getElementById("searchForm").elements.namedItem("tags1").value;
             var tags2 = document.getElementById("searchForm").elements.namedItem("tags2").value;
 
-            for (var tag in postTags) {
-                if (postFields.hasOwnProperty(tag)) {
+
+            if (tags1 !== "") {
+
+                var postTags2 = postTags.filter(function (tagObject) {
+                    console.log(tagObject);
                     switch (searchCriteria) {
                         case "EQ":
-                            return (postTags[tag].label.toLowerCase() === tags1.toLowerCase()) ||
-                                   (postTags[tag].description.toLowerCase() === tags1.toLowerCase()) ;
+                            return (tagObject.label.toLowerCase() === tags1.toLowerCase() ||
+                                tagObject.description.toLowerCase() === tags1.toLowerCase());
                             break;
                         case "CS":
-                            return (postTags[tag].label.toLowerCase().includes(tags1.toLowerCase())) ||
-                                   (postTags[tag].description.toLowerCase().includes(tags1.toLowerCase())) ; ;
+                            return (tagObject.label.toLowerCase().includes(tags1.toLowerCase()) || tagObject.description.toLowerCase().includes(tags1.toLowerCase()));
                             break;
                         case "GT":
-                            return postTags[tag].label.toLowerCase() > tags1.toLowerCase() ||
-                                   postTags[tag].description.toLowerCase() > tags1.toLowerCase();
+                            return tagObject.label.toLowerCase() > tags1.toLowerCase() ||
+                                tagObject.description.toLowerCase() > tags1.toLowerCase();
                             break;
                         case "GE":
-                            return postTags[tag].label.toLowerCase() >= tags1.toLowerCase() ||
-                                   postTags[tag].description.toLowerCase() >= tags1.toLowerCase();
+                            return tagObject.label.toLowerCase() >= tags1.toLowerCase() ||
+                                tagObject.description.toLowerCase() >= tags1.toLowerCase();
                             break;
                         case "LT":
-                            return postTags[tag].label.toLowerCase() < tags1.toLowerCase() ||
-                                   postTags[tag].description.toLowerCase() < tags1.toLowerCase()  ;
+                            return tagObject.label.toLowerCase() < tags1.toLowerCase() ||
+                                tagObject.description.toLowerCase() < tags1.toLowerCase();
                             break;
                         case "LE":
-                            return postTags[tag].label.toLowerCase() <= tags1.toLowerCase() ||
-                                   postTags[tag].description.toLowerCase() <= tags1.toLowerCase();
+
+                            return tagObject.label.toLowerCase() <= tags1.toLowerCase() ||
+                                tagObject.description.toLowerCase() <= tags1.toLowerCase();
                             break;
                         case "BT":
-                            return (postTags[tag].label.toLowerCase() >= tags1.toLowerCase() && postTags[tag].label.toLowerCase() <= tags2.toLowerCase()) ||
-                                   (postTags[tag].description.toLowerCase() >= tags1.toLowerCase() && postTags[tag].description.toLowerCase() <= tags2.toLowerCase()) ;
+                            return (tagObject.label.toLowerCase() >= tags1.toLowerCase() && tagObject.label.toLowerCase() <= tags2.toLowerCase()) ||
+                                (tagObject.description.toLowerCase() >= tags1.toLowerCase() && tagObject.description.toLowerCase() <= tags2.toLowerCase());
                             break;
                     }
+                });
 
+
+                if (postTags2.length > 0) {
+                    return true;
+                } else {
+                    return false;
                 }
+
+
             }
+
 
             searchCriteria = document.getElementById("searchForm").elements.namedItem("name_sc").value;
             var name1 = document.getElementById("searchForm").elements.namedItem("name1").value;
             var name2 = document.getElementById("searchForm").elements.namedItem("name2").value;
-            switch (searchCriteria) {
-                case "EQ":
-                    return post.name.toLowerCase() === name1.toLowerCase();
-                    break;
-                case "CS":
-                    return post.name.toLowerCase().includes(name1.toLowerCase());
-                    break;
-                case "GT":
-                    return post.name.toLowerCase() > name1.toLowerCase();
-                    break;
-                case "GE":
-                    return post.name.toLowerCase() >= name1.toLowerCase();
-                    break;
-                case "LT":
-                    return post.name.toLowerCase() < name1.toLowerCase();
-                    break;
-                case "LE":
-                    return post.name.toLowerCase() <= name1.toLowerCase();
-                    break;
-                case "BT":
-                    return (post.name.toLowerCase() >= name1.toLowerCase()) && (post.name.toLowerCase() <= name2.toLowerCase());
-                    break;
+
+            if (name1 !== "") {
+                switch (searchCriteria) {
+                    case "EQ":
+                        return post.name.toLowerCase() === name1.toLowerCase();
+                        break;
+                    case "CS":
+                        return post.name.toLowerCase().includes(name1.toLowerCase());
+                        break;
+                    case "GT":
+                        return post.name.toLowerCase() > name1.toLowerCase();
+                        break;
+                    case "GE":
+                        return post.name.toLowerCase() >= name1.toLowerCase();
+                        break;
+                    case "LT":
+                        return post.name.toLowerCase() < name1.toLowerCase();
+                        break;
+                    case "LE":
+                        return post.name.toLowerCase() <= name1.toLowerCase();
+                        break;
+                    case "BT":
+                        return (post.name.toLowerCase() >= name1.toLowerCase()) && (post.name.toLowerCase() <= name2.toLowerCase());
+                        break;
+                }
             }
+
 
             searchCriteria = document.getElementById("searchForm").elements.namedItem("desc_sc").value;
             var desc1 = document.getElementById("searchForm").elements.namedItem("description1").value;
-            var desc1 = document.getElementById("searchForm").elements.namedItem("description2").value;
-
-            switch (searchCriteria) {
-                case "EQ":
-                    return post.description.toLowerCase() === desc1.toLowerCase();
-                    break;
-                case "CS":
-                    return post.description.toLowerCase().includes(desc1.toLowerCase());
-                    break;
-                case "GT":
-                    return post.description.toLowerCase() > desc1.toLowerCase();
-                    break;
-                case "GE":
-                    return post.description.toLowerCase() >= desc1.toLowerCase();
-                    break;
-                case "LT":
-                    return post.description.toLowerCase() < desc1.toLowerCase();
-                    break;
-                case "LE":
-                    return post.description.toLowerCase() <= desc1.toLowerCase();
-                    break;
-                case "BT":
-                    return (post.description.toLowerCase() >= desc1.toLowerCase()) && (post.description.toLowerCase() <= desc2.toLowerCase());
-                    break;
+            var desc2 = document.getElementById("searchForm").elements.namedItem("description2").value;
+            if (desc1 !== "") {
+                switch (searchCriteria) {
+                    case "EQ":
+                        return post.description.toLowerCase() === desc1.toLowerCase();
+                        break;
+                    case "CS":
+                        return post.description.toLowerCase().includes(desc1.toLowerCase());
+                        break;
+                    case "GT":
+                        return post.description.toLowerCase() > desc1.toLowerCase();
+                        break;
+                    case "GE":
+                        return post.description.toLowerCase() >= desc1.toLowerCase();
+                        break;
+                    case "LT":
+                        return post.description.toLowerCase() < desc1.toLowerCase();
+                        break;
+                    case "LE":
+                        return post.description.toLowerCase() <= desc1.toLowerCase();
+                        break;
+                    case "BT":
+                        return (post.description.toLowerCase() >= desc1.toLowerCase()) && (post.description.toLowerCase() <= desc2.toLowerCase());
+                        break;
+                }
             }
 
 
         }
     );
-
     console.log(filtered_posts);
-    // document.getElementById("filteredposts").innerHTML = JSON.stringify(filtered_posts);
     document.getElementById("filtered_posts").value = JSON.stringify(filtered_posts)
 
     addPostTiles(filtered_posts);
@@ -232,9 +261,14 @@ function addPostTiles(postList) {
         bodyDiv.appendChild(btnGrp);
         cardDiv.appendChild(bodyDiv);
         colDiv.appendChild(cardDiv);
+
         document.getElementById("filteredposts").appendChild(colDiv);
 
 
     }
+
+}
+
+function onSearchCriteria() {
 
 }

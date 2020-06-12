@@ -104,7 +104,10 @@
       <workItem from="1589628813112" duration="13073000" />
       <workItem from="1589644930542" duration="1304000" />
       <workItem from="1589646266095" duration="2298000" />
-      <workItem from="1590851466377" duration="25475000" />
+      <workItem from="1590851466377" duration="31479000" />
+      <workItem from="1591018372475" duration="153000" />
+      <workItem from="1591019282844" duration="2944000" />
+      <workItem from="1591917298350" duration="3915000" />
     </task>
     <servers />
   </component>
@@ -123,16 +126,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="django-line">
-          <url>file://$PROJECT_DIR$/community/templates/AdvancedSearch.html</url>
-          <line>7</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
