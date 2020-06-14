@@ -185,14 +185,12 @@ def user_follow(request, id):
 
 
 def activity_stream(request, id):
-
     userProfile = get_object_or_404(User, pk=id)
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
 
     action = Action.objects.all()
-
 
     return render(request, 'UserActivityStream.html', {'userProfile': userProfile,
                                                        'user': community_user,

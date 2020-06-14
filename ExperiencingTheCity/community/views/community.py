@@ -121,6 +121,7 @@ def create_community(request):
         })
     else:
         community.save()
+
         # user created community action for activity stream
         create_action(request.user, 'created a new community:', community)
 
@@ -329,7 +330,11 @@ def create_post(request, id):
                     creation_date=timezone.now(), community_id=community,
                     form_fields=json.dumps(json_response), posttype_id=post_type, complaint=is_complaint,
                     complaint_status=complaint_status, tags=wiki_tags)
+
         post.save()
+
+        # user created post action for activity stream
+        create_action(request.user, 'created a new post:', post)
 
         return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
 

@@ -47,6 +47,9 @@ class Post(models.Model):
     tags = JSONField(default="")
     active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
 
 class SemanticTags(models.Model):
     community_id = models.ForeignKey(
