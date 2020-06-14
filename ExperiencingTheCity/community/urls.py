@@ -22,15 +22,13 @@ urlpatterns = [
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
 
-    path('user_profile/<id>', users.user_profile, name='user_profile'),
+    path('user_profile/<id>/', users.user_profile, name='user_profile'),
     path('user_profile/<id>/posts/', users.user_posts, name='user_posts'),
     path('user_profile/<id>/communities/', users.user_communities, name='user_communities'),
     path('user_profile/<id>/follows/', users.user_list, name='user_follows'),
     path('user_profile/<id>/followed/', users.user_list, name='user_followers'),
     path('user_profile/<id>/follow/', users.user_follow, name='user_follow'),
-
-    # TEMPORARY
-    path('UserActivityStream', users.activity_stream, name='activity_stream'),
+    path('user_profile/<id>/activitystream/', users.activity_stream, name='activity_stream'),
 
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),

@@ -183,10 +183,17 @@ def user_follow(request, id):
         data['message'] = "You are now following {}".format(userProfile)
     return JsonResponse(data, safe=False)
 
-def activity_stream(request):
-    action = Action.objects.all()
-    context = {'activity_stream': action}
+
+def activity_stream(request, id):
+
+    userProfile = get_object_or_404(User, pk=id)
+
     if request.user.is_authenticated:
-        user = get_object_or_404(UserAdditionalInfo, user=request.user)
-        context["user"] = user
-    return render(request, 'UserActivityStream.html', context)
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+
+    action = Action.objects.all()
+
+
+    return render(request, 'UserActivityStream.html', {'userProfile': userProfile,
+                                                       'user': community_user,
+                                                       'activity_stream': action})
