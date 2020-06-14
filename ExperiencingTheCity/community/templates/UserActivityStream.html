@@ -11,11 +11,11 @@
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/followed/'>FOLLOWERS</a>
             </nav>
         </div>
-        <div class="row mb-2">
+        <div>
             {% if activity_stream %}
                 {% for Action in activity_stream %}
                     <div class="list-group">
-                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm position-relative">
+                        <div class="border rounded overflow-hidden mb-2 shadow-sm position-relative">
                             <div class="col p-4 d-flex flex-column position-static">
                                 <!-- Buraya tag yazabiliriz -->
                                 {% if Action.target_ct_id == 7 %}
