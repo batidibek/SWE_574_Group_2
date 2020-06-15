@@ -16,7 +16,7 @@ from django.core.files import File
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import requests
-
+from django.views.decorators.http import require_POST
 
 # SIGN UP
 
@@ -165,23 +165,23 @@ def user_list(request, id):
                                                 'user': community_user})
 
 
-# @ajax_required
-# @require_POST
-# @login_required
-
-def user_follow(request, id):
-    userProfile = get_object_or_404(User, pk=id)
-
-    if request.user.is_authenticated:
-        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
-
-    data = {}
-    if userProfile.follows.filter(id=user_profile.id).exists():
-        data['message'] = "You are already following this user."
-    else:
-        community_user.follows.add(user_profile)
-        data['message'] = "You are now following {}".format(userProfile)
-    return JsonResponse(data, safe=False)
+def user_follow(request):
+    user_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if user_id and action:
+        try:
+            user = User.objects.get(id=user_id)
+            if action == 'follow':
+                Followership.objects.get_or_create(
+                    follows=request.user,
+                    followed=user)
+            else:
+                Followership.objects.filter(follows=request.user,
+                                            followed=user).delete()
+            return JsonResponse({'status': 'ok'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'ko'})
+    return JsonResponse({'status': 'ko'})
 
 
 def activity_stream(request, id):
