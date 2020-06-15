@@ -406,3 +406,45 @@ def archive_post(request, id):
     post.save()
 
     return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
+
+
+def advanced_search(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+
+    if post_type.formfields:
+        form_fields = json.loads(post_type.formfields)
+    else:
+        form_fields = []
+    context = {'post_type': post_type, 'form_fields' : form_fields }
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, 'AdvancedSearch.html', context )
+
+
+
+def getPostsOfPostType(request):
+    pt_id = request.GET.get("pt_id", "")
+    posts = list(Post.objects.filter(posttype_id_id=pt_id).values())
+    print("=================")
+    print(posts)
+    response = { "posts": posts }
+    return JsonResponse(response, safe=False)
+
+# def search(request, id):
+#     post_type = get_object_or_404(PostType, pk=id)
+#     name1 = str(request.POST.get('name1', "")).strip()
+#     name2 = str(request.POST.get('name2', "")).strip()
+#     description1 = str(request.POST.get('description1', "")).strip()
+#     description2 = str(request.POST.get('description2', "")).strip()
+#     form_fields = json.loads(post_type.formfields)
+#     for (k, v) in form_fields.items():
+#         for (key, value) in v.items():
+#             fieldlabel = value["fieldlabel"]
+#             fieldtype = value["fieldtype"]
+#             if fieldtype not in ["IM", "VI", "AU", "LO"]:
+#                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+#             else:
+#                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+
+
