@@ -473,3 +473,13 @@ def unarchive_post(request, id):
 
     return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
 
+
+def post_list(request):
+    post_list = Post.objects.order_by('-creation_date')[:30]
+    context = {'post_list': post_list}
+    
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    
+    return render(request, 'Posts.html', context)
