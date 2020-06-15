@@ -8,9 +8,6 @@
         });
     </script>
     <div class="message-section" style="display:none;"></div>
-    <button data-url='/user_profile/{{ userProfile.id }}/user_follow/'
-            class="follow-button" type="button">Follow
-    </button>
     <div class="container" style="width: 800px; margin:0 auto;">
         <h2>{{ userProfile }}</h2>
         <div class="nav-scroller py-1 mb-2">
@@ -22,27 +19,14 @@
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/followed/'>FOLLOWERS</a>
             </nav>
         </div>
-        <div>
-            {% with total_followers=user.user.followers.count %}
-                <span class="count"><span
-                        class="total">{{ total_followers }}</span> Follower{{ total_followers|pluralize }}</span>
-            {% endwith %}
-        </div>
-    <div class="row mb-2">
-            {% if activity_stream %}
-                {% for Action in activity_stream %}
-                    <div class="list-group">
-                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-2 shadow-sm position-relative">
-                            <div class="col p-4 d-flex flex-column position-static">
-                                <!-- Buraya tag yazabiliriz -->
-                                <h4><a href="{{ Action.user.get_absolute_url }}" class="stretched-link">{{ Action.user }}</a> {{ Action.verb }} <a href="{{ Action.target }}" class="stretched-link">{{ Action.target }}</a></h4>
-                                <div class="mb-1 text-muted">{{ Action.created }}</div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
+        <br>
+        <a>Date joined: {{ userProfile.date_joined }}</a>
+        <br><br>
+        <a>Number of communities created: {{ userCommunities }}</a>
+        <br>
+        <a>Number of posts created: {{ userPosts }}</a>
+        <br>
+        <a>Number of comments: {{ userComments }}</a>
         <br/><br/><br/><br/><br/>
     </div>
 {% endblock content %}

@@ -117,8 +117,9 @@ def log_out(request):
 
 def user_profile(request, id):
     userProfile = get_object_or_404(User, pk=id)
-    userCommunities = Community.objects.filter(owner=id)
-    userPosts = Post.objects.filter(user_id=id)
+    userCommunities = Community.objects.filter(owner=id).count()
+    userPosts = Post.objects.filter(user_id=id).count()
+    userComments = Comments.objects.filter(user_id=id).count()
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -126,6 +127,7 @@ def user_profile(request, id):
     return render(request, "UserProfile.html", {'userProfile': userProfile,
                                                 'userCommunities': userCommunities,
                                                 'userPosts': userPosts,
+                                                'userComments': userComments,
                                                 'user': community_user})
 
 
