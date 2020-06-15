@@ -371,6 +371,9 @@ def getPostDetail(request, id):
         form_fields = []
 
     context = {'post': post, 'post_type': post_type, 'form_fields': form_fields, 'comments':comments}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
