@@ -1,0 +1,250 @@
+{% extends "base.html" %} {% block content %}
+    {% load static %}
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    
+
+    <div class="container" style="width: 800px; margin:0 auto;">
+
+
+        <!-- <div class="row mb-2"> -->
+        <div class="row">
+
+            <!-- {{ postposttype_postTypes }} -->
+            <h5>Recent Activities</h5>
+            <p></p>
+            <br />
+            <ul>
+                <li>Posts that created in last 1 month
+                    <ul>
+                    {% for post in recent_posts %}
+                        <li><a href="{% url 'community:post_detail'  post.id %}"> {{ post.name }}</a></li>
+                    {% endfor %}
+                </ul>
+                </li>
+                <li>Post types that created in last 1 month
+                    <ul>
+                    {% for posttype in recent_posttypes %}
+                    <li><a href="{% url 'community:post_type' posttype.id 1 %}"> {{ posttype.name }}</a></li>
+                    {% endfor %}
+                    </ul> 
+                </li>
+                <li>Posts that commented in last 1 month
+                    <ul> 
+                    {% for post in recent_comments %}
+                        <li><a href="{% url 'community:post_detail'  post.id %}"> {{ post.name }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+
+            <canvas id="recentActivitiesChart" width="200" height="100"></canvas>
+           
+
+            <h5>Post Types Overview</h5>
+            <canvas id="myChart" width="100" height="50"></canvas>
+
+            
+            <h5>Comments Overview</h5>
+            <canvas id="post_comment" width="100" height="50"></canvas>
+
+
+            <h5>Posts Overview</h5>
+            <canvas id="active_posts" width="100" height="50"></canvas>
+
+            <h5>User's Activities Overview</h5>
+            <canvas id="user_activities" width="100" height="50"></canvas>
+
+
+        </div>
+        <br/><br/><br/><br/><br/>
+    </div>
+    <script>
+        var posttype_canvas = document.getElementById('myChart').getContext('2d');
+        var comment_canvas = document.getElementById('post_comment').getContext('2d');
+        var post_canvas = document.getElementById('active_posts').getContext('2d');
+        var user_canvas = document.getElementById('user_activities').getContext('2d');
+
+        var post_types = {{ post_types|safe }};
+        var post_type_counts = {{ post_counts|safe }};
+        var posts = {{ posts|safe }};
+        var comment_counts = {{ comments|safe }};
+        var post_dist = {{ post_distributions|safe }};
+        var post_dist_count = {{ post_dist_count|safe }};
+        var user_activities = {{ user_activities|safe }};
+        var user_activities_count = {{ user_act_count|safe }};
+
+        var total=0;
+            for(var i in post_dist_count) { total += post_dist_count[i]; }
+
+            
+        var totalUser=0;
+            for(var i in user_activities_count) { totalUser += user_activities_count[i]; }
+
+        var posttypes = new Chart(posttype_canvas, {
+            type: 'bar',
+            data: {
+                labels: post_types,
+                datasets: [{
+                    label: '# of Posts',
+                    data: post_type_counts,
+                    backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                    borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                    borderWidth: 1
+                            }]
+                },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                            }
+                        }]
+                    },
+                title: {
+                    display: true,
+                    text: '# Total Post Types: ' + post_types.length, 
+                    }
+                }
+        });
+
+        var comments = new Chart(comment_canvas, {
+            type: 'pie',
+            data: {
+                labels: posts,
+                datasets: [{
+                    label: '# of Comments',
+                    data: comment_counts,
+                    backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                    borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                    borderWidth: 1
+                            }]
+                },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                            }
+                        }]
+                    },
+                title: {
+                    display: true,
+                    text: '# Total Comment: ' + comment_counts.length, 
+                    }
+                }
+        });
+
+        var posts = new Chart(post_canvas, {
+            type: 'pie',
+            data: {
+                labels: post_dist,
+                datasets: [{
+                    label: '# of Posts',
+                    data: post_dist_count,
+                    backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                    borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                    borderWidth: 1
+                            }]
+                },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                            }
+                        }]
+                    },
+                title: {
+                    display: true,
+                    text: '# Total Post: ' + total
+                    }
+                }
+        });
+
+        var user = new Chart(user_canvas, {
+            type: 'pie',
+            data: {
+                labels: user_activities,
+                datasets: [{
+                    label: '# of Users',
+                    data: user_activities_count,
+                    backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                    borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                    borderWidth: 1
+                            }]
+                },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                            }
+                        }]
+                    },
+                title: {
+                    display: true,
+                    text: '# Total Users in Community: ' + totalUser
+                    }
+                }
+        });
+
+    </script>
+
+{% endblock content %}
