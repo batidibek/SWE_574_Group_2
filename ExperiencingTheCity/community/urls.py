@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, users, community
+from .views import home, users, community, annotation
 
 app_name = 'community'
 urlpatterns = [
@@ -48,4 +48,5 @@ urlpatterns = [
     path('create-comment/<id>', community.create_comment, name='create_comment'),
     path('report-post/<id>', community.report_post, name='report_post'),
     path('archive-post/<id>', community.archive_post, name='archive_post'),
+    path('annotate/<id>', annotation.annotate, name='annotate'),
 ]

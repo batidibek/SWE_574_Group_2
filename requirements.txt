@@ -13,3 +13,4 @@ psycopg2==2.8.5
 jsonschema==3.1.1
 boto3==1.13.11
 django-storages==1.9.1
+django-annotator==2.1.0
