@@ -11,15 +11,13 @@ $(document).ready(function () {
     }
 
     $("#addDataField").on("click", function () {
-        // var new_row = $("#PostTypeFieldsTable tr:last").clone().find('input').val('').end();
-        var new_row = $("#rowToClone_0").clone().removeAttr("id");
+        var new_row = $("#PostTypeFieldsTable tr:last").clone().find('input').val('').end();
         new_row.find('#addDataBtn').removeClass('fa fa-plus');
         new_row.find('#addDataBtn').addClass('fa fa-minus').attr('onclick', 'removePostField(this)');
         new_row.find('.bootstrap-tagsinput').remove();
         new_row.find('#enumValues1').tagsinput();
 
         $("#PostTypeFieldsTable").append(new_row);
-        $("#rowToClone_0").find('input').val('').end();
     });
 
     $("#createPostType").on("click", function (event) {

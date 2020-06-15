@@ -8,25 +8,25 @@
         });
     </script>
     <div class="message-section" style="display:none;"></div>
-    <button data-url='/user_profile/{{ userProfile.id }}/user_follow/'
-            class="follow-button" type="button">Follow
-    </button>
     <div class="container" style="width: 800px; margin:0 auto;">
         <h2>{{ userProfile }}</h2>
         <div class="nav-scroller py-1 mb-2">
             <nav class="nav d-flex justify-content-between">
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/activitystream/'>FEED</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/communities/'>COMMUNITIES</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/posts/'>POSTS</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/follows/'>FOLLOWING</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/followed/'>FOLLOWERS</a>
             </nav>
         </div>
-        <div>
-            {% with total_followers=user.user.followers.count %}
-                <span class="count"><span
-                        class="total">{{ total_followers }}</span> Follower{{ total_followers|pluralize }}</span>
-            {% endwith %}
-        </div>
+        <br>
+        <a>Date joined: {{ userProfile.date_joined }}</a>
+        <br><br>
+        <a>Number of communities created: {{ userCommunities }}</a>
+        <br>
+        <a>Number of posts created: {{ userPosts }}</a>
+        <br>
+        <a>Number of comments: {{ userComments }}</a>
         <br/><br/><br/><br/><br/>
     </div>
 {% endblock content %}

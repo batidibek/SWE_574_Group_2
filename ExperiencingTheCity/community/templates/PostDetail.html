@@ -7,9 +7,42 @@
         button.reportPostBtn { background:none;border:none; }
     </style>
 
+    <!-- Annotate Modal -->
+    <div class="modal fade" id="annotateModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 500px;">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add an Annotation</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'community:annotate' post.id %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <textarea class="form-control" id="AnnotationBody"
+                              placeholder="Write some information"
+                              rows="5" name="annotation_body"></textarea>
+                        <input type="hidden" id="selectorValue" name="selectorValue" value="something">
+                        <input type="hidden" id="targetSource" name="targetSource" value="something">
+                        <input type="hidden" id="user" name="user" value={{ user.user }}>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-dark">Annotate</button>
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                        </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Annotate Modal -->
+
+
+
     <div class="container">
-        <div class="row">
-            <div class="col-md-3 order-md-2 mb-4">             
+        <div class="row" id="post_detail">
+            <div class="col-md-4 order-md-2 mb-4">
                 <form class="card p-2">
                     <div class="input-group-btn">
                         {% if user.user %}
@@ -21,6 +54,7 @@
                                 {% if post.active == True %}
                                     <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
                                         data-toggle="modal" data-target="#archivePostModal">
+
                                         Archive Post
                                     </button>
                                 {% elif post.active == False %}
@@ -29,12 +63,27 @@
                                         Unarchive Post
                                     </button>
                                 {% endif %}
+
                             {% endif %}
+                            <button type="button" class="btn btn-primary" id="showAnnoBtn" style="width: 100%; margin: 5px"
+                                        onclick="showAnnotations()">
+                                    Show Annotations
+                                </button>
+
+                                 <button type="button" class="btn btn-light" id="hideAnno" style="width: 100%; margin: 5px; visibility:hidden"
+                                        onclick="hideAnnotations()">
+                                    Hide Annotations
+                                </button>
                         {% endif %}
                     </div>
                 </form>
-            </div>            
-            <div class="col-md-9 order-md-1">
+            <br/><br/>
+            <div class="p-4 mb-3 bg-light rounded" id="showAnno" style="visibility: hidden">
+                    <h4 class="font-italic">Annotations</h4>
+                    <br/>
+                </div>
+            </div>
+            <div class="col-md-8 order-md-1">
                 <h3>{{ post.name }}</h3>
                 {% if user.user %}
                     <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
@@ -237,6 +286,7 @@
                 </form>
             </div>
         </div>
+
         <!-- The Modal -->
         <div class="modal" id="myModal">
             <div class="modal-dialog">
@@ -294,4 +344,115 @@
         
 
     </div>
+
+    <script>
+
+        var selection;
+        var selRange;
+        var selectedText;
+        var selectorValue;
+
+        document.addEventListener("selectionchange", function () {
+            selection = window.getSelection();
+
+            selRange = selection.getRangeAt(0);
+
+            selectedText = selection.toString();
+
+            selectorValue = selectedText;
+
+
+            if(selRange.startOffset - selRange.endOffset !== 0){
+                document.getElementById("annotate-text").style.visibility = "visible";
+                document.getElementById("selectorValue").value = selectorValue;
+                document.getElementById("targetSource").value = window.location.href;
+            }
+            else{
+                document.getElementById("annotate-text").style.visibility = "hidden";
+            }
+        });
+    </script>
+    <script>
+function showAnnotations() {
+    var annos_div = document.getElementById("showAnno");
+    var page = window.location.href;
+
+    var url = `https://swe574-278917.appspot.com/annotations?page=${page}`;
+    console.log(url);
+
+    fetch(url)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+        var annos = response.annotations;
+
+        for (var i = 0; i < annos.length; i++){
+            var source = document.createElement("p");
+            source.innerHTML = "\"" + annos[i].target.selector.value + "\"";
+            source.style.fontWeight = 500;
+            annos_div.append(source);
+
+            var body = document.createElement("p");
+            body.innerHTML = annos[i].body.value;
+            annos_div.append(body);
+
+            var user_date = document.createElement("p");
+            user_date.innerHTML = annos[i].creator.bold() + "    " + annos[i].created.substring(0, 10).italics();
+            annos_div.append(user_date);
+
+            var blank = document.createElement("br");
+            annos_div.append(blank);
+            annos_div.append(blank);
+            annos_div.append(blank);
+          }
+      });
+
+
+   /* var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", url, true);
+    xhttp.setRequestHeader('Content-type', 'application/json');
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       // Typical action to be performed when the document is ready:
+       var response = JSON.parse(xhttp.responseText);
+       console.log(response)
+       var annos = response.annotations;
+
+        for (var i = 0; i < annos.length; i++){
+            var source = document.createElement("p");
+            source.innerHTML = annos[i].target.selector.value;
+            annos.append(source);
+          }
+
+    }
+};*/
+
+//xhttp.send();
+
+    annos_div.style.visibility = "visible";
+
+    var hide_button = document.getElementById("hideAnno");
+    hide_button.style.visibility = "visible";
+    var show_button = document.getElementById("showAnnoBtn");
+    show_button.style.visibility = "hidden";
+}
+</script>
+    <script>
+    function hideAnnotations() {
+        var annos_div = document.getElementById("showAnno");
+        annos_div.style.visibility = "hidden";
+        annos_div.innerHTML = "";
+        var anno_header = document.createElement("h4");
+        anno_header.innerHTML = "Annotations";
+        anno_header.className = "font-italic";
+        annos_div.append(anno_header);
+        var blank = document.createElement("br");
+        annos_div.append(blank);
+        var hide_button = document.getElementById("hideAnno");
+    hide_button.style.visibility = "hidden";
+    var show_button = document.getElementById("showAnnoBtn");
+    show_button.style.visibility = "visible";
+    }
+    </script>
+
 {% endblock content %}

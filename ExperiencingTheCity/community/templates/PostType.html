@@ -72,240 +72,378 @@
         }
     </style>
 
-    <div class="container" style="width: 800px; margin:0 auto;">
-        {% if post_type %}
-            <h3>Post Type: "{{ post_type.name }}"</h3>
-        {% else %}
-            <h3>Create A Post Type For "{{ communityDetail.name }}" Community</h3>
-        {% endif %}
+    <div class="container" style="width: 100%; margin:0 auto;">
 
-        <br/>
-        <script>
-            var fieldJson = '{ "theFields" : [] }';
+        <div class="row">
 
-            var isEdit = false;
-
-            var communityDataTypes = "{{ communityDataTypes|safe }}";
-        </script>
-        <!--    FORM -->
-        <form id="createpost" method="POST" action="{% url 'community:create_post_type' %}">
-            {% csrf_token %}
-
-            <input hidden value="" name="postTypeFields" id="postTypeFields">
-            <input hidden value="{{ communityDetail.id }}" name="communityId" id="communityId">
-            <input hidden value="" name="isUpdate" id="isUpdate">
             {% if post_type %}
-                <input hidden value="{{ post_type.id }}" name="postTypeId" id="postTypeId">
+                <div class="col-md-3 order-md-2 mb-4">
+                    <h3>Also see</h3>
+                    <form class="card p-2">
+                        <div class="input-group-btn">
+                            {% if user.user %}
+                                <button type="button" class="btn btn-success" style="width: 100%; margin: 5px"
+                                        onclick="location.href='{% url 'community:new_post' post_type.id %}'"
+                                        {% if not communityDetail.active %}disabled{% endif %}
+                                        {% if post_type %}
+                                        {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                >
+                                    Create Post
+                                </button>
+
+                                {% if user.user == post_type.owner and post_type.id != "" %}
+                                    <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                            data-toggle="modal" data-target="#myModal"
+                                            {% if not communityDetail.active %}disabled{% endif %}
+                                            {% if post_type %}
+                                            {% if not post_type.active %}disabled{% endif %}
+                                            {% endif %}>
+                                        Archive This Post Type
+                                    </button>
+
+                                {% endif %}
+                                <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px"
+                                        onclick="location.href='{% url 'community:advanced_search' post_type.id %}'"
+                                            {% if post_type %}
+                                            {% endif %}>
+                                        Advanced Search
+                                    </button>
+                            {% endif %}
+
+                        </div>
+                    </form>
+                </div>
             {% endif %}
-            <div class="form-group">
-                <label for="PostTypeName">Post Type Name</label>
+            <div class="col-md-9 order-md-1">
                 {% if post_type %}
-                    <script>
-                        isEdit = true;
-                    </script>
-                    <input type="text" class="form-control" id="PostTypeFields" hidden
-                           value="{{ post_type.formfields }}" name="PostTypeFields">
-                    <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
-                           value="{{ post_type.name }}" name="PostTypeName"
-                           {% if not communityDetail.active %}disabled{% endif %}
-                           {% if not post_type.owner == user.user %}disabled{% endif %}>
+                    <h3>Post Type: "{{ post_type.name }}"</h3>
                 {% else %}
-                    <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
-                           placeholder="Enter post type name" name="PostTypeName">
+                    <h3>Create A Post Type For "{{ communityDetail.name }}" Community</h3>
                 {% endif %}
 
+                <br/>
+                <script>
+                    var fieldJson = '{ "theFields" : [] }';
 
-            </div>
-            <div class="form-group">
-                <label for="PostTypeDescription">Post Type Description</label>
-                {% if post_type %}
-                    <textarea class="form-control" id="PostTypeDescription"
-                              rows="5" name="PostTypeDescription"
-                              {% if not communityDetail.active %}disabled{% endif %}
-                              {% if not post_type.owner == user.user %}disabled{% endif %}>{{ post_type.description }}</textarea>
-                {% else %}
-                    <textarea class="form-control" id="PostTypeDescription"
-                              placeholder="Briefly describe your post type"
-                              rows="5" name="PostTypeDescription"></textarea>
-                {% endif %}
+                    var isEdit = false;
 
-            </div>
+                    var communityDataTypes = "{{ communityDataTypes|safe }}";
+                </script>
+                <!--    FORM -->
+                <form id="createpost" method="POST" action="{% url 'community:create_post_type' %}">
+                    {% csrf_token %}
 
-            <div class="form-group">
-                <label class="checkboxContainer">Complaint Type<input type="checkbox" value="0" name="isComplaint"><span
-                        class="checkmark"></span>
-                </label>
-            </div>
-            <br/>
-            <br/>
-            <div class="addfields">
-                <table class="table" id="PostTypeFieldsTable">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="10%">Field Pos. No</th>
-                        <th scope="col">Field Label</th>
-                        <th scope="col">Field Type</th>
-                        <th scope="col">Enumerated Values</th>
-                        <th scope="col">Is Required?</th>
-                        <th scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="tableToModify">
-                    <tr id="rowToClone_0">
-                        <th scope="row">
+                    <input hidden value="" name="postTypeFields" id="postTypeFields">
+                    <input hidden value="{{ communityDetail.id }}" name="communityId" id="communityId">
+                    <input hidden value="" name="isUpdate" id="isUpdate">
+                    {% if post_type %}
+                        <input hidden value="{{ post_type.id }}" name="postTypeId" id="postTypeId">
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="PostTypeName">Post Type Name</label>
+                        {% if post_type %}
+                            <script>
+                                isEdit = true;
+                            </script>
+                            <input type="text" class="form-control" id="PostTypeFields" hidden
+                                   value="{{ post_type.formfields }}" name="PostTypeFields">
+                            <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
+                                   value="{{ post_type.name }}" name="PostTypeName"
+                                   {% if not communityDetail.active %}disabled{% endif %}
+                                   {% if not post_type.owner == user.user %}disabled{% endif %}
+                                    {% if post_type %} {% if not post_type.active %}disabled{% endif %} {% endif %}>
+                        {% else %}
+                            <input type="text" class="form-control" id="PostTypeName" aria-describedby="PostTypeName"
+                                   placeholder="Enter post type name" name="PostTypeName">
+                        {% endif %}
 
-                            <input type="text" id="fieldPostNo1" class="dt_fieldposnr form-control"
-                                   name="dt_fieldposnr" {% if not communityDetail.active %}disabled{% endif %}
-                                   {% if not post_type.owner == user.user %}disabled{% endif %}>
-                        </th>
-                        <th scope="row">
-                            <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
-                                   name="dt_fieldlabel" {% if not communityDetail.active %}disabled{% endif %}
-                                   {% if not post_type.owner == user.user %}disabled{% endif %}>
-                        </th>
-                        <td>
-                            <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
-                                    name="dt_fieldtype"
-                                    onchange="onSelectFType(this)"
-                                    {% if not communityDetail.active %}disabled{% endif %}
-                                    {% if not post_type.owner == user.user %}disabled{% endif %}>
 
-                                <option value="" disabled selected>Choose your option</option>
-                                <option value="TE">Text field</option>
-                                <option value="TA">Text area</option>
-                                <option value="DA">Date</option>
-                                <option value="TI">Time</option>
-                                <option value="IN">Integer</option>
-                                <option value="DE">Decimal</option>
-                                <option value="IM">Image</option>
-                                <option value="VI">Video</option>
-                                <option value="AU">Audio</option>
-                                <option value="UR">URI</option>
-                                <option value="LO">Location</option>
-                                <option value="EN">Enumerated</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" id="enumValues1" class="enum_vals form-control "
-                                   name="enum_vals" data-role="tagsinput" disabled>
-                        </td>
-                        <td>
+                    </div>
+                    <div class="form-group">
+                        <label for="PostTypeDescription">Post Type Description</label>
+                        {% if post_type %}
+                            <textarea class="form-control" id="PostTypeDescription"
+                                      rows="5" name="PostTypeDescription"
+                                      {% if not communityDetail.active %}disabled{% endif %}
+                                      {% if not post_type.owner == user.user %}disabled{% endif %}
+                                    {% if post_type %}{% if not post_type.active %}disabled
+                                      {% endif %} {% endif %}>{{ post_type.description }}</textarea>
+                        {% else %}
+                            <textarea class="form-control" id="PostTypeDescription"
+                                      placeholder="Briefly describe your post type"
+                                      rows="5" name="PostTypeDescription"></textarea>
+                        {% endif %}
 
-                            <label class="checkboxContainer" id="isReq">
-                                <input type="checkbox" checked="checked"
-                                       {% if not communityDetail.active %}disabled{% endif %}
-                                       {% if not post_type.owner == user.user %}disabled{% endif %}>
-                                <span class="checkmark"></span>
-                            </label>
-                        </td>
-                        <td>
-                            <button type="button" class="btn addDataField"
-                                    id="addDataField"><span id="addDataBtn"
+                    </div>
 
-                                                            class="fa fa-plus"
-                                                            {% if not communityDetail.active %}disabled{% endif %}
-                                                            {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
-                            </button>
-                        </td>
-                    </tr>
-                    {% for key, value in form_fields.items %}
-                        {% for key2, value2 in value.items %}
-                            {% if not value2.fieldposnr  ==  "" %}
+                    <div class="form-group">
+                        <label class="checkboxContainer">Complaint Type<input type="checkbox" value="0"
+                                                                              name="isComplaint"
+                                                                              {% if not communityDetail.active %}disabled{% endif %}
+                                                                              {% if not post_type.owner == user.user %}disabled{% endif %}
+                                {% if post_type %}  {% if not post_type.active %}disabled{% endif %} {% endif %}><span
+                                class="checkmark"
+                        ></span>
+                        </label>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="addfields">
+                        <table class="table" id="PostTypeFieldsTable">
+                            <thead>
                             <tr>
+                                <th scope="col" width="10%">Field Pos. No</th>
+                                <th scope="col">Field Label</th>
+                                <th scope="col">Field Type</th>
+                                <th scope="col">Enumerated Values</th>
+                                <th scope="col">Is Required?</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="tableToModify">
+                            <tr id="rowToClone_0">
                                 <th scope="row">
 
-                                    <input type="text" class="dt_fieldposnr form-control"
+                                    <input type="text" id="fieldPostNo1" class="dt_fieldposnr form-control"
                                            name="dt_fieldposnr" {% if not communityDetail.active %}disabled{% endif %}
                                            {% if not post_type.owner == user.user %}disabled{% endif %}
-                                           value="{{ value2.fieldposnr }}">
+                                            {% if post_type %}
+                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </th>
                                 <th scope="row">
                                     <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
                                            name="dt_fieldlabel" {% if not communityDetail.active %}disabled{% endif %}
                                            {% if not post_type.owner == user.user %}disabled{% endif %}
-                                           value="{{ value2.fieldlabel }}">
+                                            {% if post_type %}
+                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </th>
                                 <td>
-                                    <select class="dt_fieldtype mdb-select md-form form-control"
+                                    <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
                                             name="dt_fieldtype"
                                             onchange="onSelectFType(this)"
                                             {% if not communityDetail.active %}disabled{% endif %}
-                                            {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                            {% if not post_type.owner == user.user %}disabled{% endif %}
+                                            {% if post_type %}
+                                            {% if not post_type.active %}disabled{% endif %} {% endif %}>
 
-                                        <option value="" disabled>Choose your option</option>
-                                        <option value="TE" {% if value2.fieldtype == "TE" %}selected{% endif %}>Text
-                                            field
-                                        </option>
-                                        <option value="TA" {% if value2.fieldtype == "TA" %}selected{% endif %}>Text
-                                            area
-                                        </option>
-                                        <option value="DA" {% if value2.fieldtype == "DA" %}selected{% endif %}>Date
-                                        </option>
-                                        <option value="TI" {% if value2.fieldtype == "TI" %}selected{% endif %}>Time
-                                        </option>
-                                        <option value="IN" {% if value2.fieldtype == "IN" %}selected{% endif %}>Integer
-                                        </option>
-                                        <option value="DE" {% if value2.fieldtype == "DE" %}selected{% endif %}>Decimal
-                                        </option>
-                                        <option value="IM" {% if value2.fieldtype == "IM" %}selected{% endif %}>Image
-                                        </option>
-                                        <option value="VI" {% if value2.fieldtype == "VI" %}selected{% endif %}>Video
-                                        </option>
-                                        <option value="AU" {% if value2.fieldtype == "AU" %}selected{% endif %}>Audio
-                                        </option>
-                                        <option value="UR" {% if value2.fieldtype == "UR" %}selected{% endif %}>URI
-                                        </option>
-                                        <option value="LO" {% if value2.fieldtype == "LO" %}selected{% endif %}>
-                                            Location
-                                        </option>
-                                        <option value="EN" {% if value2.fieldtype == "EN" %}selected{% endif %}>
-                                            Enumerated
-                                        </option>
+                                        <option value="" disabled selected>Choose your option</option>
+                                        <option value="TE">Text field</option>
+                                        <option value="TA">Text area</option>
+                                        <option value="DA">Date</option>
+                                        <option value="TI">Time</option>
+                                        <option value="IN">Integer</option>
+                                        <option value="DE">Decimal</option>
+                                        <option value="IM">Image</option>
+                                        <option value="VI">Video</option>
+                                        <option value="AU">Audio</option>
+                                        <option value="UR">URI</option>
+                                        <option value="LO">Location</option>
+                                        <option value="EN">Enumerated</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="enum_vals form-control "
-                                           name="enum_vals" data-role="tagsinput"
-                                           {% if not value2.fieldtype == "EN" %}disabled{% endif %}
-                                           value="{{ value2.enumvals }}">
+                                    <input type="text" id="enumValues1" class="enum_vals form-control "
+                                           name="enum_vals" data-role="tagsinput" disabled
+                                            {% if post_type %}
+                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </td>
                                 <td>
 
-                                    <label class="checkboxContainer">
-                                        <input type="checkbox"
-                                               {% if value2.isRequired == "true" %}checked{% endif %}
+                                    <label class="checkboxContainer" id="isReq">
+                                        <input type="checkbox" checked="checked"
                                                {% if not communityDetail.active %}disabled{% endif %}
-                                               {% if not post_type.owner == user.user %}disabled{% endif %}>
+                                               {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                {% if post_type %}
+                                               {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                        >
                                         <span class="checkmark"></span>
                                     </label>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn addDataField" onclick="removePostField(this)"><span
-                                            id="removeData"
-                                            class="fa fa-minus"
+                                    <button type="button" class="btn addDataField"
+                                            id="addDataField"
                                             {% if not communityDetail.active %}disabled{% endif %}
-                                            {% if not post_type.owner == user.user %}disabled{% endif %}> </span>
+                                            {% if not post_type.owner == user.user %}disabled{% endif %}
+                                            {% if post_type %}
+                                            {% if not post_type.active %}disabled{% endif %} {% endif %}>
+                                        <span id="addDataBtn" class="fa fa-plus"> </span>
                                     </button>
                                 </td>
                             </tr>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                    </tbody>
-                </table>
+                            {% for key, value in form_fields.items %}
+                                {% for key2, value2 in value.items %}
+                                    {% if not value2.fieldposnr  ==  "" %}
+                                        <tr>
+                                            <th scope="row">
 
+                                                <input type="text" class="dt_fieldposnr form-control"
+                                                       name="dt_fieldposnr"
+                                                       {% if not communityDetail.active %}disabled{% endif %}
+                                                       {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                                       value="{{ value2.fieldposnr }}">
+                                            </th>
+                                            <th scope="row">
+                                                <input type="text" id="fieldLabel1" class="dt_fieldlabel form-control"
+                                                       name="dt_fieldlabel"
+                                                       {% if not communityDetail.active %}disabled{% endif %}
+                                                       {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                                       value="{{ value2.fieldlabel }}">
+                                            </th>
+                                            <td>
+                                                <select class="dt_fieldtype mdb-select md-form form-control"
+                                                        name="dt_fieldtype"
+                                                        onchange="onSelectFType(this)"
+                                                        {% if not communityDetail.active %}disabled{% endif %}
+                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                        {% if not post_type.active %}disabled{% endif %} {% endif %}>
+
+                                                <option value="" disabled>Choose your option</option>
+                                                <option value="TE"
+                                                        {% if value2.fieldtype == "TE" %}selected{% endif %}>
+                                                    Text
+                                                    field
+                                                </option>
+                                                <option value="TA"
+                                                        {% if value2.fieldtype == "TA" %}selected{% endif %}>
+                                                    Text
+                                                    area
+                                                </option>
+                                                <option value="DA"
+                                                        {% if value2.fieldtype == "DA" %}selected{% endif %}>
+                                                    Date
+                                                </option>
+                                                <option value="TI"
+                                                        {% if value2.fieldtype == "TI" %}selected{% endif %}>
+                                                    Time
+                                                </option>
+                                                <option value="IN"
+                                                        {% if value2.fieldtype == "IN" %}selected{% endif %}>
+                                                    Integer
+                                                </option>
+                                                <option value="DE"
+                                                        {% if value2.fieldtype == "DE" %}selected{% endif %}>
+                                                    Decimal
+                                                </option>
+                                                <option value="IM"
+                                                        {% if value2.fieldtype == "IM" %}selected{% endif %}>
+                                                    Image
+                                                </option>
+                                                <option value="VI"
+                                                        {% if value2.fieldtype == "VI" %}selected{% endif %}>
+                                                    Video
+                                                </option>
+                                                <option value="AU"
+                                                        {% if value2.fieldtype == "AU" %}selected{% endif %}>
+                                                    Audio
+                                                </option>
+                                                <option value="UR"
+                                                        {% if value2.fieldtype == "UR" %}selected{% endif %}>
+                                                    URI
+                                                </option>
+                                                <option value="LO"
+                                                        {% if value2.fieldtype == "LO" %}selected{% endif %}>
+                                                    Location
+                                                </option>
+                                                <option value="EN"
+                                                        {% if value2.fieldtype == "EN" %}selected{% endif %}>
+                                                    Enumerated
+                                                </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="enum_vals form-control "
+                                                       name="enum_vals" data-role="tagsinput"
+                                                       {% if not value2.fieldtype == "EN" %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                                       value="{{ value2.enumvals }}">
+                                            </td>
+                                            <td>
+
+                                                <label class="checkboxContainer">
+                                                    <input type="checkbox"
+                                                           {% if value2.isRequired == "true" %}checked{% endif %}
+                                                           {% if not communityDetail.active %}disabled{% endif %}
+                                                           {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                            {% if post_type %}
+                                                           {% if not post_type.active %}disabled{% endif %} {% endif %}>
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn addDataField"
+                                                        onclick="removePostField(this)"
+                                                        {% if not communityDetail.active %}disabled{% endif %}
+                                                        {% if not post_type.owner == user.user %}disabled{% endif %}
+                                                        {% if post_type %}{% if not post_type.active %}disabled
+                                                        {% endif %} {% endif %}><span
+                                                        id="removeData"
+                                                        class="fa fa-minus"
+                                                > </span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-outline-success" id="createPostType"
+                                {% if not communityDetail.active %}disabled{% endif %}
+                                {% if not post_type.owner == user.user %}disabled{% endif %}
+                                {% if post_type %}
+                                {% if not post_type.active %}disabled{% endif %}
+                                {% endif %}>Save
+                        </button>
+                        <button class="btn btn-outline-danger" name="cancel" value="cancel"
+                                style="margin-left: 10px;"
+                                onclick="location.href='{% url 'community:post_types' communityDetail.id communityDetail.active %}'">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="input-group-btn">
-                <button type="submit" class="btn btn-outline-success" id="createPostType"
-                        {% if not communityDetail.active %}disabled{% endif %}
-                        {% if not post_type.owner == user.user %}disabled{% endif %}>Save
-                </button>
-                <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
-                        style="margin-left: 10px;">Cancel
-                </button>
-            </div>
-        </form>
+        </div>
         <!--    FORM -->
+
+
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Attention!</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to archive this post type?
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        {% if post_type %}
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                    onclick="location.href='{% url 'community:archive_posttype' post_type.id %}'">Yes
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <br/><br/><br/><br/><br/>
     </div>
 {% endblock content %}

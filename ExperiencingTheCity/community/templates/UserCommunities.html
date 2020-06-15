@@ -1,12 +1,10 @@
 {% extends "base.html" %} {% block content %}
     {% load static %}
-
     <div class="container" style="width: 800px; margin:0 auto;">
-
-
         <h2>{{ userProfile }}</h2>
         <div class="nav-scroller py-1 mb-2">
             <nav class="nav d-flex justify-content-between">
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/activitystream/'>FEED</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/communities/'>COMMUNITIES</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/posts/'>POSTS</a>
                 <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/follows/'>FOLLOWING</a>
@@ -29,7 +27,7 @@
                             <p class="card-text mb-auto">
                                 {{ Community.description }}
                             </p>
-                            <a href="{{ Community.id }}" class="stretched-link">Continue reading</a>
+                            <a href=' /communities/{{ Community.id }}' class="stretched-link">Continue reading</a>
                         </div>
                     </div>
                 </div>

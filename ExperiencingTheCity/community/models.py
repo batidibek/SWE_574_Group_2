@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 class Community(models.Model):
@@ -25,6 +27,7 @@ class PostType(models.Model):
         Community, default="", on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     complaint = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -43,6 +46,9 @@ class Post(models.Model):
     inappropriate = models.BooleanField(default=False)
     tags = JSONField(default="")
     active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 
 
 class SemanticTags(models.Model):
@@ -114,3 +120,26 @@ User.add_to_class('following',
                                          through=Followership,
                                          related_name='followers',
                                          symmetrical=False))
+
+
+# A model for generating a list of actions and sorted by time of creation
+class Action(models.Model):
+    user = models.ForeignKey(User,
+                             related_name='actions',
+                             db_index=True,
+                             on_delete=models.CASCADE)
+    verb = models.CharField(max_length=200)
+    target_ct = models.ForeignKey(ContentType,
+                                  blank=True,
+                                  null=True,
+                                  related_name='target_obj',
+                                  on_delete=models.CASCADE)
+    target_id = models.PositiveIntegerField(null=True,
+                                            blank=True,
+                                            db_index=True)
+    target = GenericForeignKey('target_ct', 'target_id')
+    created = models.DateTimeField(auto_now_add=True,
+                                   db_index=True)
+
+    class Meta:
+        ordering = ('-created',)

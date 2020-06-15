@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
-    UserAdditionalInfo, Followership
+    UserAdditionalInfo, Followership, Action
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -21,7 +21,7 @@ from django.utils import timezone
 from ..utils import wiki_data
 from django.db.models import Q, Count
 from django.core.files.storage import default_storage
-
+from ..utils.activity_stream import create_action
 
 # COMMUNITY LIST
 
@@ -132,6 +132,9 @@ def create_community(request):
     else:
         community.save()
 
+        # user created community action for activity stream
+        create_action(request.user, 'created a new community:', community)
+
         # Generic Post Type creation
         pt = PostType()
         pt.community_id = Community.objects.get(pk=community.id)
@@ -157,30 +160,37 @@ def create_community(request):
 ## NEW POST TYPE
 
 def newPostType(request):
-    fieldJson = request.POST.get("postTypeFields", "")
-    print(fieldJson)
     communityId = request.POST.get("communityId", "")
     postTypeId = request.POST.get("postTypeId", "")
-    print(postTypeId)
-    if (postTypeId != ''):
-        pt = PostType.objects.get(pk=postTypeId)
+    if "cancel" in request.POST:
+        #  onclick="location.href='{% url 'community:post_types' communityDetail.id communityDetail.active %}'">
+        return HttpResponseRedirect(reverse('community:post_types', args=(communityId, postTypeId,)))
     else:
-        pt = PostType()
-    pt.community_id = Community.objects.get(pk=communityId)
-    pt.name = request.POST.get("PostTypeName", "")
-    print(pt.name)
-    pt.description = request.POST.get("PostTypeDescription", "")
-    pt.owner_id = User.objects.get(username=request.user).id
-    pt.formfields = fieldJson
-    pt.creation_date = timezone.now()
+        fieldJson = request.POST.get("postTypeFields", "")
+        print(fieldJson)
 
-    if request.POST.get("isComplaint", "") == "0":
-        pt.complaint = True
-    else:
-        pt.complaint = False
+        print(postTypeId)
+        if (postTypeId != ''):
+            pt = PostType.objects.get(pk=postTypeId)
+        else:
+            pt = PostType()
+        pt.community_id = Community.objects.get(pk=communityId)
+        pt.name = request.POST.get("PostTypeName", "")
+        print(pt.name)
+        pt.description = request.POST.get("PostTypeDescription", "")
+        pt.owner_id = User.objects.get(username=request.user).id
+        pt.formfields = fieldJson
+        pt.creation_date = timezone.now()
 
-    pt.save()
-    return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
+        if request.POST.get("isComplaint", "") == "0":
+            pt.complaint = True
+        else:
+            pt.complaint = False
+
+        pt.save()
+        # user created community action for activity stream
+        create_action(request.user, 'created a new post type:', pt)
+        return HttpResponseRedirect(reverse('community:community_detail', args=(communityId,)))
 
 
 ## GET POST TYPES
@@ -219,6 +229,15 @@ def archiveCommunity(request, id):
         context["user"] = community_user
     return HttpResponseRedirect(reverse('community:home'))
 
+def archivePostType(request, id):
+    pt = get_object_or_404(PostType, pk=id)
+    pt.active = False
+    pt.save()
+    context = {'post_type': pt}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return HttpResponseRedirect(reverse('community:post_types', args=(pt.community_id_id, True,)))
 
 def getCommunityStatistics(request, id):
     post_types = []
@@ -384,7 +403,11 @@ def create_post(request, id):
                     creation_date=timezone.now(), community_id=community,
                     form_fields=json.dumps(json_response), posttype_id=post_type, complaint=is_complaint,
                     complaint_status=complaint_status, tags=wiki_tags)
+
         post.save()
+
+        # user created post action for activity stream
+        create_action(request.user, 'created a new post:', post)
 
         return HttpResponseRedirect(reverse('community:post_detail', args=(post.id,)))
 
@@ -428,6 +451,9 @@ def getPostDetail(request, id):
         form_fields = []
 
     context = {'post': post, 'post_type': post_type, 'form_fields': form_fields, 'comments':comments}
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -465,6 +491,7 @@ def archive_post(request, id):
     return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
 
 
+
 def unarchive_post(request, id):
     post = get_object_or_404(Post, pk=id)
     community = post.community_id
@@ -483,3 +510,45 @@ def post_list(request):
         context["user"] = user
     
     return render(request, 'Posts.html', context)
+
+def advanced_search(request, id):
+    post_type = get_object_or_404(PostType, pk=id)
+
+    if post_type.formfields:
+        form_fields = json.loads(post_type.formfields)
+    else:
+        form_fields = []
+    context = {'post_type': post_type, 'form_fields' : form_fields }
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = community_user
+    return render(request, 'AdvancedSearch.html', context )
+
+
+
+def getPostsOfPostType(request):
+    pt_id = request.GET.get("pt_id", "")
+    posts = list(Post.objects.filter(posttype_id_id=pt_id).values())
+    print("=================")
+    print(posts)
+    response = { "posts": posts }
+    return JsonResponse(response, safe=False)
+
+# def search(request, id):
+#     post_type = get_object_or_404(PostType, pk=id)
+#     name1 = str(request.POST.get('name1', "")).strip()
+#     name2 = str(request.POST.get('name2', "")).strip()
+#     description1 = str(request.POST.get('description1', "")).strip()
+#     description2 = str(request.POST.get('description2', "")).strip()
+#     form_fields = json.loads(post_type.formfields)
+#     for (k, v) in form_fields.items():
+#         for (key, value) in v.items():
+#             fieldlabel = value["fieldlabel"]
+#             fieldtype = value["fieldtype"]
+#             if fieldtype not in ["IM", "VI", "AU", "LO"]:
+#                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+#             else:
+#                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+
+
+

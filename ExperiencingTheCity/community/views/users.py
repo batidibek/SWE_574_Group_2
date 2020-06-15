@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import loader, context
 from django.http import HttpResponse, HttpResponseRedirect
 from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
-    UserAdditionalInfo, Followership
+    UserAdditionalInfo, Followership, Action
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -117,8 +117,9 @@ def log_out(request):
 
 def user_profile(request, id):
     userProfile = get_object_or_404(User, pk=id)
-    userCommunities = Community.objects.filter(owner=id)
-    userPosts = Post.objects.filter(user_id=id)
+    userCommunities = Community.objects.filter(owner=id).count()
+    userPosts = Post.objects.filter(user_id=id).count()
+    userComments = Comments.objects.filter(user_id=id).count()
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -126,6 +127,7 @@ def user_profile(request, id):
     return render(request, "UserProfile.html", {'userProfile': userProfile,
                                                 'userCommunities': userCommunities,
                                                 'userPosts': userPosts,
+                                                'userComments': userComments,
                                                 'user': community_user})
 
 
@@ -182,3 +184,16 @@ def user_follow(request, id):
         community_user.follows.add(user_profile)
         data['message'] = "You are now following {}".format(userProfile)
     return JsonResponse(data, safe=False)
+
+
+def activity_stream(request, id):
+    userProfile = get_object_or_404(User, pk=id)
+
+    if request.user.is_authenticated:
+        community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+
+    action = Action.objects.all()
+
+    return render(request, 'UserActivityStream.html', {'userProfile': userProfile,
+                                                       'user': community_user,
+                                                       'activity_stream': action})

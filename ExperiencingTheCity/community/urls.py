@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, users, community
+from .views import home, users, community, annotation
 
 app_name = 'community'
 urlpatterns = [
@@ -21,14 +21,21 @@ urlpatterns = [
     path('communities/new_post/<id>', community.new_post, name="new_post"),
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
+
     path('communities/statistics/<id>', community.getCommunityStatistics, name="community_statistics"),
 
-    path('user_profile/<id>', users.user_profile, name='user_profile'),
+    path('communities/advanced_search/<id>', community.advanced_search, name="advanced_search"),
+    path('getPostsOfPostType', community.getPostsOfPostType),
+    # path('communities/search/<id>', community.search, name="search"),
+
+
+    path('user_profile/<id>/', users.user_profile, name='user_profile'),
     path('user_profile/<id>/posts/', users.user_posts, name='user_posts'),
     path('user_profile/<id>/communities/', users.user_communities, name='user_communities'),
     path('user_profile/<id>/follows/', users.user_list, name='user_follows'),
     path('user_profile/<id>/followed/', users.user_list, name='user_followers'),
     path('user_profile/<id>/follow/', users.user_follow, name='user_follow'),
+    path('user_profile/<id>/activitystream/', users.activity_stream, name='activity_stream'),
 
     # REQUESTS
     path('create-user/', users.create_user, name='create_user'),
@@ -37,10 +44,15 @@ urlpatterns = [
     path('create-community/', community.create_community, name='create_community'),
     path('create-post-type', community.newPostType, name="create_post_type"),
     path('getCommunityByFilter', community.getCommunityByFilter),
-    path('archive_community/<id>', community.archiveCommunity, name='archive_community'),
+    path('archive_community/<id>', community.archiveCommunity, name='archive_community' ),
+    path('archive_posttype/<id>', community.archivePostType, name='archive_posttype' ),
     path('create-post/<id>', community.create_post, name='create_post'),
     path('create-comment/<id>', community.create_comment, name='create_comment'),
     path('report-post/<id>', community.report_post, name='report_post'),
     path('archive-post/<id>', community.archive_post, name='archive_post'),
+
     path('unarchive-post/<id>', community.unarchive_post, name='unarchive_post'),
+
+    path('annotate/<id>', annotation.annotate, name='annotate'),
+
 ]

@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block content %}
+    {% load static %}
+    <div class="container" style="width: 1000px; margin:0 auto;">
+        <h2>{{ userProfile }}</h2>
+        <div class="nav-scroller py-1 mb-2">
+            <nav class="nav d-flex justify-content-between">
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/activitystream/'>FEED</a>
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/communities/'>COMMUNITIES</a>
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/posts/'>POSTS</a>
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/follows/'>FOLLOWING</a>
+                <a class="p-2 text-muted" href='/user_profile/{{ userProfile.id }}/followed/'>FOLLOWERS</a>
+            </nav>
+        </div>
+        <div>
+            {% if activity_stream %}
+                {% for Action in activity_stream %}
+                    <div class="list-group">
+                        <div class="border rounded overflow-hidden mb-2 shadow-sm position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <!-- Buraya tag yazabiliriz -->
+                                {% if Action.target_ct_id == 7 %}
+                                    <h4><a href='/user_profile/{{ Action.user.id }}'
+                                           class="link">{{ Action.user }}</a> {{ Action.verb }} <a
+                                            href='/communities/{{ Action.target_id }}'
+                                            class="link">{{ Action.target }}</a></h4>
+                                    <div class="mb-1 text-muted">{{ Action.created }}</div>
+                                {% elif Action.target_ct_id == 11 %}
+                                    <h4><a href='/user_profile/{{ Action.user.id }}'
+                                           class="link">{{ Action.user }}</a> {{ Action.verb }} <a
+                                            href="{{ Action.target }}" class="link">{{ Action.target }}</a></h4>
+                                    <div class="mb-1 text-muted">{{ Action.created }}</div>
+                                {% elif Action.target_ct_id == 8 %}
+                                    <h4><a href='/user_profile/{{ Action.user.id }}'
+                                           class="link">{{ Action.user }}</a> {{ Action.verb }} <a
+                                            href=' /communities/posts/post_detail/{{ Action.target_id }}'
+                                            class="link">{{ Action.target }}</a></h4>
+                                    <div class="mb-1 text-muted">{{ Action.created }}</div>
+                                {% else %}
+                                    <h4><a href='/user_profile/{{ Action.user.id }}'
+                                           class="link">{{ Action.user }}</a> {{ Action.verb }} <a
+                                            href="{{ Action.target }}" class="link">{{ Action.target }}</a></h4>
+                                    <div class="mb-1 text-muted">{{ Action.created }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <br/><br/><br/><br/><br/>
+    </div>
+{% endblock content %}%} 

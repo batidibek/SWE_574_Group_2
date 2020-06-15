@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, UserAdditionalInfo, Followership
+
+from ..models import Community, PostType, Post, SemanticTags, MemberShip, Comments, InappropriatePosts, Notification, \
+    UserAdditionalInfo, Followership, Action
 from django.http import Http404
 from django.urls import reverse
 import datetime
@@ -33,6 +35,8 @@ def homepage(request):
     context = {'community_list': community_list}
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        action = Action.objects.order_by('-created')[:10]
         context["user"] = community_user
+        context["activity_stream"] = action
     return render(request, 'Home.html', context)
 
