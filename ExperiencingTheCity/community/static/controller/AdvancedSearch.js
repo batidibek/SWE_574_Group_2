@@ -40,7 +40,12 @@ function filterPosts(postList) {
             console.log(postTags);
             for (var sField in postFields) {
                 if (postFields.hasOwnProperty(sField)) {
-
+                    if ( postFields[sField].fieldltype !== 'LO' &&
+                         postFields[sField].fieldltype !== 'IM' &&
+                         postFields[sField].fieldltype !== 'VI' &&
+                         postFields[sField].fieldltype !== 'AU') {
+                        continue;
+                    }
                     var scname = postFields[sField].fieldlabel + "_sc";
                     searchCriteria = document.getElementById("searchForm").elements.namedItem(scname).value;
                     var inputname1 = postFields[sField].fieldlabel + "_1";
