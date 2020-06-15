@@ -424,7 +424,7 @@ def getPosts(request, id):
             post.inappropriate = 1
             post.save()
 
-    context = {'communityPosts': posts}
+    context = {'communityPosts': communityPosts}
 
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
