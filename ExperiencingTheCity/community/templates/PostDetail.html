@@ -97,7 +97,9 @@
                 {% endif %}                
                 <br/>
                 <hr style="border: 1px solid gray;" />
-                <h9 style="color: red;"><i>Since this post is archived, no action can be taken on it.</i></h9>
+                {% if post.active == False %}
+                <h9 style="color: #ff0000;"><i>Since this post is archived, no action can be taken on it.</i></h9>
+            {% endif %}
                 <br/>
                 <br/>
             <form id="postdetail" method="POST" action="{% url 'community:create_comment' post.id %}">
