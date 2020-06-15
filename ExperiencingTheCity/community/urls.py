@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('new-community/', community.new_community, name='new_community'),
     path('communities/', community.community_list, name='community_list'),
-    path('posts/', community.community_list, name='post_list'),
+    path('posts/', community.post_list, name='post_list'),
     path('communities/<id>', community.getCommunity, name="community_detail"),
     path('communities/new-post-type/<id>', community.getCommunityHeader, name="new_post_type"),
 
@@ -21,9 +21,13 @@ urlpatterns = [
     path('communities/new_post/<id>', community.new_post, name="new_post"),
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
+
+    path('communities/statistics/<id>', community.getCommunityStatistics, name="community_statistics"),
+
     path('communities/advanced_search/<id>', community.advanced_search, name="advanced_search"),
     path('getPostsOfPostType', community.getPostsOfPostType),
     # path('communities/search/<id>', community.search, name="search"),
+
 
     path('user_profile/<id>/', users.user_profile, name='user_profile'),
     path('user_profile/<id>/posts/', users.user_posts, name='user_posts'),
@@ -46,5 +50,9 @@ urlpatterns = [
     path('create-comment/<id>', community.create_comment, name='create_comment'),
     path('report-post/<id>', community.report_post, name='report_post'),
     path('archive-post/<id>', community.archive_post, name='archive_post'),
+
+    path('unarchive-post/<id>', community.unarchive_post, name='unarchive_post'),
+
     path('annotate/<id>', annotation.annotate, name='annotate'),
+
 ]

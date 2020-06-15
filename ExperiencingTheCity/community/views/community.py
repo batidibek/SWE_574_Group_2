@@ -8,6 +8,7 @@ from ..models import Community, PostType, Post, SemanticTags, MemberShip, Commen
 from django.http import Http404
 from django.urls import reverse
 import datetime
+from datetime import timedelta
 import json
 import uuid
 from django.core import serializers
@@ -18,7 +19,7 @@ from django.contrib.auth import authenticate, login, logout
 import requests
 from django.utils import timezone
 from ..utils import wiki_data
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.files.storage import default_storage
 from ..utils.activity_stream import create_action
 
@@ -35,10 +36,18 @@ def community_list(request):
 
 def getCommunity(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-    context = {'communityDetail': communityDetail}
+    
+    number_of_posts = Post.objects.filter(community_id=id).count()
+    number_of_posttypes = PostType.objects.filter(community_id=id).count()
+
+    context = {'communityDetail'     : communityDetail,
+               'number_of_posts'     : number_of_posts,
+               'number_of_posttypes' : number_of_posttypes}
+
     if request.user.is_authenticated:
         community_user = get_object_or_404(UserAdditionalInfo, user=request.user)
         context["user"] = community_user
+
     return render(request, "CommunityDetail.html", context)
 
 
@@ -53,6 +62,7 @@ def getCommunityByFilter(request):
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
+   
     return render(request, "PostType.html", {"communityDetail": communityDetail})
 
 
@@ -229,6 +239,69 @@ def archivePostType(request, id):
         context["user"] = community_user
     return HttpResponseRedirect(reverse('community:post_types', args=(pt.community_id_id, True,)))
 
+def getCommunityStatistics(request, id):
+    post_types = []
+    post_counts = []
+    posts = []
+    comments = []
+
+    recent_posts = []
+    recent_post_types = []
+    recent_commented_posts = []
+
+    post_distributions_count = []
+    post_distributions = ['Archived', 'Reported', 'Active']
+
+    post_distributions_count.append(Post.objects.filter(community_id=id).filter(active=False).count())
+    post_distributions_count.append(Post.objects.filter(community_id=id).filter(inappropriate=True).count())
+    post_distributions_count.append(Post.objects.filter(community_id=id).filter(active=True).count())
+
+    user_activities = ['Created Post', 'Created Post Type', 'Commented', 'Reported']
+    user_activities_count = []
+
+    user_activities_count.append(Post.objects.filter(community_id=id).values('user_id').distinct().count()) # created post
+    user_activities_count.append(PostType.objects.filter(community_id=id).values('owner').distinct().count()) # created post type
+    user_activities_count.append(Comments.objects.filter(post_id__in=(Post.objects.filter(community_id=id))).values('user_id').distinct().count()) # commented
+    user_activities_count.append(InappropriatePosts.objects.filter(post_id__in=(Post.objects.filter(community_id=id))).values('user_id').distinct().count()) # reported
+
+    post_queryset = Post.objects.filter(community_id=id).filter(creation_date__range=[timezone.now() - timedelta(days=30), timezone.now()])
+    posttype_queryset = PostType.objects.filter(community_id=id).filter(creation_date__range=[timezone.now() - timedelta(days=30), timezone.now()])
+    recent_comments = Comments.objects.filter(creation_date__range=[timezone.now() - timedelta(days=30), timezone.now()])
+    commented_posts_queryset = Post.objects.filter(id__in=recent_comments).filter(community_id=id)
+
+    recent_posts = list(post_queryset)
+    recent_post_types = list(posttype_queryset)
+    recent_commented_posts = list(commented_posts_queryset)
+
+    for postType in PostType.objects.filter(community_id=id):
+        post_count = Post.objects.filter(posttype_id=postType.pk).count()    
+
+        post_counts.append(post_count)
+        post_types.append(postType.name)
+
+    for post in Post.objects.filter(community_id=id):
+        comment_count = Comments.objects.filter(post_id=post.pk).count()
+        
+        posts.append(post.name)
+        comments.append(comment_count)    
+
+    context = {
+                'post_types'         : post_types,
+                'post_counts'        : post_counts,
+                'posts'              : posts,
+                'comments'           : comments,
+                'recent_posts'       : recent_posts,
+                'recent_posttypes'   : recent_post_types,
+                'recent_comments'    : recent_commented_posts,
+                'post_distributions' : post_distributions,
+                'post_dist_count'    : post_distributions_count,
+                'user_activities'    : user_activities,
+                'user_act_count'     : user_activities_count
+             }
+
+    return render(request, "CommunityStatistics.html", context)
+
+
 ## POST OPERATIONS
 
 def new_post(request, id):
@@ -346,8 +419,10 @@ def getPosts(request, id):
     for post in communityPosts:
         report_count = InappropriatePosts.objects.filter(post_id=post).count()
 
-        if report_count <= 5:
+        if report_count >= 5:
             posts.append(post)
+            post.inappropriate = 1
+            post.save()
 
     context = {'communityPosts': posts}
 
@@ -416,6 +491,26 @@ def archive_post(request, id):
     return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
 
 
+
+def unarchive_post(request, id):
+    post = get_object_or_404(Post, pk=id)
+    community = post.community_id
+    post.active = True
+    post.save()
+
+    return HttpResponseRedirect(reverse('community:community_detail', args=(community.id,)))
+
+
+def post_list(request):
+    post_list = Post.objects.order_by('-creation_date')[:30]
+    context = {'post_list': post_list}
+    
+    if request.user.is_authenticated:
+        user = get_object_or_404(UserAdditionalInfo, user=request.user)
+        context["user"] = user
+    
+    return render(request, 'Posts.html', context)
+
 def advanced_search(request, id):
     post_type = get_object_or_404(PostType, pk=id)
 
@@ -454,5 +549,6 @@ def getPostsOfPostType(request):
 #                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
 #             else:
 #                 fieldValue = str(request.POST.get(value["fieldlabel"], "")).strip()
+
 
 

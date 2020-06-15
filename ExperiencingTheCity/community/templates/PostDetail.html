@@ -51,12 +51,18 @@
                                     data-toggle="modal" data-target="#myModal">
                                     Edit Post
                                 </button> -->
-                                <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                {% if post.active == True %}
+                                    <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
                                         data-toggle="modal" data-target="#archivePostModal">
-                                    Archive Post
-                                </button>
 
-
+                                        Archive Post
+                                    </button>
+                                {% elif post.active == False %}
+                                    <button type="button" class="btn btn-danger" style="width: 100%; margin: 5px"
+                                        data-toggle="modal" data-target="#unarchivePostModal">
+                                        Unarchive Post
+                                    </button>
+                                {% endif %}
 
                             {% endif %}
                             <button type="button" class="btn btn-primary" id="showAnnoBtn" style="width: 100%; margin: 5px"
@@ -81,14 +87,19 @@
                 <h3>{{ post.name }}</h3>
                 {% if user.user %}
                     <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
-                    <h9 style="float: right;">
-                        <a href="{% url 'community:report_post' post.id %}"><i class="far fa-flag" style="color: gray;">Report Post</i></a>
-                    </h9>
+                    {% if post.active == true %}
+                        <h9 style="float: right;">
+                            <a href="{% url 'community:report_post' post.id %}"><i class="far fa-flag" style="color: gray;">Report Post</i></a>
+                        </h9>
+                    {% endif %}
                 {% else %}
                     <h8>{{ post.creation_date }}</h8>
                 {% endif %}                
                 <br/>
                 <hr style="border: 1px solid gray;" />
+                <h9 style="color: red;"><i>Since this post is archived, no action can be taken on it.</i></h9>
+                <br/>
+                <br/>
             <form id="postdetail" method="POST" action="{% url 'community:create_comment' post.id %}">
             {% csrf_token %}
                     {% if post_type.name == "Generic Post Type" %}
@@ -261,13 +272,16 @@
                     <br/>
                     <br/>
                     <br/>
-                    <!-- COMMENTBOX -->
-                    {% if user.user %}
-                    <div class="form-group">
-                        <textarea class="form-control" placeholder="Write your comment here!" rows="5" name="commentbox"></textarea>
-                        <br>
-                        <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button>
-                    </div>
+
+                    {% if post.active == True %}
+                        <!-- COMMENTBOX -->
+                        {% if user.user %}
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="Write your comment here!" rows="5" name="commentbox"></textarea>
+                            <br>
+                            <button type="submit" class="btn btn-outline-primary"  style="float: right;">Send Comment</button>
+                        </div>
+                        {% endif %}
                     {% endif %}
                 </form>
             </div>
