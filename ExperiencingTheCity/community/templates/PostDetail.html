@@ -56,7 +56,7 @@
                                     Archive Post
                                 </button>
 
-                                <button type="button" class="btn btn-primary" style="width: 100%; margin: 5px"
+                                <button type="button" class="btn btn-primary" id="showAnnoBtn" style="width: 100%; margin: 5px"
                                         onclick="showAnnotations()">
                                     Show Annotations
                                 </button>
@@ -418,6 +418,8 @@ xhttp.onreadystatechange = function() {
 
     var hide_button = document.getElementById("hideAnno");
     hide_button.style.visibility = "visible";
+    var show_button = document.getElementById("showAnnoBtn");
+    show_button.style.visibility = "hidden";
 }
 </script>
     <script>
@@ -433,6 +435,8 @@ xhttp.onreadystatechange = function() {
         annos_div.append(blank);
         var hide_button = document.getElementById("hideAnno");
     hide_button.style.visibility = "hidden";
+    var show_button = document.getElementById("showAnnoBtn");
+    show_button.style.visibility = "visible";
     }
     </script>
 
