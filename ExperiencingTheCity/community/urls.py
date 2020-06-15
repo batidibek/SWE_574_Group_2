@@ -21,6 +21,7 @@ urlpatterns = [
     path('communities/new_post/<id>', community.new_post, name="new_post"),
     path('communities/posts/<id>', community.getPosts, name="posts"),
     path('communities/posts/post_detail/<id>', community.getPostDetail, name="post_detail"),
+    path('communities/statistics/<id>', community.getCommunityStatistics, name="community_statistics"),
 
     path('user_profile/<id>', users.user_profile, name='user_profile'),
     path('user_profile/<id>/posts/', users.user_posts, name='user_posts'),
@@ -41,4 +42,5 @@ urlpatterns = [
     path('create-comment/<id>', community.create_comment, name='create_comment'),
     path('report-post/<id>', community.report_post, name='report_post'),
     path('archive-post/<id>', community.archive_post, name='archive_post'),
+    path('unarchive-post/<id>', community.unarchive_post, name='unarchive_post'),
 ]
