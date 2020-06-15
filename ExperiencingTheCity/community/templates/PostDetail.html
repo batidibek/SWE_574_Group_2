@@ -86,7 +86,7 @@
             <div class="col-md-8 order-md-1">
                 <h3>{{ post.name }}</h3>
                 {% if user.user %}
-                    <h8><a href="">{{ user.user }}</a>, {{ post.creation_date }}</h8>
+                    <h8><a href="">{{ post.user_id }}</a>, {{ post.creation_date }}</h8>
                     {% if post.active == true %}
                         <h9 style="float: right;">
                             <a href="{% url 'community:report_post' post.id %}"><i class="far fa-flag" style="color: gray;">Report Post</i></a>
