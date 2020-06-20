@@ -179,6 +179,7 @@ def newPostType(request):
         pt.name = request.POST.get("PostTypeName", "")
         print(pt.name)
         pt.description = request.POST.get("PostTypeDescription", "")
+        pt.description = pt.description[0: 199]
         pt.owner_id = User.objects.get(username=request.user).id
         pt.formfields = fieldJson
         pt.creation_date = timezone.now()
@@ -331,6 +332,7 @@ def create_post(request, id):
     name = str(request.POST.get('name', "")).strip()
     query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
+    description = description[0: 199]
     is_complaint = False
     complaint_status = ""
     wiki_tags = {}
