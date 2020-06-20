@@ -99,8 +99,8 @@ function html2json() {
         var fieldTypes = row.cells[2].children[0];
         // var fieldTypesSel = fieldTypes.options[fieldTypes.selectedIndex].text;
         if (fieldTypes.options[fieldTypes.selectedIndex].value === "EN") {
+            var enumValList = enumValuesOfRows[i - 1];
             // var enumValList = enumValuesOfRows.itemsArray;
-            var enumValList = enumValuesOfRows.itemsArray;
              var obj2 = [];
             for (var j = 0; j < enumValList.length; j++) {
                 //var obj2 = JSON.parse(tagsJson);
@@ -119,7 +119,7 @@ function html2json() {
         var second_cell = '"fieldlabel" : "' + row.cells[1].children[0].value + '"';
         var third_cell  = '"fieldtype"  : "' + fieldTypes.options[fieldTypes.selectedIndex].value + '"';
         var forth_cell  = '"isRequired" : "' + isRequired.checked + '"';
-        var fifth_cell  = '"enumvals" : ' + (fieldTypes.options[fieldTypes.selectedIndex].value === "EN" ? tagsJson : '') ;
+        var fifth_cell  = '"enumvals" : ' + (fieldTypes.options[fieldTypes.selectedIndex].value === "EN" ? tagsJson : '" "') ;
 
 
         itArr.push(first_cell);

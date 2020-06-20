@@ -226,8 +226,8 @@
                             {% elif value2.fieldtype == "EN" %}
                                 <select class="form-control" class="form-control" id="{{ value2.fieldlabel }}"
                                         name="{{ value2.fieldlabel }}">
-                                    {% if field.required == "false" %}
-                                        <option>[Leave Empty]</option>
+                                    {% if value2.isRequired == "false" %}
+                                        <option> </option>
                                     {% endif %}
                                     {% for vvv in value2.enumvals %}
                                             {% for kkk2, vvv2 in vvv.items %}

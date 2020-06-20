@@ -243,7 +243,7 @@
                                 </td>
                                 <td>
                                     <input type="text" id="enumValues1" class="enum_vals form-control "
-                                           name="enum_vals" disabled
+                                           name="enum_vals" disabled data-role="tagsinput"
                                             {% if post_type %}
                                            {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </td>
@@ -360,28 +360,20 @@
                                             </td>
                                             <td>
 
-{#                                                <select>#}
-{#                                                    {% for vvv in value2.enumvals %}#}
-{#                                                        {% for kkk2, vvv2 in vvv.items %}#}
-{#                                                            <option value=#}
-{#                                                                            {{ vvv2 }}> {{ vvv2 }} </option>#}
-{#                                                        {% endfor %}#}
-{#                                                    {% endfor %}#}
-{#                                                </select>#}
 
-                                                                                                <input type="text" class="enum_vals form-control "
-                                                                                                       name="enum_vals" data-role="tagsinput"
-                                                                                                       {% if not value2.fieldtype == "EN" %}disabled{% endif %}
-                                                                                                        {% if post_type %}
-                                                                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
-                                                                                                       value="
+                                                <input type="text" class="enum_vals form-control "
+                                                       name="enum_vals" data-role="tagsinput"
+                                                       {% if not value2.fieldtype == "EN" %}disabled{% endif %}
+                                                        {% if post_type %}
+                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                                       value="
                                                                                     {% for vvv in value2.enumvals %}
                                                                                         {% for kkk2, vvv2 in vvv.items %}
                                                                                             {{ vvv2 }},
                                                                                         {% endfor %}
                                                                                     {% endfor %}
                                                 "
-                                                                                                >
+                                                >
                                             </td>
                                             <td>
 
