@@ -89,6 +89,7 @@ def create_community(request):
     name = str(request.POST.get('name', "")).strip()
     query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
+    description = description[0 : 199]
     context = {'community_name': name, 'description': description}
     lat = request.POST.getlist('latitude', "")
     lon = request.POST.getlist('longitude', "")
