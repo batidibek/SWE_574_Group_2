@@ -62,8 +62,9 @@ def getCommunityByFilter(request):
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-   
-    return render(request, "PostType.html", {"communityDetail": communityDetail})
+    context = { "communityDetail": communityDetail }
+    context["user"] = request.user
+    return render(request, "PostType.html", {context})
 
 
 # NEW COMMUNITY
