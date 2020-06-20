@@ -104,10 +104,10 @@
                                 {% endif %}
                                 <button type="button" class="btn btn-warning" style="width: 100%; margin: 5px"
                                         onclick="location.href='{% url 'community:advanced_search' post_type.id %}'"
-                                            {% if post_type %}
-                                            {% endif %}>
-                                        Advanced Search
-                                    </button>
+                                        {% if post_type %}
+                                        {% endif %}>
+                                    Advanced Search
+                                </button>
                             {% endif %}
 
                         </div>
@@ -166,7 +166,7 @@
                                       rows="5" name="PostTypeDescription"
                                       {% if not communityDetail.active %}disabled{% endif %}
                                       {% if not post_type.owner == user.user %}disabled{% endif %}
-                                    {% if post_type %}{% if not post_type.active %}disabled
+                                      {% if post_type %}{% if not post_type.active %}disabled
                                       {% endif %} {% endif %}>{{ post_type.description }}</textarea>
                         {% else %}
                             <textarea class="form-control" id="PostTypeDescription"
@@ -243,7 +243,7 @@
                                 </td>
                                 <td>
                                     <input type="text" id="enumValues1" class="enum_vals form-control "
-                                           name="enum_vals" data-role="tagsinput" disabled
+                                           name="enum_vals" disabled
                                             {% if post_type %}
                                            {% if not post_type.active %}disabled{% endif %} {% endif %}>
                                 </td>
@@ -272,7 +272,10 @@
                             </tr>
                             {% for key, value in form_fields.items %}
                                 {% for key2, value2 in value.items %}
+
                                     {% if not value2.fieldposnr  ==  "" %}
+
+
                                         <tr>
                                             <th scope="row">
 
@@ -302,66 +305,83 @@
                                                         {% if post_type %}
                                                         {% if not post_type.active %}disabled{% endif %} {% endif %}>
 
-                                                <option value="" disabled>Choose your option</option>
-                                                <option value="TE"
-                                                        {% if value2.fieldtype == "TE" %}selected{% endif %}>
-                                                    Text
-                                                    field
-                                                </option>
-                                                <option value="TA"
-                                                        {% if value2.fieldtype == "TA" %}selected{% endif %}>
-                                                    Text
-                                                    area
-                                                </option>
-                                                <option value="DA"
-                                                        {% if value2.fieldtype == "DA" %}selected{% endif %}>
-                                                    Date
-                                                </option>
-                                                <option value="TI"
-                                                        {% if value2.fieldtype == "TI" %}selected{% endif %}>
-                                                    Time
-                                                </option>
-                                                <option value="IN"
-                                                        {% if value2.fieldtype == "IN" %}selected{% endif %}>
-                                                    Integer
-                                                </option>
-                                                <option value="DE"
-                                                        {% if value2.fieldtype == "DE" %}selected{% endif %}>
-                                                    Decimal
-                                                </option>
-                                                <option value="IM"
-                                                        {% if value2.fieldtype == "IM" %}selected{% endif %}>
-                                                    Image
-                                                </option>
-                                                <option value="VI"
-                                                        {% if value2.fieldtype == "VI" %}selected{% endif %}>
-                                                    Video
-                                                </option>
-                                                <option value="AU"
-                                                        {% if value2.fieldtype == "AU" %}selected{% endif %}>
-                                                    Audio
-                                                </option>
-                                                <option value="UR"
-                                                        {% if value2.fieldtype == "UR" %}selected{% endif %}>
-                                                    URI
-                                                </option>
-                                                <option value="LO"
-                                                        {% if value2.fieldtype == "LO" %}selected{% endif %}>
-                                                    Location
-                                                </option>
-                                                <option value="EN"
-                                                        {% if value2.fieldtype == "EN" %}selected{% endif %}>
-                                                    Enumerated
-                                                </option>
+                                                    <option value="" disabled>Choose your option</option>
+                                                    <option value="TE"
+                                                            {% if value2.fieldtype == "TE" %}selected{% endif %}>
+                                                        Text
+                                                        field
+                                                    </option>
+                                                    <option value="TA"
+                                                            {% if value2.fieldtype == "TA" %}selected{% endif %}>
+                                                        Text
+                                                        area
+                                                    </option>
+                                                    <option value="DA"
+                                                            {% if value2.fieldtype == "DA" %}selected{% endif %}>
+                                                        Date
+                                                    </option>
+                                                    <option value="TI"
+                                                            {% if value2.fieldtype == "TI" %}selected{% endif %}>
+                                                        Time
+                                                    </option>
+                                                    <option value="IN"
+                                                            {% if value2.fieldtype == "IN" %}selected{% endif %}>
+                                                        Integer
+                                                    </option>
+                                                    <option value="DE"
+                                                            {% if value2.fieldtype == "DE" %}selected{% endif %}>
+                                                        Decimal
+                                                    </option>
+                                                    <option value="IM"
+                                                            {% if value2.fieldtype == "IM" %}selected{% endif %}>
+                                                        Image
+                                                    </option>
+                                                    <option value="VI"
+                                                            {% if value2.fieldtype == "VI" %}selected{% endif %}>
+                                                        Video
+                                                    </option>
+                                                    <option value="AU"
+                                                            {% if value2.fieldtype == "AU" %}selected{% endif %}>
+                                                        Audio
+                                                    </option>
+                                                    <option value="UR"
+                                                            {% if value2.fieldtype == "UR" %}selected{% endif %}>
+                                                        URI
+                                                    </option>
+                                                    <option value="LO"
+                                                            {% if value2.fieldtype == "LO" %}selected{% endif %}>
+                                                        Location
+                                                    </option>
+                                                    <option value="EN"
+                                                            {% if value2.fieldtype == "EN" %}selected{% endif %}>
+                                                        Enumerated
+                                                    </option>
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" class="enum_vals form-control "
-                                                       name="enum_vals" data-role="tagsinput"
-                                                       {% if not value2.fieldtype == "EN" %}disabled{% endif %}
-                                                        {% if post_type %}
-                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
-                                                       value="{{ value2.enumvals }}">
+
+{#                                                <select>#}
+{#                                                    {% for vvv in value2.enumvals %}#}
+{#                                                        {% for kkk2, vvv2 in vvv.items %}#}
+{#                                                            <option value=#}
+{#                                                                            {{ vvv2 }}> {{ vvv2 }} </option>#}
+{#                                                        {% endfor %}#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+
+                                                                                                <input type="text" class="enum_vals form-control "
+                                                                                                       name="enum_vals" data-role="tagsinput"
+                                                                                                       {% if not value2.fieldtype == "EN" %}disabled{% endif %}
+                                                                                                        {% if post_type %}
+                                                                                                       {% if not post_type.active %}disabled{% endif %} {% endif %}
+                                                                                                       value="
+                                                                                    {% for vvv in value2.enumvals %}
+                                                                                        {% for kkk2, vvv2 in vvv.items %}
+                                                                                            {{ vvv2 }},
+                                                                                        {% endfor %}
+                                                                                    {% endfor %}
+                                                "
+                                                                                                >
                                             </td>
                                             <td>
 
