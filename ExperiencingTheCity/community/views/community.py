@@ -207,10 +207,7 @@ def getPostTypes(request, id, activeStatus):
 def getPostType(request, id, activeStatus):
     post_type = get_object_or_404(PostType, pk=id)
     communityDetail = get_object_or_404(Community, id=post_type.community_id_id)
-    print("minnnnnnnnnnnnnnaaaaaaaaaa")
-    print(post_type.formfields)
     if post_type.formfields:
-        #post_type.formfields = "\'" + post_type.formfields  + "\'"
         form_fields = json.loads(post_type.formfields)
     else:
         form_fields = []
