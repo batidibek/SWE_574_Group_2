@@ -1,8 +1,8 @@
 {% extends "base.html" %} {% block content %}
-{% load static %}
-<script src="{% static 'controller/Post.js' %}"></script>
+    {% load static %}
+    <script src="{% static 'controller/Post.js' %}"></script>
 
-<div class="container" style="width: 800px; margin:0 auto;">
+    <div class="container" style="width: 800px; margin:0 auto;">
         <h3>{{ post_type.name }}</h3>
         {% if error_message %}
             <p style="color: red"><strong>{{ error_message }}</strong></p>
@@ -36,7 +36,8 @@
             {% elif post_type.name == "Generic Post Type for Complaints" %}
                 <div class="form-group">
                     <label for="postStatus">Status</label>
-                    <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype" disabled=true>
+                    <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
+                            name="dt_fieldtype" disabled=true>
                         <option value="TE">Open</option>
                         <option value="TA">In Progress</option>
                         <option value="DA">Closed</option>
@@ -56,24 +57,25 @@
                     <label for="PostDescription">Description</label>
                     {% if description %}
                         <textarea class="form-control" id="PostDescription"
-                              placeholder="Briefly describe your post"
-                              rows="5" name="description">{{ description }}</textarea>
+                                  placeholder="Briefly describe your post"
+                                  rows="5" name="description">{{ description }}</textarea>
                     {% else %}
                         <textarea class="form-control" id="PostDescription"
-                              placeholder="Briefly describe your post"
-                              rows="5" name="description"></textarea>
+                                  placeholder="Briefly describe your post"
+                                  rows="5" name="description"></textarea>
                     {% endif %}
                 </div>
             {% else %}
                 {% if post_type.complaint == True %}
-                <div class="form-group">
-                    <label for="poststatus">Status</label>
-                    <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control" name="dt_fieldtype" disabled=true>
-                        <option value="TE">Open</option>
-                        <option value="TA">In Progress</option>
-                        <option value="DA">Closed</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="poststatus">Status</label>
+                        <select id="fieldTypeSelect1" class="dt_fieldtype mdb-select md-form form-control"
+                                name="dt_fieldtype" disabled=true>
+                            <option value="TE">Open</option>
+                            <option value="TA">In Progress</option>
+                            <option value="DA">Closed</option>
+                        </select>
+                    </div>
                 {% endif %}
                 <div class="form-group">
                     <label for="postName">Post Name</label>
@@ -89,130 +91,160 @@
                     <label for="PostDescription">Description</label>
                     {% if description %}
                         <textarea class="form-control" id="PostDescription"
-                              placeholder="Briefly describe your post"
-                              rows="5" name="description">{{ description }}</textarea>
+                                  placeholder="Briefly describe your post"
+                                  rows="5" name="description">{{ description }}</textarea>
                     {% else %}
                         <textarea class="form-control" id="PostDescription"
-                              placeholder="Briefly describe your post"
-                              rows="5" name="description"></textarea>
+                                  placeholder="Briefly describe your post"
+                                  rows="5" name="description"></textarea>
                     {% endif %}
                 </div>
                 <!--Generate form from JSON field-->
                 <div class="form-group">
                     {% for key, value in form_fields.items %}
                         {% for key2, value2 in value.items %}
-                            <label>{{value2.fieldlabel}}</label>
+                            <label>{{ value2.fieldlabel }}</label>
 
                             <!-- "TE">Text field -->
                             {% if value2.fieldtype == "TE" %}
-                            <input type="text" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="Enter {{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                <input type="text" class="form-control" id="{{ value2.fieldlabel }}"
+                                       aria-describedby="{{ value2.fieldlabel }}"
+                                       placeholder="Enter {{ value2.fieldlabel }}" name="{{ value2.fieldlabel }}">
 
-                            <!-- "TA">Text area -->
+                                <!-- "TA">Text area -->
                             {% elif value2.fieldtype == "TA" %}
-                            <textarea class="form-control" id="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" rows="5" name="{{value2.fieldlabel}}"></textarea>
+                                <textarea class="form-control" id="{{ value2.fieldlabel }}"
+                                          placeholder="{{ value2.fieldlabel }}" rows="5"
+                                          name="{{ value2.fieldlabel }}"></textarea>
 
-                            <!-- "DA">Date -->
+                                <!-- "DA">Date -->
                             {% elif value2.fieldtype == "DA" %}
-                            <input type="date" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                <input type="date" class="form-control" id="{{ value2.fieldlabel }}"
+                                       aria-describedby="{{ value2.fieldlabel }}" placeholder="{{ value2.fieldlabel }}"
+                                       name="{{ value2.fieldlabel }}">
 
-                            <!-- "TI">Time -->
+                                <!-- "TI">Time -->
                             {% elif value2.fieldtype == "TI" %}
-                            <input type="time" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                <input type="time" class="form-control" id="{{ value2.fieldlabel }}"
+                                       aria-describedby="{{ value2.fieldlabel }}" placeholder="{{ value2.fieldlabel }}"
+                                       name="{{ value2.fieldlabel }}">
 
-                            <!-- "IN">Integer -->
+                                <!-- "IN">Integer -->
                             {% elif value2.fieldtype == "IN" %}
-                            <input type="number" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                <input type="number" class="form-control" id="{{ value2.fieldlabel }}"
+                                       aria-describedby="{{ value2.fieldlabel }}" placeholder="{{ value2.fieldlabel }}"
+                                       name="{{ value2.fieldlabel }}">
 
-                            <!-- "DE">Decimal -->
+                                <!-- "DE">Decimal -->
                             {% elif value2.fieldtype == "DE" %}
-                            <input type="number" step=0.01 class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                <input type="number" step=0.01 class="form-control" id="{{ value2.fieldlabel }}"
+                                       aria-describedby="{{ value2.fieldlabel }}" placeholder="{{ value2.fieldlabel }}"
+                                       name="{{ value2.fieldlabel }}">
 
-                            <!-- "IM">Image -->
+                                <!-- "IM">Image -->
                             {% elif value2.fieldtype == "IM" %}
-                            <div class="input-group">
-                                <div class="form-control">
-                                    <input type="file" accept=".jpg,.gif,.png" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                    <label class="custom-file-label" for="{{value2.fieldlabel}}">Choose a file to upload</label>
+                                <div class="input-group">
+                                    <div class="form-control">
+                                        <input type="file" accept=".jpg,.gif,.png" class="custom-file-input"
+                                               id="{{ value2.fieldlabel }}" aria-describedby="{{ value2.fieldlabel }}"
+                                               name="{{ value2.fieldlabel }}">
+                                        <label class="custom-file-label" for="{{ value2.fieldlabel }}">Choose a file to
+                                            upload</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- "VI">Video -->
+                                <!-- "VI">Video -->
                             {% elif value2.fieldtype == "VI" %}
-                            <div class="input-group">
-                                <div class="form-control">
-                                    <input type="file" accept=".mp4" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                    <label class="custom-file-label" for="{{value2.fieldlabel}}">Choose a file to upload</label>
+                                <div class="input-group">
+                                    <div class="form-control">
+                                        <input type="file" accept=".mp4" class="custom-file-input"
+                                               id="{{ value2.fieldlabel }}" aria-describedby="{{ value2.fieldlabel }}"
+                                               name="{{ value2.fieldlabel }}">
+                                        <label class="custom-file-label" for="{{ value2.fieldlabel }}">Choose a file to
+                                            upload</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- "AU">Audio -->
+                                <!-- "AU">Audio -->
                             {% elif value2.fieldtype == "AU" %}
-                            <div class="input-group">
-                                <div class="form-control">
-                                    <input type="file" accept=".mp3, .wav" class="custom-file-input" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                    <label class="custom-file-label" for="{{value2.fieldlabel}}">Choose a file to upload</label>
+                                <div class="input-group">
+                                    <div class="form-control">
+                                        <input type="file" accept=".mp3, .wav" class="custom-file-input"
+                                               id="{{ value2.fieldlabel }}" aria-describedby="{{ value2.fieldlabel }}"
+                                               name="{{ value2.fieldlabel }}">
+                                        <label class="custom-file-label" for="{{ value2.fieldlabel }}">Choose a file to
+                                            upload</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- "UR">URI -->
+                                <!-- "UR">URI -->
                             {% elif value2.fieldtype == "UR" %}
-                            <input type="url" class="form-control" id="{{value2.fieldlabel}}" aria-describedby="{{value2.fieldlabel}}" placeholder="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
+                                <input type="url" class="form-control" id="{{ value2.fieldlabel }}"
+                                       aria-describedby="{{ value2.fieldlabel }}" placeholder="{{ value2.fieldlabel }}"
+                                       name="{{ value2.fieldlabel }}">
 
-                            <!-- "LO">Location -->
+                                <!-- "LO">Location -->
                             {% elif value2.fieldtype == "LO" %}
-                            <div id="map" style="width: 760px; height: 350px;"></div>    
-                            <script>
-                                // initialize Leaflet
-                                let map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
-                            
-                                // add the OpenStreetMap tiles
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                    maxZoom: 19,
-                                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-                                }).addTo(map);
-                            
-                                // show the scale bar on the lower left corner
-                                L.control.scale().addTo(map);
-                            
-                                // show a marker on the map
-                                //var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
-                                let lat = 41.02;
-                                let lon = 28.98;
-                            
-                                map.on('click', function (e) {
-                                    L.marker({lon: e.latlng.lng, lat: e.latlng.lat}).addTo(map);
-                                    lat = e.latlng.lat;
-                                    lon = e.latlng.lng;
-                                    let latInput = document.createElement("input");
-                                    latInput.name = "latitude";
-                                    latInput.type = "hidden";
-                                    latInput.value = lat;
-                                    document.getElementById("map").appendChild(latInput);
-                                    let lonInput = document.createElement("input");
-                                    lonInput.name = "longitude"
-                                    lonInput.type = "hidden";
-                                    lonInput.value = lon;
-                                    document.getElementById("map").appendChild(lonInput);
-                                });
-                            </script>                      
-                        
+                                <div id="map" style="width: 760px; height: 350px;"></div>
+                                <script>
+                                    // initialize Leaflet
+                                    let map = L.map('map').setView({lon: 28.98, lat: 41.06}, 10);
 
-                            <!-- "EN">Enumerated -->
+                                    // add the OpenStreetMap tiles
+                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                        maxZoom: 19,
+                                        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                                    }).addTo(map);
+
+                                    // show the scale bar on the lower left corner
+                                    L.control.scale().addTo(map);
+
+                                    // show a marker on the map
+                                    //var marker = L.marker({ lon: 28.98, lat: 41.02 }).addTo(map);
+                                    let lat = 41.02;
+                                    let lon = 28.98;
+
+                                    map.on('click', function (e) {
+                                        L.marker({lon: e.latlng.lng, lat: e.latlng.lat}).addTo(map);
+                                        lat = e.latlng.lat;
+                                        lon = e.latlng.lng;
+                                        let latInput = document.createElement("input");
+                                        latInput.name = "latitude";
+                                        latInput.type = "hidden";
+                                        latInput.value = lat;
+                                        document.getElementById("map").appendChild(latInput);
+                                        let lonInput = document.createElement("input");
+                                        lonInput.name = "longitude"
+                                        lonInput.type = "hidden";
+                                        lonInput.value = lon;
+                                        document.getElementById("map").appendChild(lonInput);
+                                    });
+                                </script>
+
+
+                                <!-- "EN">Enumerated -->
                             {% elif value2.fieldtype == "EN" %}
-                            <select class="form-control" class="form-control" id="{{value2.fieldlabel}}" name="{{value2.fieldlabel}}">
-                                {% if field.required == "No" %}
-                                <option>[Leave Empty]</option>
-                                {% endif %}
-                                {% for option in field.options %}
-                                    <option>{{option}}</option>
-                                {% endfor %}
-                            </select>
+                                <select class="form-control" class="form-control" id="{{ value2.fieldlabel }}"
+                                        name="{{ value2.fieldlabel }}">
+                                    {% if value2.isRequired == "false" %}
+                                        <option> </option>
+                                    {% endif %}
+                                    {% for vvv in value2.enumvals %}
+                                            {% for kkk2, vvv2 in vvv.items %}
+                                                <option value=
+                                                                {{ vvv2 }}> {{ vvv2 }} </option>
+                                            {% endfor %}
+                                    {% endfor %}
+                                </select>
                             {% endif %}
 
-                            {% if value2.isRequired == "true" %}
-                            <small id="fieldType" class="form-text text-muted">*This field is required</small>
-                            {% endif %}
-                            <label>{{value2.enumvals}}</label>
+{#                            {% if value2.isRequired == "true" %}#}
+{#                                <small id="fieldType" class="form-text text-muted">*This field is required</small>#}
+{#                            {% endif %}#}
+{#                            <label>{{ value2.enumvals }}</label>#}
+
+
+
                             <br/>
                         {% endfor %}
                     {% endfor %}
@@ -223,17 +255,21 @@
                 <label for="Tags">Tags</label>
                 <br/>
                 <input id="searchTerm" name="search" placeholder="Search.." style="width: 500px; float: left">
-                <button id='search' type="button" class ="btn btn-outline-primary" style="margin-left: 10px; float: left">Get Tag Suggestions</button>
+                <button id='search' type="button" class="btn btn-outline-primary"
+                        style="margin-left: 10px; float: left">Get Tag Suggestions
+                </button>
             </div>
             <br/>
             <br/>
             <div id="wikidataResult">
-            </div>        
+            </div>
             <br/>
             <br/>
             <div class="input-group-btn">
                 <button type="submit" class="btn btn-outline-success">Send</button>
-                <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel" style="margin-left: 10px;">Cancel</button>
+                <button class="btn btn-outline-danger" type="submit" name="cancel" value="cancel"
+                        style="margin-left: 10px;">Cancel
+                </button>
             </div>
         </form>
         <br/>

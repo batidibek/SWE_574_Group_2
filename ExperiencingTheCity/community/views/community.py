@@ -62,8 +62,9 @@ def getCommunityByFilter(request):
 
 def getCommunityHeader(request, id):
     communityDetail = get_object_or_404(Community, pk=id)
-   
-    return render(request, "PostType.html", {"communityDetail": communityDetail})
+    context = { "communityDetail": communityDetail }
+    context["user"] = request.user
+    return render(request, "PostType.html", {context})
 
 
 # NEW COMMUNITY
@@ -89,6 +90,7 @@ def create_community(request):
     name = str(request.POST.get('name', "")).strip()
     query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
+    description = description[0 : 199]
     context = {'community_name': name, 'description': description}
     lat = request.POST.getlist('latitude', "")
     lon = request.POST.getlist('longitude', "")
@@ -178,6 +180,7 @@ def newPostType(request):
         pt.name = request.POST.get("PostTypeName", "")
         print(pt.name)
         pt.description = request.POST.get("PostTypeDescription", "")
+        pt.description = pt.description[0: 199]
         pt.owner_id = User.objects.get(username=request.user).id
         pt.formfields = fieldJson
         pt.creation_date = timezone.now()
@@ -208,10 +211,12 @@ def getPostType(request, id, activeStatus):
     post_type = get_object_or_404(PostType, pk=id)
     communityDetail = get_object_or_404(Community, id=post_type.community_id_id)
     if post_type.formfields:
+        print("minaaaaaaaa")
+        print(post_type.formfields)
         form_fields = json.loads(post_type.formfields)
     else:
         form_fields = []
-    context = {'post_type': post_type, 'communityDetail': communityDetail, "form_fields": form_fields}
+    context = {'post_type': post_type, 'communityDetail': communityDetail, "form_fields" : form_fields}
 
     if request.user.is_authenticated:
         user = get_object_or_404(UserAdditionalInfo, user=request.user)
@@ -328,6 +333,7 @@ def create_post(request, id):
     name = str(request.POST.get('name', "")).strip()
     query = str(request.POST.get('tags', "")).strip()
     description = str(request.POST.get('description', "")).strip()
+    description = description[0: 199]
     is_complaint = False
     complaint_status = ""
     wiki_tags = {}
